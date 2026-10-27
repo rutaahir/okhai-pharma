@@ -217,13 +217,13 @@ export const HeroWithDualSwapper: React.FC = () => {
   const currentProduct = PRODUCTS_DATA[productIdx];
   const currentFacility = FACILITY_SWAPS[facilityIdx];
 
-  // Automatic synchronized swapping timer (every 2 seconds)
+  // Automatic synchronized swapping timer (every 4 seconds)
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
       setProductIdx((prev) => (prev + 1) % PRODUCTS_DATA.length);
       setFacilityIdx((prev) => (prev + 1) % FACILITY_SWAPS.length);
-    }, 2000);
+    }, 4000);
     return () => clearInterval(timer);
   }, [isPaused]);
 
@@ -515,10 +515,10 @@ export const HeroWithDualSwapper: React.FC = () => {
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={currentProduct.id}
-                      initial={{ opacity: 0, y: -10, filter: 'blur(3px)' }}
+                      initial={{ opacity: 0, y: -14, filter: 'blur(5px)' }}
                       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                      exit={{ opacity: 0, y: 10, filter: 'blur(3px)' }}
-                      transition={{ duration: 0.35, ease: LUXURY_EASE }}
+                      exit={{ opacity: 0, y: 14, filter: 'blur(5px)' }}
+                      transition={{ duration: 0.5, ease: LUXURY_EASE }}
                       className="mb-3.5"
                     >
                       <h2 className="text-2xl sm:text-3xl lg:text-[32px] font-serif font-bold text-[#143823] leading-tight tracking-tight">
@@ -539,7 +539,7 @@ export const HeroWithDualSwapper: React.FC = () => {
                           key={prod.id}
                           type="button"
                           onClick={() => setProductIdx(idx)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center gap-1.5 shrink-0 ${
+                          className={`relative overflow-hidden px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center gap-1.5 shrink-0 ${
                             isActive
                               ? 'bg-[#143823] text-white shadow-md shadow-[#143823]/25 scale-102 ring-1 ring-[#8CC63F]/40'
                               : 'text-[#143823]/70 hover:text-[#143823] hover:bg-white'
@@ -569,10 +569,10 @@ export const HeroWithDualSwapper: React.FC = () => {
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={currentProduct.id}
-                          initial={{ opacity: 0, scale: 0.82, rotate: -6, y: 12 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 0, y: 0 }}
-                          exit={{ opacity: 0, scale: 1.1, rotate: 6, y: -12 }}
-                          transition={{ duration: 0.42, ease: LUXURY_EASE }}
+                          initial={{ opacity: 0, scale: 0.84, rotate: -5, y: 14, filter: 'blur(5px)' }}
+                          animate={{ opacity: 1, scale: 1, rotate: 0, y: 0, filter: 'blur(0px)' }}
+                          exit={{ opacity: 0, scale: 1.08, rotate: 5, y: -14, filter: 'blur(5px)' }}
+                          transition={{ duration: 0.55, ease: LUXURY_EASE }}
                           className="w-full h-full flex items-center justify-center p-3 sm:p-4 relative"
                         >
                           <img
@@ -600,10 +600,10 @@ export const HeroWithDualSwapper: React.FC = () => {
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={currentProduct.id}
-                        initial={{ opacity: 0, x: 10, filter: 'blur(3px)' }}
+                        initial={{ opacity: 0, x: 12, filter: 'blur(4px)' }}
                         animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-                        exit={{ opacity: 0, x: -10, filter: 'blur(3px)' }}
-                        transition={{ duration: 0.38, ease: LUXURY_EASE }}
+                        exit={{ opacity: 0, x: -12, filter: 'blur(4px)' }}
+                        transition={{ duration: 0.48, ease: LUXURY_EASE }}
                         className="grid grid-cols-2 gap-2"
                       >
                         {/* Purity */}
@@ -674,10 +674,10 @@ export const HeroWithDualSwapper: React.FC = () => {
                   <AnimatePresence mode="wait">
                     <motion.div
                       key={currentFacility.id}
-                      initial={{ opacity: 0, y: -10, filter: 'blur(3px)' }}
+                      initial={{ opacity: 0, y: -14, filter: 'blur(5px)' }}
                       animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                      exit={{ opacity: 0, y: 10, filter: 'blur(3px)' }}
-                      transition={{ duration: 0.35, ease: LUXURY_EASE }}
+                      exit={{ opacity: 0, y: 14, filter: 'blur(5px)' }}
+                      transition={{ duration: 0.5, ease: LUXURY_EASE }}
                       className="mb-3.5"
                     >
                       <h3 className="text-2xl sm:text-3xl lg:text-[32px] font-serif font-bold text-[#143823] leading-tight tracking-tight">
@@ -698,7 +698,7 @@ export const HeroWithDualSwapper: React.FC = () => {
                           key={fac.id}
                           type="button"
                           onClick={() => setFacilityIdx(idx)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center gap-1.5 shrink-0 ${
+                          className={`relative overflow-hidden px-3.5 py-1.5 rounded-xl text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center gap-1.5 shrink-0 ${
                             isActive
                               ? 'bg-[#143823] text-white shadow-md shadow-[#143823]/25 scale-102 ring-1 ring-[#8CC63F]/40'
                               : 'text-[#143823]/70 hover:text-[#143823] hover:bg-white'
@@ -722,10 +722,10 @@ export const HeroWithDualSwapper: React.FC = () => {
                     {facilityIdx === 0 && (
                       <motion.div
                         key="self-farming"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.05 }}
-                        transition={{ duration: 0.4, ease: LUXURY_EASE }}
+                        initial={{ opacity: 0, scale: 0.94, filter: 'blur(5px)' }}
+                        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                        exit={{ opacity: 0, scale: 1.04, filter: 'blur(5px)' }}
+                        transition={{ duration: 0.52, ease: LUXURY_EASE }}
                         className="w-full"
                       >
                         <div className="relative w-full h-56 sm:h-64 lg:h-[268px] rounded-2xl overflow-hidden bg-[#E2EFF4] border border-[#CBDCC5] shadow-xs group">
@@ -753,10 +753,10 @@ export const HeroWithDualSwapper: React.FC = () => {
                     {facilityIdx === 1 && (
                       <motion.div
                         key="clean-rooms"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.05 }}
-                        transition={{ duration: 0.4, ease: LUXURY_EASE }}
+                        initial={{ opacity: 0, scale: 0.94, filter: 'blur(5px)' }}
+                        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                        exit={{ opacity: 0, scale: 1.04, filter: 'blur(5px)' }}
+                        transition={{ duration: 0.52, ease: LUXURY_EASE }}
                         className="w-full"
                       >
                         <div className="relative w-full h-56 sm:h-64 lg:h-[268px] rounded-2xl overflow-hidden bg-[#0A1A10] border border-[#CBDCC5] shadow-xs group">
@@ -790,10 +790,10 @@ export const HeroWithDualSwapper: React.FC = () => {
                     {facilityIdx === 2 && (
                       <motion.div
                         key="qc-testing"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.05 }}
-                        transition={{ duration: 0.4, ease: LUXURY_EASE }}
+                        initial={{ opacity: 0, scale: 0.94, filter: 'blur(5px)' }}
+                        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                        exit={{ opacity: 0, scale: 1.04, filter: 'blur(5px)' }}
+                        transition={{ duration: 0.52, ease: LUXURY_EASE }}
                         className="w-full"
                       >
                         {/* 3 Analytical Sub-Images */}

@@ -44,66 +44,19 @@ export const Preloader: React.FC<{ onComplete: () => void }> = ({ onComplete }) 
       <div className="absolute inset-0 aurora-mesh pointer-events-none opacity-60" />
 
       <div className="relative z-10 flex flex-col items-center max-w-sm px-6 text-center">
-        {/* Animated Leaf SVG Sprig */}
-        <div className="relative w-28 h-28 mb-6 flex items-center justify-center">
-          <svg
-            viewBox="0 0 100 100"
-            className="w-full h-full text-[#5B9A3C]"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            {/* Main botanical stem */}
-            <path
-              d="M 50 90 Q 48 50 50 15"
-              strokeDasharray="100"
-              strokeDashoffset={Math.max(0, 100 - progress)}
-              className="transition-all duration-75 text-[#1E3D2A]"
+        {/* Company Logo with Luxury Animated Luminous Glow & Breathing Aura */}
+        <div className="relative mb-6 flex items-center justify-center">
+          {/* Ambient Multi-layer Glowing Pulse */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#8CC63F]/40 via-[#5B9A3C]/25 to-transparent blur-3xl scale-125 animate-pulse" />
+          
+          {/* Official Company Logo in Luxury Glass Plinth */}
+          <div className="relative px-6 py-5 sm:px-8 sm:py-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-white shadow-[0_25px_60px_rgba(20,56,35,0.15)] ring-1 ring-[#5B9A3C]/20 transition-all duration-700">
+            <img
+              src="/assets/aistudio/image_7ccf5a84.png"
+              alt="Okhai Pharma Intermediates Pvt. Ltd."
+              className="h-16 sm:h-20 w-auto object-contain drop-shadow-sm transition-transform duration-700"
             />
-            {/* Left lower leaf */}
-            <path
-              d="M 49 70 Q 25 65 20 50 C 22 40 40 50 49 58"
-              fill={progress > 40 ? 'rgba(91, 154, 60, 0.15)' : 'none'}
-              strokeDasharray="80"
-              strokeDashoffset={Math.max(0, 80 - Math.max(0, progress - 20) * 1.5)}
-              className="transition-all duration-100"
-            />
-            {/* Right mid leaf */}
-            <path
-              d="M 50 55 Q 75 50 82 36 C 80 26 62 38 50 45"
-              fill={progress > 60 ? 'rgba(140, 198, 63, 0.2)' : 'none'}
-              strokeDasharray="80"
-              strokeDashoffset={Math.max(0, 80 - Math.max(0, progress - 35) * 1.6)}
-              className="transition-all duration-100"
-            />
-            {/* Left upper leaf */}
-            <path
-              d="M 50 40 Q 30 32 28 20 C 35 15 45 25 50 32"
-              fill={progress > 75 ? 'rgba(91, 154, 60, 0.25)' : 'none'}
-              strokeDasharray="60"
-              strokeDashoffset={Math.max(0, 60 - Math.max(0, progress - 50) * 1.8)}
-              className="transition-all duration-100"
-            />
-            {/* Top crown leaf */}
-            <path
-              d="M 50 25 C 45 10 55 10 50 15"
-              strokeDasharray="40"
-              strokeDashoffset={Math.max(0, 40 - Math.max(0, progress - 70) * 2)}
-              className="transition-all duration-100"
-            />
-          </svg>
-        </div>
-
-        {/* Wordmark */}
-        <div className="space-y-1 transition-opacity duration-500" style={{ opacity: progress > 25 ? 1 : 0.2 }}>
-          <h2 className="text-2xl font-serif font-semibold text-[#1E3D2A] tracking-tight">
-            Okhai Pharma
-          </h2>
-          <p className="text-xs uppercase tracking-[0.25em] text-[#5B9A3C] font-mono">
-            Intermediates Pvt. Ltd.
-          </p>
+          </div>
         </div>
 
         {/* Percentage Counter */}

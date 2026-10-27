@@ -20,6 +20,7 @@ import { Downloads } from './pages/Downloads';
 import { Contact } from './pages/Contact';
 import { Legal } from './pages/Legal';
 import { NotFound } from './pages/NotFound';
+import { FloatingActionHub } from './components/common/FloatingActionHub';
 
 export default function App() {
   const [preloaderDone, setPreloaderDone] = useState(false);
@@ -63,6 +64,9 @@ export default function App() {
 
         {/* Global Mega Footer */}
         <Footer />
+
+        {/* Global Bottom-Right Floating Hub (Quick Info & Scroll-to-Top) */}
+        <FloatingActionHub />
       </div>
     </BrowserRouter>
   );
