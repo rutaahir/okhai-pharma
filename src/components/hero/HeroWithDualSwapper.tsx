@@ -728,22 +728,22 @@ export const HeroWithDualSwapper: React.FC = () => {
                         transition={{ duration: 0.52, ease: LUXURY_EASE }}
                         className="w-full"
                       >
-                        <div className="relative w-full h-56 sm:h-64 lg:h-[268px] rounded-2xl overflow-hidden bg-[#E2EFF4] border border-[#CBDCC5] shadow-xs group">
+                        <div className="relative w-full h-56 sm:h-64 lg:h-[268px] rounded-2xl overflow-hidden bg-[#E8F3F7] border border-[#CBDCC5] shadow-xs group flex items-center justify-center">
                           <img
                             src={selfFarmingMapImg}
                             alt="Okhai Pharma Gujarat Contract Farming Origin Map"
-                            className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-103"
+                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-102"
                           />
                           {/* Origin Tag */}
                           <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#143823]/90 backdrop-blur-md text-white text-[11px] font-mono font-semibold flex items-center gap-1.5 shadow-md">
                             <MapPin className="w-3.5 h-3.5 text-[#8CC63F]" />
-                            <span>Gujarat Agronomy Belt (Saurashtra &amp; North Gujarat)</span>
+                            <span>Gujarat Agronomy Belt</span>
                           </div>
 
                           {/* Traceable Origin Tag */}
-                          <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#143823] text-[11px] font-mono font-semibold border border-[#5B9A3C]/30 shadow-md flex items-center gap-1.5">
+                          <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full bg-white/95 backdrop-blur-md text-[#143823] text-[11px] font-mono font-semibold border border-[#5B9A3C]/30 shadow-md flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full bg-[#5B9A3C]" />
-                            <span>Direct Agronomy • 100% Traceable</span>
+                            <span>100% Traceable Direct Agronomy</span>
                           </div>
                         </div>
                       </motion.div>
