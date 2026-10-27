@@ -33,7 +33,7 @@ import {
 import sulfatePkgImg from '../assets/images/product-nicotine-sulfate-pkg.jpg';
 import alkaloidPkgImg from '../assets/images/product-nicotine-alkaloid-pkg.jpg';
 import pureNicotinePkgImg from '../assets/images/product-pure-nicotine-pkg.jpg';
-import liquidImg from '../assets/images/round-thumb-liquid.jpg';
+import tobaccoLeavesImg from '../assets/images/tobacco-leaves.png';
 import labQcImg from '../assets/images/laboratory_qc_chromatography_1792921813996.jpg';
 import { RevealOnScroll } from '../components/common/RevealOnScroll';
 import { FadeInUp, FadeInLeft, FadeInRight, StaggerContainer, StaggerItem } from '../components/common/animations';
@@ -220,15 +220,15 @@ export const ProductsIndex: React.FC = () => {
                   {/* Glowing Ambient Halo */}
                   <div className="absolute -inset-3 rounded-full bg-[#8CC63F]/25 blur-xl group-hover:bg-[#8CC63F]/40 transition-all duration-500" />
                   
-                  {/* Dish Container */}
-                  <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/95 shadow-2xl bg-white transition-transform duration-700 group-hover:scale-105">
+                  {/* Botanical Raw Material Container */}
+                  <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/95 shadow-2xl bg-white transition-transform duration-700 group-hover:scale-105 flex items-center justify-center p-3 sm:p-3.5">
                     <img
-                      src={liquidImg}
-                      alt="Standardized High Purity Nicotine Liquid Intermediate"
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      src={tobaccoLeavesImg}
+                      alt="Natural Selected Tobacco Leaves Botanical Intermediate Raw Material"
+                      className="w-full h-full object-contain scale-105 group-hover:scale-110 transition-transform duration-700"
                     />
                     {/* Glass sheen highlight */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-white/60 pointer-events-none opacity-40 group-hover:opacity-70 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/40 pointer-events-none rounded-full" />
                   </div>
 
                   {/* Corner Leaf Florets */}
