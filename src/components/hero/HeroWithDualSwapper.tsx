@@ -728,11 +728,11 @@ export const HeroWithDualSwapper: React.FC = () => {
                         transition={{ duration: 0.52, ease: LUXURY_EASE }}
                         className="w-full"
                       >
-                        <div className="relative w-full h-56 sm:h-64 lg:h-[268px] rounded-2xl overflow-hidden bg-[#E8F3F7] border border-[#CBDCC5] shadow-xs group flex items-center justify-center">
+                        <div className="relative w-full h-60 sm:h-72 lg:h-[280px] rounded-2xl overflow-hidden bg-[#E8F3F7] border border-[#CBDCC5] shadow-xs group">
                           <img
                             src={selfFarmingMapImg}
                             alt="Okhai Pharma Gujarat Contract Farming Origin Map"
-                            className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-102"
+                            className="w-full h-full object-cover object-[center_40%] transition-transform duration-700 group-hover:scale-103"
                           />
                           {/* Origin Tag */}
                           <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#143823]/90 backdrop-blur-md text-white text-[11px] font-mono font-semibold flex items-center gap-1.5 shadow-md">
