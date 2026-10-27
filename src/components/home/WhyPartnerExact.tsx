@@ -17,7 +17,7 @@ import {
   FileCheck2
 } from 'lucide-react';
 
-import powderImg from '../../assets/images/round-thumb-powder.jpg';
+import liquidImg from '../../assets/images/round-thumb-liquid.jpg';
 import globeImg from '../../assets/images/partner-globe-network.jpg';
 import researchImg from '../../assets/images/partner-research-labs.jpg';
 import manufacturingImg from '../../assets/images/partner-manufacturing.jpg';
@@ -336,8 +336,8 @@ export const WhyPartnerExact: React.FC = () => {
                   {/* Photo container */}
                   <div className="w-full h-full rounded-full overflow-hidden relative">
                     <img
-                      src={powderImg}
-                      alt="High Purity Pharmaceutical Nicotine Crystals in Petri Dish"
+                      src={liquidImg}
+                      alt="High Purity Pharmaceutical Nicotine Liquid Intermediate in Glass Dish"
                       className="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
                     />
                     {/* Subtle glass reflection highlight */}

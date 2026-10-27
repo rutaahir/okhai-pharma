@@ -33,7 +33,7 @@ import {
 import sulfatePkgImg from '../assets/images/product-nicotine-sulfate-pkg.jpg';
 import alkaloidPkgImg from '../assets/images/product-nicotine-alkaloid-pkg.jpg';
 import pureNicotinePkgImg from '../assets/images/product-pure-nicotine-pkg.jpg';
-import powderImg from '../assets/images/round-thumb-powder.jpg';
+import liquidImg from '../assets/images/round-thumb-liquid.jpg';
 import labQcImg from '../assets/images/laboratory_qc_chromatography_1792921813996.jpg';
 import { RevealOnScroll } from '../components/common/RevealOnScroll';
 import { FadeInUp, FadeInLeft, FadeInRight, StaggerContainer, StaggerItem } from '../components/common/animations';
@@ -223,8 +223,8 @@ export const ProductsIndex: React.FC = () => {
                   {/* Dish Container */}
                   <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/95 shadow-2xl bg-white transition-transform duration-700 group-hover:scale-105">
                     <img
-                      src={powderImg}
-                      alt="Standardized High Purity Nicotine Powder"
+                      src={liquidImg}
+                      alt="Standardized High Purity Nicotine Liquid Intermediate"
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     {/* Glass sheen highlight */}

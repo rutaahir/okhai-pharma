@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
-  FileDown,
   CheckCircle2,
   ShieldCheck,
   Microscope,
-  Globe2,
   ChevronRight,
   Layers,
   Sparkles,
-  Phone,
-  Anchor,
-  Truck
+  Phone
 } from 'lucide-react';
 import { HeroWithDualSwapper } from '../components/hero/HeroWithDualSwapper';
 import { AboutSectionExact } from '../components/home/AboutSectionExact';
@@ -21,8 +17,8 @@ import { PurposeVisionExact } from '../components/home/PurposeVisionExact';
 import { WhyPartnerExact } from '../components/home/WhyPartnerExact';
 import { PeopleBehindOkhaiExact } from '../components/home/PeopleBehindOkhaiExact';
 import { RevealOnScroll } from '../components/common/RevealOnScroll';
-import { FadeInUp, FadeInLeft, FadeInRight, StaggerContainer, StaggerItem, ImageReveal } from '../components/common/animations';
-import { COMPANY_DETAILS, PRODUCTS, LEADERSHIP, PROCESS_STEPS, EXPORT_REGIONS } from '../data/companyData';
+import { FadeInUp, FadeInLeft, FadeInRight, StaggerContainer, StaggerItem } from '../components/common/animations';
+import { COMPANY_DETAILS, PRODUCTS, LEADERSHIP, PROCESS_STEPS } from '../data/companyData';
 import partnerNicotraceLogo from '../assets/images/partner-nicotrace-logo.png';
 
 export const Home: React.FC = () => {
@@ -149,72 +145,7 @@ export const Home: React.FC = () => {
         </StaggerContainer>
       </section>
 
-      {/* =========================================================================
-          8. GLOBAL REACH & STRATEGIC EXPORT CONNECTIVITY
-      ========================================================================= */}
-      <section className="py-4 sm:py-6 lg:py-8 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
-        <div className="rounded-3xl bg-white/85 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(30,61,42,0.06)] p-6 sm:p-8 lg:p-9 relative overflow-hidden">
-          
-          {/* Ambient Corner Glow */}
-          <div className="absolute top-0 right-0 w-80 h-80 bg-[#8CC63F]/12 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
-            
-            {/* World Map & Port Text */}
-            <FadeInLeft className="lg:col-span-7">
-              <span className="text-xs uppercase tracking-widest font-mono text-[#5B9A3C] font-semibold flex items-center gap-2">
-                <Globe2 className="w-3.5 h-3.5" />
-                <span>International Logistics &amp; Ports</span>
-              </span>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-medium text-[#1E3D2A] mt-2 leading-tight">
-                Strategic export connectivity from Gujarat, India.
-              </h2>
-              <p className="mt-3 text-xs sm:text-sm text-[#1E3D2A]/75 leading-relaxed">
-                Direct proximity to leading deep-water container terminals (Nhava Sheva JNPT, Port of Mundra, and Kandla) and Ahmedabad Air Cargo enables scheduled maritime and air freight dispatches across global destinations.
-              </p>
-
-              <div className="mt-6 flex flex-wrap gap-2 text-xs font-mono text-[#1E3D2A]/80">
-                {EXPORT_REGIONS.map((r) => (
-                  <span key={r.name} className="bg-white/90 px-3 py-1.5 rounded-xl border border-[#1E3D2A]/10 shadow-xs flex items-center gap-1.5">
-                    <Anchor className="w-3 h-3 text-[#5B9A3C]" />
-                    <span>{r.name}</span>
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-8 flex flex-wrap items-center gap-4">
-                <Link
-                  to="/export"
-                  className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-white bg-[#5B9A3C] hover:bg-[#6EB448] px-5 py-2.5 rounded-xl transition-all shadow-md shadow-[#5B9A3C]/20 group"
-                >
-                  <span>View Export Procedures &amp; Packaging</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-                <Link
-                  to="/downloads"
-                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-[#1E3D2A]/70 hover:text-[#5B9A3C] transition-colors"
-                >
-                  <FileDown className="w-4 h-4 text-[#5B9A3C]" />
-                  <span>Download Port Handling Guidelines</span>
-                </Link>
-              </div>
-            </FadeInLeft>
-
-            {/* Secure Warehouse Visual */}
-            <FadeInRight className="lg:col-span-5">
-              <div className="rounded-2xl sm:rounded-3xl overflow-hidden border border-[#1E3D2A]/10 shadow-xl aspect-[4/3] group relative">
-                <ImageReveal
-                  src="/src/assets/images/pharma_intermediate_drum_storage_1792921814108.jpg"
-                  alt="Secure export storage bay at Okhai Pharma"
-                  aspectRatio="aspect-[4/3]"
-                  className="w-full h-full"
-                />
-              </div>
-            </FadeInRight>
-
-          </div>
-        </div>
-      </section>
 
       {/* =========================================================================
           9. THE PEOPLE BEHIND OKHAI PHARMA (Leadership & Partners)

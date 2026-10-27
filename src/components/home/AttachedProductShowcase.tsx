@@ -18,7 +18,7 @@ import alkaloidPkgImg from '../../assets/images/product-nicotine-alkaloid-pkg.jp
 import pureNicotinePkgImg from '../../assets/images/product-pure-nicotine-pkg.jpg';
 import flaskImg from '../../assets/images/round-slide-1-flask.jpg';
 import blueFlasksImg from '../../assets/images/round-thumb-flasks.jpg';
-import powderImg from '../../assets/images/round-thumb-powder.jpg';
+import liquidImg from '../../assets/images/round-thumb-liquid.jpg';
 import shipImg from '../../assets/images/round-thumb-ship.jpg';
 
 interface ProductSlide {
@@ -119,9 +119,9 @@ const ROUND_SLIDES: RoundSlide[] = [
   },
   {
     id: 1,
-    title: 'High Purity Active Powder',
+    title: 'High Purity Liquid Intermediate',
     subtitle: 'USP / EP Standard Refinement',
-    image: powderImg,
+    image: liquidImg,
     category: 'API Refining',
     badge: 'Phase 02',
     step: '02'
