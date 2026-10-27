@@ -33,7 +33,7 @@ export const PRODUCTS: ProductInfo[] = [
     applications: [
       "Scientific research reagent for neuropharmacology and receptor kinetic assays",
       "Chemical manufacturing intermediate for synthesis of complex nicotine derivatives",
-      "Starting material for high-purity nicotine refining up to 99% purity",
+      "Starting material for high-purity nicotine refining up to 99.5% purity",
       "Formulation intermediate for controlled release research preparations"
     ],
     features: [

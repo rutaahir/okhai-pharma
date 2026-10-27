@@ -17,7 +17,7 @@ import {
   FileCheck2
 } from 'lucide-react';
 
-import liquidImg from '../../assets/images/round-thumb-liquid.jpg';
+import tobaccoLeavesImg from '../../assets/images/tobacco-leaves.png';
 import globeImg from '../../assets/images/partner-globe-network.jpg';
 import researchImg from '../../assets/images/partner-research-labs.jpg';
 import manufacturingImg from '../../assets/images/partner-manufacturing.jpg';
@@ -325,7 +325,7 @@ export const WhyPartnerExact: React.FC = () => {
             {/* Interactive Visual Stage */}
             <div className="relative w-full max-w-[680px] h-[380px] sm:h-[420px] lg:h-[440px] flex items-center justify-center">
 
-              {/* 1. CIRCULAR PETRI DISH (Center-Left) */}
+              {/* 1. CIRCULAR BOTANICAL RAW MATERIAL (Center-Left) */}
               <div className="absolute left-2 sm:left-6 md:left-8 top-1/2 -translate-y-1/2 z-20">
                 <div className="relative w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 rounded-full p-2 bg-gradient-to-br from-white via-[#F5FAF2] to-[#DDF0D6] shadow-[0_20px_50px_rgba(30,61,42,0.18)] ring-1 ring-[#5B9A3C]/30 group">
                   
@@ -334,14 +334,14 @@ export const WhyPartnerExact: React.FC = () => {
                   <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#5B9A3C]/10 via-transparent to-white/40 pointer-events-none" />
                   
                   {/* Photo container */}
-                  <div className="w-full h-full rounded-full overflow-hidden relative">
+                  <div className="w-full h-full rounded-full overflow-hidden relative bg-white flex items-center justify-center p-2.5">
                     <img
-                      src={liquidImg}
-                      alt="High Purity Pharmaceutical Nicotine Liquid Intermediate in Glass Dish"
-                      className="w-full h-full object-cover scale-105 group-hover:scale-110 transition-transform duration-700"
+                      src={tobaccoLeavesImg}
+                      alt="Natural Selected Tobacco Leaves Botanical Intermediate Raw Material"
+                      className="w-full h-full object-contain scale-105 group-hover:scale-110 transition-transform duration-700"
                     />
                     {/* Subtle glass reflection highlight */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-[#1E3D2A]/25 pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-white/10 via-transparent to-[#1E3D2A]/10 pointer-events-none rounded-full" />
                   </div>
 
                   {/* Overlaid Badge: "QUALITY | TRUST | GLOBAL REACH" */}

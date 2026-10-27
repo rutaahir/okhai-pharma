@@ -188,7 +188,7 @@ export const AboutSectionExact: React.FC = () => {
                     <FlaskConical className="w-5 h-5 text-[#5B9A3C]" />
                   </div>
                   <span className="font-serif text-2xl sm:text-[1.75rem] font-bold text-[#1E3D2A] leading-none">
-                    Up to 99%
+                    99.5%
                   </span>
                   <span className="text-xs text-[#1E3D2A]/70 font-medium mt-1.5">
                     Refined Capacity
