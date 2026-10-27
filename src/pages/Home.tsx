@@ -94,7 +94,7 @@ export const Home: React.FC = () => {
       {/* =========================================================================
           7. PROCESS TEASER (5-Step Quality Journey)
       ========================================================================= */}
-      <section className="py-12 sm:py-16 lg:py-20 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
+      <section className="pt-10 sm:pt-14 pb-4 sm:pb-6 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         <FadeInUp>
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-4">
             <div>
@@ -152,8 +152,8 @@ export const Home: React.FC = () => {
       {/* =========================================================================
           8. GLOBAL REACH & STRATEGIC EXPORT CONNECTIVITY
       ========================================================================= */}
-      <section className="py-12 sm:py-16 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
-        <div className="rounded-3xl bg-white/85 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(30,61,42,0.06)] p-6 sm:p-10 lg:p-12 relative overflow-hidden">
+      <section className="py-4 sm:py-6 lg:py-8 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
+        <div className="rounded-3xl bg-white/85 backdrop-blur-xl border border-white shadow-[0_20px_50px_rgba(30,61,42,0.06)] p-6 sm:p-8 lg:p-9 relative overflow-hidden">
           
           {/* Ambient Corner Glow */}
           <div className="absolute top-0 right-0 w-80 h-80 bg-[#8CC63F]/12 rounded-full blur-3xl pointer-events-none" />
@@ -209,13 +209,6 @@ export const Home: React.FC = () => {
                   aspectRatio="aspect-[4/3]"
                   className="w-full h-full"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-4 left-4 right-4 text-white text-xs font-mono flex items-center justify-between pointer-events-none">
-                  <span className="bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/20">
-                    Kasor Export Bay · UN 1658 / UN 1654
-                  </span>
-                  <span className="text-[#8CC63F] font-semibold">200L Drums</span>
-                </div>
               </div>
             </FadeInRight>
 
@@ -231,7 +224,7 @@ export const Home: React.FC = () => {
       {/* =========================================================================
           10. FINAL HIGH-IMPACT LUXURY BOTANICAL CTA & MARKETING PARTNER SECTION
       ========================================================================= */}
-      <section className="py-16 sm:py-24 bg-gradient-to-br from-[#EFF6EB] via-[#F8FAF5] to-[#E5F0E1] text-[#143823] relative overflow-hidden border-t border-[#5B9A3C]/20 shadow-sm">
+      <section className="py-10 sm:py-14 lg:py-16 bg-gradient-to-br from-[#EFF6EB] via-[#F8FAF5] to-[#E5F0E1] text-[#143823] relative overflow-hidden border-t border-[#5B9A3C]/20 shadow-sm">
         {/* Soft Ambient Light Glows */}
         <div className="absolute top-0 right-1/4 w-[500px] h-[300px] bg-[#8CC63F]/20 rounded-full blur-[110px] pointer-events-none" />
         <div className="absolute -bottom-10 left-10 w-[400px] h-[250px] bg-[#5B9A3C]/12 rounded-full blur-[90px] pointer-events-none" />

@@ -132,7 +132,7 @@ export const PeopleBehindOkhaiExact: React.FC = () => {
   };
 
   return (
-    <section className="relative py-12 lg:py-16 bg-transparent text-[#1E3D2A] overflow-hidden selection:bg-[#5B9A3C]/20 selection:text-[#1E3D2A]">
+    <section className="relative py-8 lg:py-10 bg-transparent text-[#1E3D2A] overflow-hidden selection:bg-[#5B9A3C]/20 selection:text-[#1E3D2A]">
       
       {/* =========================================================================
           ATMOSPHERIC WORLD MAP BACKGROUND & GLOWING NETWORK ROUTES
