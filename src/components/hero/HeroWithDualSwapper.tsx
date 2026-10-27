@@ -285,11 +285,11 @@ export const HeroWithDualSwapper: React.FC = () => {
             <img
               src={factoryBg}
               alt="Okhai Pharma Manufacturing Facility Gujarat"
-              className="w-full h-full object-cover object-[82%_center] sm:object-[84%_center] lg:object-[80%_center] brightness-[1.03] contrast-[1.02]"
+              className="w-full h-full object-cover object-[56%_center] sm:object-[58%_center] lg:object-[60%_center] brightness-[1.02] contrast-[1.02]"
             />
 
             {/* Left Scrim: Ensures text is sharp and legible */}
-            <div className="absolute inset-y-0 left-0 w-full md:w-3/5 lg:w-[48%] bg-gradient-to-r from-black/85 via-black/55 to-transparent pointer-events-none" />
+            <div className="absolute inset-y-0 left-0 w-full md:w-[56%] lg:w-[46%] bg-gradient-to-r from-black/88 via-black/55 to-transparent pointer-events-none" />
             <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-black/75 via-black/25 to-transparent pointer-events-none" />
           </div>
 
