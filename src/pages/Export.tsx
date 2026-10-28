@@ -27,7 +27,7 @@ import {
 
 import heroFacilityImg from '../assets/images/about-hero-facility.jpg';
 import realFactoryImg from '../assets/images/real-factory-exterior.jpg';
-import cargoShipImg from '../assets/images/export-maritime-air-cargo.jpg';
+import nicotineAirCargoImg from '../assets/images/nicotine-air-cargo.jpg';
 import { RevealOnScroll } from '../components/common/RevealOnScroll';
 import { FadeInLeft, FadeInRight, FadeInUp, StaggerContainer, StaggerItem } from '../components/common/animations';
 import { COMPANY_DETAILS } from '../data/companyData';
@@ -217,11 +217,11 @@ export const Export: React.FC = () => {
                   <path d="M 640,270 Q 720,260 740,330 Q 670,360 630,320 Z" fill="#E6EEDF" fillOpacity="0.6" />
 
                   {/* Arcs Radiating from Gujarat (530, 185) */}
-                  <path d="M 530,185 Q 440,90 380,100" stroke="url(#routeHeroGrad)" strokeWidth="1.8" strokeDasharray="4 4" className="animate-flow-dash" />
-                  <path d="M 530,185 Q 320,50 170,100" stroke="url(#routeHeroGrad)" strokeWidth="1.8" strokeDasharray="5 5" className="animate-flow-dash" />
-                  <path d="M 530,185 Q 460,190 430,220" stroke="url(#routeHeroGrad)" strokeWidth="1.5" className="animate-flow-dash" />
-                  <path d="M 530,185 Q 610,130 680,140" stroke="url(#routeHeroGrad)" strokeWidth="1.8" strokeDasharray="4 4" className="animate-flow-dash" />
-                  <path d="M 530,185 Q 600,260 660,300" stroke="url(#routeHeroGrad)" strokeWidth="1.5" strokeDasharray="4 4" className="animate-flow-dash" />
+                  <path d="M 530,185 Q 440,90 380,100" stroke="url(#routeHeroGrad)" strokeWidth="1.8" strokeDasharray="4 4" />
+                  <path d="M 530,185 Q 320,50 170,100" stroke="url(#routeHeroGrad)" strokeWidth="1.8" strokeDasharray="5 5" />
+                  <path d="M 530,185 Q 460,190 430,220" stroke="url(#routeHeroGrad)" strokeWidth="1.5" />
+                  <path d="M 530,185 Q 610,130 680,140" stroke="url(#routeHeroGrad)" strokeWidth="1.8" strokeDasharray="4 4" />
+                  <path d="M 530,185 Q 600,260 660,300" stroke="url(#routeHeroGrad)" strokeWidth="1.5" strokeDasharray="4 4" />
 
                   {/* Radiating Beacon from Gujarat */}
                   <circle cx="530" cy="185" r="16" fill="#8CC63F" fillOpacity="0.25" className="animate-ping" />
@@ -432,15 +432,15 @@ export const Export: React.FC = () => {
                 </p>
               </div>
 
-              {/* Right Column: Ocean Freight & Air Cargo Visual */}
+              {/* Right Column: Nicotine Air Cargo Dispatch Visual */}
               <div className="lg:col-span-6 relative">
-                <div className="relative rounded-3xl overflow-hidden border border-[#5B9A3C]/25 shadow-2xl aspect-[16/9.5] group">
+                <div className="relative rounded-3xl overflow-hidden border border-[#5B9A3C]/25 shadow-2xl aspect-[16/9.5] group bg-[#EBF2E5]">
                   <img
-                    src={cargoShipImg}
-                    alt="Ocean Container Ship and Air Cargo Delivery"
-                    className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-700"
+                    src={nicotineAirCargoImg}
+                    alt="Nicotine Air Cargo - Palletized UN 1654 Class 6.1 drums loading into cargo airliner"
+                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
 
                   {/* Corner Leaf Accent */}
                   <div className="absolute -bottom-3 -right-3 w-20 h-20 pointer-events-none select-none">
@@ -449,9 +449,9 @@ export const Export: React.FC = () => {
                     </svg>
                   </div>
 
-                  <div className="absolute bottom-3 left-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 text-[#1E3D2A] text-xs font-semibold shadow-md">
-                    <Ship className="w-3.5 h-3.5 text-[#5B9A3C]" />
-                    <span>Mundra Port (JNPT) &amp; Ahmedabad Air Cargo</span>
+                  <div className="absolute bottom-3 left-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 text-[#1E3D2A] text-xs font-semibold shadow-md backdrop-blur-xs">
+                    <Plane className="w-3.5 h-3.5 text-[#5B9A3C]" />
+                    <span>UN 1654 Class 6.1 Dangerous Goods Certified · Air Cargo Dispatch</span>
                   </div>
                 </div>
               </div>
@@ -575,20 +575,40 @@ export const Export: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Container Ship Ocean Vignette with Lush Corner Foliage */}
-                <div className="mt-8 relative rounded-2xl overflow-hidden border border-[#5B9A3C]/20 shadow-lg aspect-[16/9]">
-                  <img
-                    src={cargoShipImg}
-                    alt="Ocean Shipping Container Vessel"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent pointer-events-none" />
-                  
-                  {/* Botanical Corner Flourish */}
-                  <div className="absolute -bottom-4 -left-4 w-24 h-24 pointer-events-none select-none">
-                    <svg viewBox="0 0 100 100" fill="none" className="w-full h-full drop-shadow-md">
-                      <path d="M10,90 Q40,10 90,10 Q90,60 10,90 Z" fill="#5B9A3C" fillOpacity="0.9" stroke="#2D5A3C" strokeWidth="1" />
-                    </svg>
+                {/* Key Logistics Gateway Features Card (Replacing generic port vignette) */}
+                <div className="mt-8 p-5 rounded-2xl bg-white border border-[#1E3D2A]/10 shadow-xs flex flex-col gap-3.5">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-[#EAF2E5] text-[#5B9A3C] flex items-center justify-center shrink-0">
+                      <Anchor className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[#1E3D2A]">Mundra &amp; Kandla Seaports</h4>
+                      <p className="text-[11px] text-[#1E3D2A]/70 leading-relaxed mt-0.5">Direct FCL chemical container vessel sailings to Europe, Americas &amp; Asia-Pacific</p>
+                    </div>
+                  </div>
+
+                  <div className="h-px bg-[#1E3D2A]/5" />
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-[#EAF2E5] text-[#5B9A3C] flex items-center justify-center shrink-0">
+                      <Plane className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[#1E3D2A]">Ahmedabad Air Cargo Gateway</h4>
+                      <p className="text-[11px] text-[#1E3D2A]/70 leading-relaxed mt-0.5">Expedited 24–48h express dispatch for priority pharmaceutical API batches</p>
+                    </div>
+                  </div>
+
+                  <div className="h-px bg-[#1E3D2A]/5" />
+
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-[#EAF2E5] text-[#5B9A3C] flex items-center justify-center shrink-0">
+                      <ShieldCheck className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="text-xs font-bold text-[#1E3D2A]">Class 6.1 Certified Compliance</h4>
+                      <p className="text-[11px] text-[#1E3D2A]/70 leading-relaxed mt-0.5">UN-certified packaging, inert nitrogen blanketing &amp; tamper-evident banding</p>
+                    </div>
                   </div>
                 </div>
 
@@ -621,11 +641,11 @@ export const Export: React.FC = () => {
                     <path d="M 690,300 Q 780,290 800,370 Q 720,410 680,360 Z" fill="#E6EEDF" fillOpacity="0.65" />
 
                     {/* Trade Arcs Originating from Gujarat (580, 210) */}
-                    <path d="M 580,210 Q 480,100 420,110" stroke="url(#routeArcGlow)" strokeWidth="2" strokeDasharray="5 5" className="animate-flow-dash" />
-                    <path d="M 580,210 Q 360,60 190,120" stroke="url(#routeArcGlow)" strokeWidth="2" strokeDasharray="6 6" className="animate-flow-dash" />
-                    <path d="M 580,210 Q 500,220 460,250" stroke="url(#routeArcGlow)" strokeWidth="1.8" className="animate-flow-dash" />
-                    <path d="M 580,210 Q 670,140 750,160" stroke="url(#routeArcGlow)" strokeWidth="2" strokeDasharray="5 5" className="animate-flow-dash" />
-                    <path d="M 580,210 Q 660,290 730,340" stroke="url(#routeArcGlow)" strokeWidth="1.8" strokeDasharray="5 5" className="animate-flow-dash" />
+                    <path d="M 580,210 Q 480,100 420,110" stroke="url(#routeArcGlow)" strokeWidth="2" strokeDasharray="5 5" />
+                    <path d="M 580,210 Q 360,60 190,120" stroke="url(#routeArcGlow)" strokeWidth="2" strokeDasharray="6 6" />
+                    <path d="M 580,210 Q 500,220 460,250" stroke="url(#routeArcGlow)" strokeWidth="1.8" />
+                    <path d="M 580,210 Q 670,140 750,160" stroke="url(#routeArcGlow)" strokeWidth="2" strokeDasharray="5 5" />
+                    <path d="M 580,210 Q 660,290 730,340" stroke="url(#routeArcGlow)" strokeWidth="1.8" strokeDasharray="5 5" />
 
                     {/* Pulsing Origin Marker on Gujarat */}
                     <circle cx="580" cy="210" r="18" fill="#8CC63F" fillOpacity="0.3" className="animate-ping" />
