@@ -5,19 +5,16 @@ import {
   Leaf,
   Lock,
   User,
-  Mail,
   Eye,
   EyeOff,
   ArrowRight,
-  ShieldCheck,
-  AlertCircle,
-  KeyRound
+  AlertCircle
 } from 'lucide-react';
 
 export const AdminLogin: React.FC = () => {
-  const [username, setUsername] = useState('superadmin');
-  const [email, setEmail] = useState('rutvikaahir30@gmail.com');
-  const [password, setPassword] = useState('Admin@Okhai2026');
+  // Exactly 2 fields: 1) Username or Email, 2) Password (both empty)
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -28,6 +25,17 @@ export const AdminLogin: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!identifier.trim()) {
+      setError('Please enter your username or email.');
+      return;
+    }
+
+    if (!password) {
+      setError('Please enter your password.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -35,8 +43,8 @@ export const AdminLogin: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          username: username.trim() || email.trim(),
-          email: email.trim(),
+          username: identifier.trim(),
+          email: identifier.trim(),
           password
         }),
       });
@@ -54,13 +62,6 @@ export const AdminLogin: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleFillCredentials = () => {
-    setUsername('superadmin');
-    setEmail('rutvikaahir30@gmail.com');
-    setPassword('Admin@Okhai2026');
-    setError('');
   };
 
   return (
@@ -108,50 +109,41 @@ export const AdminLogin: React.FC = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Username Field */}
+            
+            {/* Field 1: Username or Email */}
             <div>
-              <label className="block text-xs font-bold text-[#1E3D2A] uppercase tracking-wider mb-1.5 font-mono">
-                Admin Username
+              <label 
+                htmlFor="admin-identifier"
+                className="block text-xs font-bold text-[#1E3D2A] uppercase tracking-wider mb-1.5 font-mono"
+              >
+                1. Username or Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#1E3D2A]/50">
                   <User className="w-4 h-4" />
                 </div>
                 <input
+                  id="admin-identifier"
+                  name="identifier"
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="superadmin"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  placeholder="Enter username or email"
                   required
-                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
+                  autoComplete="off"
+                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
                 />
               </div>
             </div>
 
-            {/* Email Field */}
-            <div>
-              <label className="block text-xs font-bold text-[#1E3D2A] uppercase tracking-wider mb-1.5 font-mono">
-                Superadmin Email
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#1E3D2A]/50">
-                  <Mail className="w-4 h-4" />
-                </div>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="rutvikaahir30@gmail.com"
-                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
-                />
-              </div>
-            </div>
-
-            {/* Password Field */}
+            {/* Field 2: Password (empty by default, nothing shown) */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-xs font-bold text-[#1E3D2A] uppercase tracking-wider font-mono">
-                  Password
+                <label 
+                  htmlFor="admin-password"
+                  className="block text-xs font-bold text-[#1E3D2A] uppercase tracking-wider font-mono"
+                >
+                  2. Password
                 </label>
               </div>
               <div className="relative">
@@ -159,18 +151,22 @@ export const AdminLogin: React.FC = () => {
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
+                  id="admin-password"
+                  name="password"
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder="Enter password"
                   required
-                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-11 py-2.5 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
+                  autoComplete="new-password"
+                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-11 py-3 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#1E3D2A]/50 hover:text-[#1E3D2A] transition-colors cursor-pointer"
                   tabIndex={-1}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -198,23 +194,6 @@ export const AdminLogin: React.FC = () => {
               </button>
             </div>
           </form>
-
-          {/* Quick Demo Credentials Pill */}
-          <div className="mt-6 pt-5 border-t border-[#1E3D2A]/10 text-center">
-            <button
-              type="button"
-              onClick={handleFillCredentials}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#EAF2E5] hover:bg-[#DBEAD5] text-[11px] font-mono text-[#2E683A] transition-colors cursor-pointer border border-[#5B9A3C]/25"
-            >
-              <KeyRound className="w-3.5 h-3.5 text-[#5B9A3C]" />
-              <span>Fill Superadmin Demo Credentials</span>
-            </button>
-            <div className="text-[10px] text-[#1E3D2A]/60 mt-1.5 font-mono space-y-0.5">
-              <div>User: <strong className="text-[#1E3D2A]">superadmin</strong> · Pass: <strong className="text-[#1E3D2A]">Admin@Okhai2026</strong></div>
-              <div>Email: <strong className="text-[#5B9A3C]">rutvikaahir30@gmail.com</strong></div>
-            </div>
-          </div>
-
         </div>
 
         {/* Footer Nav */}
