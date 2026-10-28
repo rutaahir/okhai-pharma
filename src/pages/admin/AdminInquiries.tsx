@@ -204,8 +204,30 @@ export const AdminInquiries: React.FC = () => {
     setTimeout(() => setAlertMsg(null), 4000);
   };
 
-  const handleExportCsv = () => {
-    window.open('/api/admin/inquiries/export/csv', '_blank');
+  const [exporting, setExporting] = useState(false);
+
+  const handleExportCsv = async () => {
+    try {
+      setExporting(true);
+      showAlert('success', 'Preparing inquiries CSV ledger...');
+      const res = await authFetch('/api/admin/inquiries/export/csv');
+      if (!res.ok) throw new Error('Failed to download inquiries CSV');
+      const blob = await res.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `okhai_pharma_inquiries_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      window.URL.revokeObjectURL(downloadUrl);
+      document.body.removeChild(link);
+      showAlert('success', 'Inquiries CSV downloaded successfully.');
+    } catch (err) {
+      console.error('Export error:', err);
+      showAlert('error', 'Failed to export CSV. Please try again.');
+    } finally {
+      setExporting(false);
+    }
   };
 
   return (
@@ -255,10 +277,11 @@ export const AdminInquiries: React.FC = () => {
 
           <button
             onClick={handleExportCsv}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#1E3D2A]/15 text-[#1E3D2A] hover:border-[#5B9A3C] hover:bg-[#FAFBF8] transition-all text-xs font-semibold shadow-xs cursor-pointer active:scale-98"
+            disabled={exporting}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white border border-[#1E3D2A]/15 text-[#1E3D2A] hover:border-[#5B9A3C] hover:bg-[#FAFBF8] transition-all text-xs font-semibold shadow-xs cursor-pointer active:scale-98 disabled:opacity-60"
           >
             <FileSpreadsheet className="w-4 h-4 text-[#5B9A3C]" />
-            <span>Export CSV</span>
+            <span>{exporting ? 'Exporting...' : 'Export CSV'}</span>
           </button>
         </div>
       </div>
