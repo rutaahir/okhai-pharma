@@ -50,31 +50,37 @@ export const CoreFormulationsExact: React.FC = () => {
         
         {/* SECTION HEADER */}
         <FadeInUp>
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-14 gap-4">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-[11px] font-mono font-semibold uppercase tracking-widest text-[#5B9A3C]">
-                  OUR CORE FORMULATIONS
-                </span>
-                <span className="h-[1px] w-16 sm:w-24 bg-[#5B9A3C]/35" />
-              </div>
-
-              <h2 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-serif font-medium text-[#1E3D2A] leading-[1.12] tracking-tight">
-                Refined intermediates for <span className="italic font-serif text-[#4E8A32]">global industry.</span>
-              </h2>
-
-              <p className="text-sm sm:text-[15px] text-[#1E3D2A]/75 mt-2.5 font-light leading-relaxed max-w-2xl">
-                High-purity nicotine intermediates. Consistent specifications. Global supply.
-              </p>
+          <div className="text-center max-w-3xl mx-auto mb-14 lg:mb-16">
+            
+            {/* Header Monograph Pill with Flanking Lines */}
+            <div className="inline-flex items-center gap-3 mb-2.5">
+              <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
+              <span className="text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-widest text-[#5B9A3C]">
+                OUR CORE FORMULATIONS
+              </span>
+              <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
             </div>
 
-            <Link
-              to="/products"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-mono font-semibold text-[#1E3D2A]/85 hover:text-[#4E8A32] transition-colors self-start md:self-end pb-1 group"
-            >
-              <span>Compare specifications</span>
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </Link>
+            {/* Main Title */}
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight">
+              Refined intermediates for <span className="italic font-serif text-[#4E8A32]">global industry.</span>
+            </h2>
+
+            {/* Subtitle */}
+            <p className="text-sm sm:text-base text-[#1E3D2A]/75 mt-2.5 font-light leading-relaxed max-w-2xl mx-auto">
+              High-purity nicotine intermediates. Consistent specifications. Global supply.
+            </p>
+
+            {/* Centered Action Link */}
+            <div className="mt-4 flex justify-center">
+              <Link
+                to="/products"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-mono font-semibold text-[#5B9A3C] hover:text-[#4E8A32] transition-colors group"
+              >
+                <span>Compare specifications</span>
+                <span className="transition-transform group-hover:translate-x-1">→</span>
+              </Link>
+            </div>
           </div>
         </FadeInUp>
 

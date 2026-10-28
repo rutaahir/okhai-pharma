@@ -92,23 +92,32 @@ export const Home: React.FC = () => {
       ========================================================================= */}
       <section className="pt-10 sm:pt-14 pb-4 sm:pb-6 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         <FadeInUp>
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-12 gap-4">
-            <div>
-              <span className="text-xs uppercase tracking-widest font-mono text-[#5B9A3C] font-semibold flex items-center gap-2">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Extraction &amp; Quality Journey</span>
+          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 lg:mb-16">
+            
+            {/* Header Monograph Pill with Flanking Lines */}
+            <div className="inline-flex items-center gap-3 mb-2.5">
+              <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
+              <span className="text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-widest text-[#5B9A3C]">
+                EXTRACTION &amp; QUALITY JOURNEY
               </span>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-medium text-[#1E3D2A] mt-2 leading-tight">
-                From botanical harvest to sealed export drum.
-              </h2>
+              <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
             </div>
-            <Link
-              to="/quality-process"
-              className="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-[#5B9A3C] hover:text-[#4E8A32] group"
-            >
-              <span>Explore analytical validation</span>
-              <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-            </Link>
+
+            {/* Main Title */}
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight">
+              From botanical harvest to <span className="italic font-serif text-[#4E8A32]">sealed export drum.</span>
+            </h2>
+
+            {/* Action Link Centered */}
+            <div className="mt-4 flex justify-center">
+              <Link
+                to="/quality-process"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-mono font-semibold text-[#5B9A3C] hover:text-[#4E8A32] group"
+              >
+                <span>Explore analytical validation</span>
+                <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </div>
           </div>
         </FadeInUp>
 
