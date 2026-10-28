@@ -66,53 +66,64 @@ export const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen relative text-white flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 overflow-hidden selection:bg-[#8CC63F]/30 selection:text-white">
+    <div className="min-h-screen relative text-white flex flex-col justify-between overflow-x-hidden selection:bg-[#8CC63F]/30 selection:text-white">
       
-      {/* Background Facility Image from Hero Section */}
+      {/* 1. Full-Resolution Photographic Background of Okhai Pharma Facility */}
       <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none select-none">
         <img
           src={heroFacilityBg}
           alt="Okhai Pharma Manufacturing Facility Gujarat"
-          className="w-full h-full object-cover object-[58%_center] brightness-[0.78] contrast-[1.05]"
+          className="w-full h-full object-cover object-[84%_center] sm:object-[82%_center] lg:object-[82%_center] brightness-[0.98] contrast-[1.02]"
         />
-        {/* Cinematic Botanical Scrim Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1E13]/85 via-[#122A1A]/80 to-[#0A1A10]/92" />
-        <div className="absolute inset-0 bg-radial from-transparent via-black/20 to-black/60" />
+
+        {/* Directional Left-Side Scrim ONLY: 
+            Darkens the left side so the login card and text are razor-sharp,
+            while leaving the entire center/right building facade and 
+            "Okhai Pharma Intermediates Pvt. Ltd." logo 100% sunny, sharp, bright, and unobstructed! */}
+        <div className="absolute inset-y-0 left-0 w-full md:w-1/2 lg:w-[44%] xl:w-[40%] bg-gradient-to-r from-[#07130B]/95 via-[#07130B]/75 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#07130B]/75 via-[#07130B]/20 to-transparent pointer-events-none" />
       </div>
 
-      {/* Ambient Radial Lights */}
-      <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-[#5B9A3C]/20 rounded-full blur-[140px] pointer-events-none z-[1]" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#8CC63F]/15 rounded-full blur-[130px] pointer-events-none z-[1]" />
+      {/* Top Header Bar */}
+      <header className="relative z-20 w-full px-5 sm:px-8 lg:px-12 pt-6 pb-2 flex items-center justify-between">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-black/45 hover:bg-black/65 border border-white/20 backdrop-blur-md text-xs font-mono text-[#8CC63F] transition-all hover:scale-102 shadow-lg"
+        >
+          <Leaf className="w-3.5 h-3.5 text-[#8CC63F]" />
+          <span>Okhai Pharma Intermediates</span>
+        </Link>
 
-      <div className="max-w-md w-full relative z-10 py-10">
-        
-        {/* Header Branding */}
-        <div className="text-center mb-8">
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/15 border border-white/15 backdrop-blur-md text-xs font-mono text-[#8CC63F] mb-6 transition-all hover:scale-102"
-          >
-            <Leaf className="w-3.5 h-3.5 text-[#8CC63F]" />
-            <span>Okhai Pharma Intermediates</span>
-          </Link>
-
-          <h1 className="text-3xl sm:text-4xl font-serif font-medium text-white tracking-tight leading-tight">
-            Commercial Portal
-          </h1>
-          <p className="mt-2 text-xs sm:text-sm text-white/70 font-light">
-            Sign in to manage lead inquiries, quotations, and dispatch workflows.
-          </p>
+        {/* Manufacturing Plant Location Badge over photo */}
+        <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/45 border border-white/20 backdrop-blur-md text-xs font-mono text-white/90 shadow-lg">
+          <span className="w-2 h-2 rounded-full bg-[#8CC63F] animate-pulse" />
+          <span>Manufacturing Facility · Gujarat, India</span>
         </div>
+      </header>
 
-        {/* Login Card */}
-        <div className="bg-white/95 backdrop-blur-2xl rounded-3xl p-7 sm:p-9 text-[#1E3D2A] border border-white/20 shadow-2xl shadow-black/40 relative">
+      {/* Main Content Area: Left-aligned on Desktop so the building logo is 100% visible on the Right */}
+      <main className="relative z-10 w-full px-5 sm:px-8 lg:px-12 py-6 flex-1 flex flex-col justify-center">
+        <div className="w-full max-w-[390px] mx-auto lg:mx-0">
           
-          {error && (
-            <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-3 animate-fade-in">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-600 mt-0.5" />
-              <div className="flex-1 font-medium">{error}</div>
-            </div>
-          )}
+          {/* Header Branding */}
+          <div className="mb-6">
+            <h1 className="text-3xl sm:text-4xl font-serif font-medium text-white tracking-tight leading-tight drop-shadow-md">
+              Commercial Portal
+            </h1>
+            <p className="mt-2 text-xs sm:text-sm text-white/80 font-light drop-shadow">
+              Sign in to manage lead inquiries, quotations, and dispatch workflows.
+            </p>
+          </div>
+
+          {/* Login Card */}
+          <div className="bg-white/95 backdrop-blur-2xl rounded-3xl p-7 sm:p-8 text-[#1E3D2A] border border-white/30 shadow-2xl shadow-black/50 relative">
+            
+            {error && (
+              <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-3 animate-fade-in">
+                <AlertCircle className="w-4 h-4 shrink-0 text-red-600 mt-0.5" />
+                <div className="flex-1 font-medium">{error}</div>
+              </div>
+            )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             
@@ -200,19 +211,20 @@ export const AdminLogin: React.FC = () => {
               </button>
             </div>
           </form>
-        </div>
+          </div>
 
-        {/* Footer Nav */}
-        <div className="mt-8 text-center">
-          <Link
-            to="/"
-            className="text-xs text-white/70 hover:text-white transition-colors inline-flex items-center gap-1.5 font-medium"
-          >
-            <span>← Return to Public Website</span>
-          </Link>
-        </div>
+          {/* Footer Nav */}
+          <div className="mt-6 text-center lg:text-left">
+            <Link
+              to="/"
+              className="text-xs text-white/80 hover:text-white transition-colors inline-flex items-center gap-1.5 font-medium drop-shadow"
+            >
+              <span>← Return to Public Website</span>
+            </Link>
+          </div>
 
-      </div>
+        </div>
+      </main>
 
     </div>
   );
