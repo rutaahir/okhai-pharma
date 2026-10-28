@@ -73,53 +73,50 @@ export const AdminLogin: React.FC = () => {
         <img
           src={heroFacilityBg}
           alt="Okhai Pharma Manufacturing Facility Gujarat"
-          className="w-full h-full object-cover object-[84%_center] sm:object-[82%_center] lg:object-[82%_center] brightness-[0.98] contrast-[1.02]"
+          className="w-full h-full object-cover object-[50%_15%] brightness-[0.98] contrast-[1.02]"
         />
 
-        {/* Directional Left-Side Scrim ONLY: 
-            Darkens the left side so the login card and text are razor-sharp,
-            while leaving the entire center/right building facade and 
-            "Okhai Pharma Intermediates Pvt. Ltd." logo 100% sunny, sharp, bright, and unobstructed! */}
-        <div className="absolute inset-y-0 left-0 w-full md:w-1/2 lg:w-[44%] xl:w-[40%] bg-gradient-to-r from-[#07130B]/95 via-[#07130B]/75 to-transparent pointer-events-none" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[#07130B]/75 via-[#07130B]/20 to-transparent pointer-events-none" />
+        {/* Soft Top Scrim ONLY for header & form legibility in sky area, leaving factory building & logo bright below */}
+        <div className="absolute inset-x-0 top-0 h-[48%] bg-gradient-to-b from-[#07130B]/80 via-[#07130B]/40 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#07130B]/60 to-transparent pointer-events-none" />
       </div>
 
       {/* Top Header Bar */}
-      <header className="relative z-20 w-full px-5 sm:px-8 lg:px-12 pt-6 pb-2 flex items-center justify-between">
+      <header className="relative z-20 w-full px-5 sm:px-8 lg:px-12 pt-3 pb-1 flex items-center justify-between">
         <Link
           to="/"
-          className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-black/45 hover:bg-black/65 border border-white/20 backdrop-blur-md text-xs font-mono text-[#8CC63F] transition-all hover:scale-102 shadow-lg"
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/45 hover:bg-black/65 border border-white/20 backdrop-blur-md text-[11px] font-mono text-[#8CC63F] transition-all hover:scale-102 shadow-lg"
         >
           <Leaf className="w-3.5 h-3.5 text-[#8CC63F]" />
           <span>Okhai Pharma Intermediates</span>
         </Link>
 
         {/* Manufacturing Plant Location Badge over photo */}
-        <div className="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/45 border border-white/20 backdrop-blur-md text-xs font-mono text-white/90 shadow-lg">
+        <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-black/45 border border-white/20 backdrop-blur-md text-[11px] font-mono text-white/90 shadow-lg">
           <span className="w-2 h-2 rounded-full bg-[#8CC63F] animate-pulse" />
           <span>Manufacturing Facility · Gujarat, India</span>
         </div>
       </header>
 
-      {/* Main Content Area: Left-aligned on Desktop so the building logo is 100% visible on the Right */}
-      <main className="relative z-10 w-full px-5 sm:px-8 lg:px-12 py-6 flex-1 flex flex-col justify-center">
-        <div className="w-full max-w-[390px] mx-auto lg:mx-0">
+      {/* Main Content Area: UPPER CENTER */}
+      <main className="relative z-10 w-full px-4 sm:px-6 py-1 flex-1 flex flex-col items-center justify-start pt-1 sm:pt-2 lg:pt-3">
+        <div className="w-full max-w-[375px] mx-auto">
           
           {/* Header Branding */}
-          <div className="mb-6">
-            <h1 className="text-3xl sm:text-4xl font-serif font-medium text-white tracking-tight leading-tight drop-shadow-md">
+          <div className="mb-2.5 text-center">
+            <h1 className="text-2xl sm:text-[26px] font-serif font-medium text-white tracking-tight leading-tight drop-shadow-md">
               Commercial Portal
             </h1>
-            <p className="mt-2 text-xs sm:text-sm text-white/80 font-light drop-shadow">
-              Sign in to manage lead inquiries, quotations, and dispatch workflows.
+            <p className="mt-0.5 text-xs text-white/85 font-light drop-shadow">
+              Sign in to manage lead inquiries and quotations.
             </p>
           </div>
 
           {/* Login Card */}
-          <div className="bg-white/95 backdrop-blur-2xl rounded-3xl p-7 sm:p-8 text-[#1E3D2A] border border-white/30 shadow-2xl shadow-black/50 relative">
+          <div className="bg-white/95 backdrop-blur-2xl rounded-2xl p-5 sm:p-5.5 text-[#1E3D2A] border border-white/30 shadow-2xl shadow-black/50 relative text-left">
             
             {error && (
-              <div className="mb-6 p-4 rounded-2xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-3 animate-fade-in">
+              <div className="mb-3.5 p-3 rounded-xl bg-red-50 border border-red-200 text-xs text-red-700 flex items-start gap-2.5 animate-fade-in">
                 <AlertCircle className="w-4 h-4 shrink-0 text-red-600 mt-0.5" />
                 <div className="flex-1 font-medium">{error}</div>
               </div>
@@ -191,11 +188,11 @@ export const AdminLogin: React.FC = () => {
             </div>
 
             {/* Submit Button */}
-            <div className="pt-2">
+            <div className="pt-1.5">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3.5 px-4 rounded-xl bg-[#1E3D2A] hover:bg-[#2C573C] text-white text-xs sm:text-sm font-semibold tracking-wide transition-all shadow-lg shadow-[#1E3D2A]/20 hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full py-3 px-4 rounded-xl bg-[#1E3D2A] hover:bg-[#2C573C] text-white text-xs sm:text-sm font-semibold tracking-wide transition-all shadow-lg shadow-[#1E3D2A]/20 hover:shadow-xl hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <>
@@ -210,17 +207,17 @@ export const AdminLogin: React.FC = () => {
                 )}
               </button>
             </div>
-          </form>
-          </div>
 
-          {/* Footer Nav */}
-          <div className="mt-6 text-center lg:text-left">
-            <Link
-              to="/"
-              className="text-xs text-white/80 hover:text-white transition-colors inline-flex items-center gap-1.5 font-medium drop-shadow"
-            >
-              <span>← Return to Public Website</span>
-            </Link>
+            {/* Return to Public Website inside Card */}
+            <div className="pt-1.5 text-center">
+              <Link
+                to="/"
+                className="text-[11px] text-[#1E3D2A]/60 hover:text-[#1E3D2A] font-medium transition-colors inline-flex items-center gap-1"
+              >
+                <span>← Return to Public Website</span>
+              </Link>
+            </div>
+          </form>
           </div>
 
         </div>
