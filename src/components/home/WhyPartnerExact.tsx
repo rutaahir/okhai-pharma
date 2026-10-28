@@ -176,7 +176,7 @@ export const WhyPartnerExact: React.FC = () => {
             HEADER ROW: Eyebrow Badge, Main Title, Subtitle
         ========================================================================= */}
         <FadeInUp>
-          <div className="text-center max-w-3xl mx-auto mb-14 lg:mb-16">
+          <div className="text-center max-w-4xl lg:max-w-5xl mx-auto mb-14 lg:mb-16">
             
             {/* Header Monograph Pill with Flanking Lines */}
             <div className="inline-flex items-center gap-3 mb-2.5">
@@ -187,8 +187,8 @@ export const WhyPartnerExact: React.FC = () => {
               <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
             </div>
 
-            {/* Main Title matching exact font styling */}
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight">
+            {/* Main Title matching exact font styling - Single Line on Desktop */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight whitespace-normal sm:whitespace-nowrap">
               Why leading research &amp; <span className="italic font-serif text-[#4E8A32]">pharma buyers partner with us.</span>
             </h2>
 

@@ -92,7 +92,7 @@ export const Home: React.FC = () => {
       ========================================================================= */}
       <section className="pt-10 sm:pt-14 pb-4 sm:pb-6 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         <FadeInUp>
-          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 lg:mb-16">
+          <div className="text-center max-w-4xl lg:max-w-5xl mx-auto mb-12 sm:mb-14 lg:mb-16">
             
             {/* Header Monograph Pill with Flanking Lines */}
             <div className="inline-flex items-center gap-3 mb-2.5">
@@ -103,8 +103,8 @@ export const Home: React.FC = () => {
               <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
             </div>
 
-            {/* Main Title */}
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight">
+            {/* Main Title - Single Line on Desktop */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[44px] font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight whitespace-normal sm:whitespace-nowrap">
               From botanical harvest to <span className="italic font-serif text-[#4E8A32]">sealed export drum.</span>
             </h2>
 
@@ -231,7 +231,7 @@ export const Home: React.FC = () => {
                 <div className="absolute -bottom-12 -left-12 w-80 h-80 bg-[#5B9A3C]/15 rounded-full blur-2xl pointer-events-none" />
 
                 {/* Prestige Floating Badges Row */}
-                <div className="relative z-10 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 mb-5">
+                <div className="relative z-10 flex flex-wrap items-center justify-center lg:justify-start gap-2.5 mb-2">
                   <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#143823] text-white text-xs font-mono font-bold shadow-md shadow-[#143823]/25 border border-[#8CC63F]/40">
                     <span className="w-2 h-2 rounded-full bg-[#8CC63F] animate-ping" />
                     <span className="tracking-wider uppercase text-[#8CC63F]">Marketing Partner</span>
@@ -241,17 +241,17 @@ export const Home: React.FC = () => {
                   </span>
                 </div>
 
-                {/* NicoTrace SOLUTIONS Large Hero Logo - Prominent & Containerless */}
-                <div className="relative z-10 w-full flex items-center justify-center lg:justify-start py-3 group">
+                {/* NicoTrace SOLUTIONS Large Hero Logo - Prominent & Compact Spacing */}
+                <div className="relative z-10 w-full flex items-center justify-center lg:justify-start py-0 group">
                   <img
                     src={partnerNicotraceLogo}
                     alt="NicoTrace SOLUTIONS - Authorized Global Marketing Partner"
-                    className="h-44 sm:h-56 md:h-64 lg:h-76 w-auto max-w-full object-contain filter drop-shadow-[0_20px_40px_rgba(20,56,35,0.18)] transition-all duration-700 group-hover:scale-105 group-hover:drop-shadow-[0_25px_50px_rgba(20,56,35,0.25)] cursor-pointer"
+                    className="h-32 sm:h-40 md:h-48 lg:h-52 w-auto max-w-full object-contain filter drop-shadow-[0_15px_30px_rgba(20,56,35,0.16)] transition-all duration-700 group-hover:scale-105 group-hover:drop-shadow-[0_20px_40px_rgba(20,56,35,0.22)] cursor-pointer"
                   />
                 </div>
 
                 {/* Partner Details & Value Proposition */}
-                <div className="relative z-10 mt-5 w-full">
+                <div className="relative z-10 mt-2 sm:mt-3 w-full">
                   <div className="flex items-center justify-center lg:justify-start gap-2">
                     <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#143823] tracking-tight">
                       NicoTrace Solutions
@@ -261,12 +261,12 @@ export const Home: React.FC = () => {
                     </span>
                   </div>
 
-                  <p className="mt-2 text-xs sm:text-sm text-[#3E5545] leading-relaxed font-normal max-w-lg mx-auto lg:mx-0">
+                  <p className="mt-1.5 text-xs sm:text-sm text-[#3E5545] leading-relaxed font-normal max-w-lg mx-auto lg:mx-0">
                     Authorized global marketing and strategic distribution partner facilitating licensed commercial allocations, worldwide contract sourcing, and documentation desk.
                   </p>
 
                   {/* 3 Value Pillars */}
-                  <div className="mt-4 flex flex-wrap items-center justify-center lg:justify-start gap-2">
+                  <div className="mt-3 flex flex-wrap items-center justify-center lg:justify-start gap-2">
                     <span className="px-3 py-1 rounded-xl bg-white/90 backdrop-blur-sm border border-[#5B9A3C]/20 text-[11px] font-mono text-[#143823] font-medium shadow-2xs">
                       ✓ Commercial Allocations
                     </span>
@@ -276,21 +276,6 @@ export const Home: React.FC = () => {
                     <span className="px-3 py-1 rounded-xl bg-white/90 backdrop-blur-sm border border-[#5B9A3C]/20 text-[11px] font-mono text-[#143823] font-medium shadow-2xs">
                       ✓ Regulatory Desk
                     </span>
-                  </div>
-
-                  {/* Strategic Alliance Footer Action */}
-                  <div className="mt-6 pt-4 border-t border-[#143823]/10 flex flex-wrap items-center justify-between gap-3 text-xs">
-                    <span className="font-mono text-xs text-[#5B9A3C] font-semibold flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#5B9A3C]" />
-                      <span>Strategic Alliance</span>
-                    </span>
-                    <Link
-                      to="/contact"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#143823] hover:bg-[#1E4D35] text-white font-semibold text-xs shadow-md shadow-[#143823]/20 hover:shadow-lg transition-all group/btn cursor-pointer hover:scale-102"
-                    >
-                      <span>Inquire via Partner Desk</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1" />
-                    </Link>
                   </div>
                 </div>
 

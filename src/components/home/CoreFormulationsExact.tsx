@@ -50,7 +50,7 @@ export const CoreFormulationsExact: React.FC = () => {
         
         {/* SECTION HEADER */}
         <FadeInUp>
-          <div className="text-center max-w-3xl mx-auto mb-14 lg:mb-16">
+          <div className="text-center max-w-4xl lg:max-w-5xl mx-auto mb-14 lg:mb-16">
             
             {/* Header Monograph Pill with Flanking Lines */}
             <div className="inline-flex items-center gap-3 mb-2.5">
@@ -61,8 +61,8 @@ export const CoreFormulationsExact: React.FC = () => {
               <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
             </div>
 
-            {/* Main Title */}
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight">
+            {/* Main Title - Single Line on Desktop */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight whitespace-normal sm:whitespace-nowrap">
               Refined intermediates for <span className="italic font-serif text-[#4E8A32]">global industry.</span>
             </h2>
 

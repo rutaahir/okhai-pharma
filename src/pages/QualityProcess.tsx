@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ChevronRight,
@@ -9,12 +9,68 @@ import {
   Activity,
   ShieldCheck,
   Leaf,
-  FlaskConical
+  FlaskConical,
+  Eye,
+  Sparkles,
+  Microscope
 } from 'lucide-react';
 import { PROCESS_STEPS } from '../data/companyData';
 import { FadeInLeft, FadeInRight, FadeInUp, StaggerContainer, StaggerItem } from '../components/common/animations';
 
+import labGcImg from '../assets/images/facility-lab-gc.jpg';
+import labHplcImg from '../assets/images/facility-lab-hplc.png';
+import labTitrationImg from '../assets/images/facility-lab-titration.jpg';
+import { HplcChromatogramModal } from '../components/products/HplcChromatogramModal';
+
 export const QualityProcess: React.FC = () => {
+  const [hplcModalOpen, setHplcModalOpen] = useState(false);
+
+  const QC_TEST_CARDS = [
+    {
+      id: 'gc',
+      tag: 'GC-FID / GC-MS',
+      title: 'GC Testing',
+      sub: 'Gas Chromatography (Volatiles)',
+      image: labGcImg,
+      desc: 'Identification and quantification of volatile alkaloids, residual solvents, and related organic impurities under calibrated GLP capillary columns.',
+      specs: [
+        'Gas Chromatography (GC) Impurity Profiling',
+        'Residual solvent screening (ICH Q3C)',
+        'Trace volatile detection (<0.05%)'
+      ],
+      pill: 'GLP Calibrated'
+    },
+    {
+      id: 'hplc',
+      tag: 'Purity ≥ 99.5%',
+      title: 'HPLC Analysis',
+      sub: 'High-Performance Liquid Chromatography',
+      image: labHplcImg,
+      desc: 'Precision reverse-phase liquid chromatography validating exact nicotine alkaloid concentration, peak symmetry, and USP/EP monograph purity.',
+      specs: [
+        'HPLC Purity & Peak Monograph Validation',
+        'Impurity related substances <0.1%',
+        'Validated retention time profiling'
+      ],
+      pill: 'Interactive Peak Readout',
+      isInteractive: true
+    },
+    {
+      id: 'titration',
+      tag: 'USP / EP Monograph',
+      title: 'Titration',
+      sub: 'Potentiometric Monograph Titration',
+      image: labTitrationImg,
+      desc: 'Automated non-aqueous potentiometric endpoint titration measuring acid neutrality, absolute stoichiometric purity, and chemical consistency.',
+      specs: [
+        'Non-Aqueous Potentiometric Titration Assay',
+        'Stoichiometric endpoint verification',
+        'Assay range 99.0% - 101.0%'
+      ],
+      pill: 'Compendial Assay'
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-[#F8F9F4] text-[#1E3D2A] pb-24">
       {/* Breadcrumb & Hero */}
@@ -71,15 +127,139 @@ export const QualityProcess: React.FC = () => {
         </div>
       </section>
 
+      {/* =========================================================================
+          ANALYTICAL QC TESTING SUITE: GC, HPLC & TITRATION
+          Placed immediately above the 5-Step Manufacturing Lifecycle
+      ========================================================================= */}
+      <section className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 mb-20 sm:mb-24 relative">
+        <FadeInUp>
+          <div className="text-center max-w-4xl lg:max-w-5xl mx-auto mb-12 sm:mb-14">
+            {/* Header Monograph Pill with Flanking Lines */}
+            <div className="inline-flex items-center gap-3 mb-2.5">
+              <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
+              <span className="text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-widest text-[#5B9A3C]">
+                GLP ANALYTICAL LABORATORY · TRIPLE BATCH RELEASE
+              </span>
+              <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
+            </div>
+
+            {/* Main Title - Single Line on Desktop */}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight whitespace-normal sm:whitespace-nowrap">
+              Advanced QC: <span className="italic font-serif text-[#4E8A32]">GC, HPLC &amp; Titration Testing.</span>
+            </h2>
+
+            {/* Subtitle */}
+            <p className="text-sm sm:text-base text-[#1E3D2A]/75 mt-3 font-light leading-relaxed max-w-2xl mx-auto">
+              Every production lot undergoes rigorous analytical validation across three validated methodologies before certificate of analysis (CoA) issuance.
+            </p>
+          </div>
+        </FadeInUp>
+
+        {/* 3 Testing Cards Grid */}
+        <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7 lg:gap-8">
+          {QC_TEST_CARDS.map((card) => (
+            <StaggerItem key={card.id} className="h-full">
+              <div
+                onClick={() => {
+                  if (card.isInteractive) setHplcModalOpen(true);
+                }}
+                className={`group h-full flex flex-col justify-between rounded-3xl bg-white border border-[#CBDCC5]/80 hover:border-[#5B9A3C] shadow-sm hover:shadow-xl hover:shadow-[#5B9A3C]/12 transition-all duration-400 overflow-hidden ${
+                  card.isInteractive ? 'cursor-pointer' : ''
+                } hover:-translate-y-1.5`}
+              >
+                {/* Upper Image Section */}
+                <div>
+                  <div className="relative w-full h-52 sm:h-56 lg:h-60 overflow-hidden bg-[#FAFBF7]">
+                    <img
+                      src={card.image}
+                      alt={card.title}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-106"
+                    />
+                    
+                    {/* Badge top-left */}
+                    <div className="absolute top-3 left-3 px-3 py-1 rounded-lg bg-black/75 backdrop-blur-md text-[10px] sm:text-[11px] font-mono text-white font-bold tracking-wide border border-white/10 shadow-md">
+                      {card.tag}
+                    </div>
+
+                    {/* Interactive indicator for HPLC */}
+                    {card.isInteractive && (
+                      <div className="absolute top-3 right-3 px-2.5 py-1 rounded-lg bg-[#5B9A3C]/90 backdrop-blur-md text-white text-[10px] font-mono font-semibold flex items-center gap-1 shadow-md group-hover:bg-[#4E8A32] transition-colors">
+                        <Eye className="w-3 h-3" />
+                        <span>Inspect</span>
+                      </div>
+                    )}
+
+                    {/* Gradient subtle vignette */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-60 pointer-events-none" />
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-6 sm:p-7">
+                    <h3 className="text-xl sm:text-2xl font-serif font-bold text-[#143823] group-hover:text-[#5B9A3C] transition-colors tracking-tight">
+                      {card.title}
+                    </h3>
+                    <p className="text-xs sm:text-[13px] font-mono text-[#5B9A3C] font-semibold mt-1">
+                      {card.sub}
+                    </p>
+
+                    <p className="text-xs sm:text-sm text-[#1E3D2A]/75 font-light leading-relaxed mt-3">
+                      {card.desc}
+                    </p>
+
+                    {/* Key Specs Checklist */}
+                    <ul className="mt-4 space-y-2 pt-3 border-t border-[#1E3D2A]/8">
+                      {card.specs.map((spec, i) => (
+                        <li key={i} className="flex items-center gap-2 text-xs text-[#1E3D2A]/85 font-normal">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#5B9A3C] shrink-0" />
+                          <span>{spec}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                {/* Footer Pill / CTA */}
+                <div className="px-6 pb-6 pt-0">
+                  {card.isInteractive ? (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHplcModalOpen(true);
+                      }}
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#143823] text-white hover:bg-[#5B9A3C] text-xs font-semibold shadow-sm transition-all group-hover:shadow-md cursor-pointer"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-[#8CC63F]" />
+                      <span>Inspect HPLC Chromatogram</span>
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+                    </button>
+                  ) : (
+                    <div className="w-full flex items-center justify-between text-[11px] font-mono text-[#1E3D2A]/60 px-3 py-2 rounded-xl bg-[#F8F9F4] border border-[#CBDCC5]/60">
+                      <span>Standard Assay</span>
+                      <span className="font-semibold text-[#5B9A3C]">{card.pill}</span>
+                    </div>
+                  )}
+                </div>
+
+              </div>
+            </StaggerItem>
+          ))}
+        </StaggerContainer>
+      </section>
+
       {/* 5-Step Process Timeline */}
       <section className="max-w-7xl mx-auto px-6 lg:px-8 mb-24">
         <FadeInUp>
-          <div className="mb-12">
-            <span className="text-xs uppercase tracking-widest font-mono text-[#5B9A3C] font-semibold">
-              Standard Operating Procedure
-            </span>
-            <h2 className="text-3xl font-serif font-medium text-[#1E3D2A] mt-1">
-              The 5-Step Manufacturing &amp; Testing Lifecycle
+          <div className="text-center max-w-4xl lg:max-w-5xl mx-auto mb-12 sm:mb-14">
+            <div className="inline-flex items-center gap-3 mb-2.5">
+              <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
+              <span className="text-[11px] sm:text-xs font-mono font-semibold uppercase tracking-widest text-[#5B9A3C]">
+                STANDARD OPERATING PROCEDURE
+              </span>
+              <span className="h-[1px] w-10 sm:w-16 bg-[#5B9A3C]/40" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-serif font-medium text-[#1E3D2A] leading-tight tracking-tight whitespace-normal sm:whitespace-nowrap">
+              The 5-Step <span className="italic font-serif text-[#4E8A32]">Manufacturing &amp; Testing Lifecycle.</span>
             </h2>
           </div>
         </FadeInUp>
@@ -253,6 +433,12 @@ export const QualityProcess: React.FC = () => {
           </Link>
         </div>
       </section>
+
+      {/* Interactive HPLC Chromatogram Modal */}
+      <HplcChromatogramModal
+        isOpen={hplcModalOpen}
+        onClose={() => setHplcModalOpen(false)}
+      />
     </div>
   );
 };
