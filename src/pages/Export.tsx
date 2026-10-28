@@ -215,11 +215,11 @@ export const Export: React.FC = () => {
                 </Link>
 
                 <a
-                  href="#trade-routes"
+                  href="#export-protocol"
                   className="px-5 py-3 rounded-full bg-white/95 hover:bg-white border border-[#1E3D2A]/15 hover:border-[#5B9A3C] text-[#1E3D2A] text-xs font-semibold tracking-wide transition-all shadow-xs flex items-center gap-2 hover:scale-102 active:scale-98"
                 >
                   <Compass className="w-4 h-4 text-[#5B9A3C]" />
-                  <span>View Shipping Routes</span>
+                  <span>View Export Protocol</span>
                 </a>
               </div>
 
@@ -395,7 +395,7 @@ export const Export: React.FC = () => {
           2. FROM OUR FACILITY TO YOUR DESTINATION (4-Step Export Timeline + Freight Photo)
       ========================================================================= */}
       <RevealOnScroll>
-        <section className="relative py-16 sm:py-24 bg-gradient-to-b from-[#FAFBF8] via-[#F3F8F0] to-[#EAF2E5] overflow-hidden">
+        <section id="export-protocol" className="relative py-16 sm:py-24 bg-gradient-to-b from-[#FAFBF8] via-[#F3F8F0] to-[#EAF2E5] overflow-hidden">
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
@@ -535,219 +535,7 @@ export const Export: React.FC = () => {
         </section>
       </RevealOnScroll>
 
-      {/* =========================================================================
-          3. CONNECTED TO GLOBAL MARKETS (Interactive World Routes & Gateways)
-      ========================================================================= */}
-      <RevealOnScroll>
-        <section id="trade-routes" className="relative py-16 sm:py-24 bg-[#FAFBF8] overflow-hidden">
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-              
-              {/* Left Column: Heading, Subtitle & Gateway Cards */}
-              <FadeInLeft className="lg:col-span-5">
-                
-                <div className="inline-flex items-center gap-2 mb-3">
-                  <Leaf className="w-4 h-4 text-[#5B9A3C]" />
-                  <span className="text-xs uppercase tracking-[0.2em] font-mono font-semibold text-[#5B9A3C]">
-                    Strategic Transit Corridors
-                  </span>
-                </div>
 
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-[#1E3D2A] leading-tight">
-                  Connected to
-                  <br />
-                  <span className="italic font-normal text-[#5B9A3C] font-editorial">Global Markets</span>
-                </h2>
-
-                <p className="mt-4 text-sm sm:text-base text-[#1E3D2A]/80 font-light leading-relaxed">
-                  Our Gujarat manufacturing headquarters is strategically connected to major deepwater container seaports and international air cargo terminals.
-                </p>
-
-                {/* Key Logistics Gateway Features Card */}
-                <div className="mt-8 p-5 sm:p-6 rounded-3xl bg-white/95 backdrop-blur-md border border-[#1E3D2A]/10 shadow-sm flex flex-col gap-4">
-                  <div className="flex items-start gap-3.5 group">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF2E5] text-[#5B9A3C] flex items-center justify-center shrink-0 group-hover:bg-[#1E3D2A] group-hover:text-white transition-colors">
-                      <Anchor className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-[#1E3D2A]">Mundra &amp; Kandla Seaports</h4>
-                      <p className="text-[11px] text-[#1E3D2A]/70 leading-relaxed mt-0.5">Direct FCL chemical container vessel sailings to Europe, Americas &amp; Asia-Pacific with dedicated ISO tank handling.</p>
-                    </div>
-                  </div>
-
-                  <div className="h-px bg-[#1E3D2A]/5" />
-
-                  <div className="flex items-start gap-3.5 group">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF2E5] text-[#5B9A3C] flex items-center justify-center shrink-0 group-hover:bg-[#1E3D2A] group-hover:text-white transition-colors">
-                      <Plane className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-[#1E3D2A]">Ahmedabad Air Cargo Terminal</h4>
-                      <p className="text-[11px] text-[#1E3D2A]/70 leading-relaxed mt-0.5">Expedited 24–48h express dispatch for priority pharmaceutical API batches and analytical reference samples.</p>
-                    </div>
-                  </div>
-
-                  <div className="h-px bg-[#1E3D2A]/5" />
-
-                  <div className="flex items-start gap-3.5 group">
-                    <div className="w-9 h-9 rounded-xl bg-[#EAF2E5] text-[#5B9A3C] flex items-center justify-center shrink-0 group-hover:bg-[#1E3D2A] group-hover:text-white transition-colors">
-                      <ShieldCheck className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <h4 className="text-xs font-bold text-[#1E3D2A]">Class 6.1 Certified Compliance</h4>
-                      <p className="text-[11px] text-[#1E3D2A]/70 leading-relaxed mt-0.5">UN-certified packaging, inert nitrogen dry blanketing, cold chain temperature monitors &amp; tamper-evident banding.</p>
-                    </div>
-                  </div>
-                </div>
-
-              </FadeInLeft>
-
-              {/* Right Column: Interactive Route Map with Destination Drawer */}
-              <FadeInRight className="lg:col-span-7 relative">
-                
-                <div className="relative rounded-3xl overflow-hidden bg-white/90 backdrop-blur-xl border border-[#5B9A3C]/25 shadow-2xl p-5 sm:p-8">
-                  
-                  {/* Select Destination Quick Pills */}
-                  <div className="mb-4 flex items-center justify-between gap-2 flex-wrap">
-                    <span className="text-xs font-serif font-bold text-[#1E3D2A]">Select Shipping Corridor:</span>
-                    <div className="flex items-center gap-1.5 flex-wrap">
-                      {DESTINATIONS.map((dest) => (
-                        <button
-                          key={dest.id}
-                          onClick={() => setActiveDest(dest)}
-                          className={`px-3 py-1 rounded-full text-xs font-mono transition-all cursor-pointer ${
-                            activeDest.id === dest.id
-                              ? 'bg-[#1E3D2A] text-[#8CC63F] font-bold shadow-xs'
-                              : 'bg-[#FAFBF8] border border-[#1E3D2A]/10 text-[#1E3D2A]/75 hover:border-[#5B9A3C] hover:text-[#5B9A3C]'
-                          }`}
-                        >
-                          {dest.region}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="relative bg-[#FAFBF8] rounded-2xl p-2 border border-[#5B9A3C]/15 overflow-hidden">
-                    <svg viewBox="0 0 850 480" fill="none" className="w-full h-auto" xmlns="http://www.w3.org/2000/svg">
-                      <defs>
-                        <pattern id="routesDotGrid" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse">
-                          <circle cx="2" cy="2" r="1.3" fill="#5B9A3C" fillOpacity="0.16" />
-                        </pattern>
-                        <linearGradient id="routeArcGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-                          <stop offset="0%" stopColor="#8CC63F" stopOpacity="0.9" />
-                          <stop offset="100%" stopColor="#5B9A3C" stopOpacity="0.4" />
-                        </linearGradient>
-                      </defs>
-
-                      <rect width="850" height="480" fill="url(#routesDotGrid)" />
-
-                      {/* Continents Silhouettes */}
-                      <path d="M 90,70 Q 180,50 240,90 Q 250,170 190,200 Q 130,210 80,150 Z" fill="#E6EEDF" fillOpacity="0.8" />
-                      <path d="M 200,240 Q 260,260 230,360 Q 170,400 150,330 Z" fill="#E6EEDF" fillOpacity="0.65" />
-                      <path d="M 400,80 Q 500,70 520,130 Q 450,170 390,140 Z" fill="#E6EEDF" fillOpacity="0.85" />
-                      <path d="M 410,170 Q 510,180 490,290 Q 430,380 390,280 Z" fill="#E6EEDF" fillOpacity="0.7" />
-                      <path d="M 520,70 Q 720,60 770,170 Q 690,270 560,200 Z" fill="#E6EEDF" fillOpacity="0.85" />
-                      <path d="M 690,300 Q 780,290 800,370 Q 720,410 680,360 Z" fill="#E6EEDF" fillOpacity="0.7" />
-
-                      {/* Trade Arcs Originating from Gujarat (580, 210) */}
-                      <path d="M 580,210 Q 480,100 420,110" stroke="url(#routeArcGlow)" strokeWidth="2.2" strokeDasharray="5 5" className="animate-flow-dash" />
-                      <path d="M 580,210 Q 360,60 190,120" stroke="url(#routeArcGlow)" strokeWidth="2.2" strokeDasharray="6 6" className="animate-flow-dash" />
-                      <path d="M 580,210 Q 500,220 460,250" stroke="url(#routeArcGlow)" strokeWidth="2" strokeDasharray="4 4" className="animate-flow-dash" />
-                      <path d="M 580,210 Q 670,140 750,160" stroke="url(#routeArcGlow)" strokeWidth="2.2" strokeDasharray="5 5" className="animate-flow-dash" />
-                      <path d="M 580,210 Q 660,290 730,340" stroke="url(#routeArcGlow)" strokeWidth="2" strokeDasharray="5 5" className="animate-flow-dash" />
-
-                      {/* Pulsing Origin Marker on Gujarat */}
-                      <circle cx="580" cy="210" r="22" fill="#8CC63F" fillOpacity="0.3" className="animate-ping" />
-                      <circle cx="580" cy="210" r="8" fill="#5B9A3C" />
-                      <circle cx="580" cy="210" r="3.5" fill="#FFFFFF" />
-
-                      {/* Origin Badge */}
-                      <g transform="translate(580, 240)">
-                        <rect x="-48" y="0" width="96" height="24" rx="12" fill="#1E3D2A" />
-                        <text x="0" y="16" fontSize="11" fontFamily="JetBrains Mono, monospace" fontWeight="bold" fill="#8CC63F" textAnchor="middle">Gujarat Hub</text>
-                      </g>
-
-                      {/* Destination Clickable Nodes */}
-                      {DESTINATIONS.map((dest) => {
-                        const isCurrent = activeDest.id === dest.id;
-                        return (
-                          <g
-                            key={dest.id}
-                            className="cursor-pointer group/pin"
-                            onClick={() => setActiveDest(dest)}
-                          >
-                            <circle
-                              cx={`${dest.x}%`}
-                              cy={`${dest.y}%`}
-                              r={isCurrent ? '8' : '6'}
-                              fill={isCurrent ? '#5B9A3C' : '#1E3D2A'}
-                              className="group-hover/pin:fill-[#5B9A3C] transition-colors"
-                            />
-                            <circle
-                              cx={`${dest.x}%`}
-                              cy={`${dest.y}%`}
-                              r="3"
-                              fill="#FFFFFF"
-                            />
-                            <text
-                              x={`${dest.x}%`}
-                              y={`${dest.y - 3.5}%`}
-                              fontSize="12"
-                              fontFamily="Fraunces, serif"
-                              fontWeight={isCurrent ? 'bold' : '600'}
-                              fill={isCurrent ? '#5B9A3C' : '#1E3D2A'}
-                              textAnchor="middle"
-                              className="group-hover/pin:fill-[#5B9A3C] transition-colors"
-                            >
-                              {dest.region}
-                            </text>
-                          </g>
-                        );
-                      })}
-                    </svg>
-                  </div>
-
-                  {/* Destination Details Drawer */}
-                  <div className="mt-5 p-5 rounded-2xl bg-[#EAF2E5]/90 border border-[#5B9A3C]/30 shadow-xs">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#5B9A3C]/20">
-                      <div>
-                        <span className="text-[11px] font-mono uppercase tracking-wider text-[#5B9A3C] font-semibold">Active Destination Corridor</span>
-                        <h3 className="text-base sm:text-lg font-serif font-bold text-[#1E3D2A]">{activeDest.name}</h3>
-                      </div>
-                      <span className="px-3 py-1 rounded-full bg-white text-[#5B9A3C] font-mono text-xs font-semibold shadow-xs self-start sm:self-center">
-                        {activeDest.standards}
-                      </span>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3 text-xs text-[#1E3D2A]">
-                      <div className="flex items-start gap-2.5">
-                        <Ship className="w-4 h-4 text-[#5B9A3C] shrink-0 mt-0.5" />
-                        <div>
-                          <div className="font-semibold text-[#1E3D2A]">Maritime Container Ports:</div>
-                          <div className="text-[#1E3D2A]/75 text-[11px]">{activeDest.ports} ({activeDest.oceanTransit})</div>
-                        </div>
-                      </div>
-                      <div className="flex items-start gap-2.5">
-                        <Plane className="w-4 h-4 text-[#5B9A3C] shrink-0 mt-0.5" />
-                        <div>
-                          <div className="font-semibold text-[#1E3D2A]">Expedited Air Freight:</div>
-                          <div className="text-[#1E3D2A]/75 text-[11px]">{activeDest.airTransit} via Ahmedabad Terminal</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-
-              </FadeInRight>
-
-            </div>
-
-          </div>
-        </section>
-      </RevealOnScroll>
 
       {/* =========================================================================
           4. YOUR QUESTIONS, ANSWERED (Export & Logistics FAQ Accordion)
