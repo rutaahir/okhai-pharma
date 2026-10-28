@@ -135,12 +135,37 @@
   100% { transform: scale(1.0) translate(0%, 0%); }
 }
 
+@keyframes floatReverse {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-1deg); }
+}
+
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -36;
+  }
+}
+
+@keyframes radarPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.4); opacity: 0.2; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+
 .animate-float-slow {
   animation: floatSlow 6s ease-in-out infinite;
 }
 
-.animate-pulse-glow {
-  animation: pulseGlow 4s ease-in-out infinite;
+.animate-float-reverse {
+  animation: floatReverse 7s ease-in-out infinite;
+}
+
+.animate-flow-dash {
+  animation: flowDash 2.4s linear infinite;
+}
+
+.animate-radar-pulse {
+  animation: radarPulse 3s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
 }
 
 .animate-laser-scan {
