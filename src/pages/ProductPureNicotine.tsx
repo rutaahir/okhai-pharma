@@ -202,7 +202,7 @@ export const ProductPureNicotine: React.FC = () => {
                 <img
                   src={pureNicotinePkgImg}
                   alt="Pure Nicotine USP/EP 99.5%+ Canister and Bottle Packaging"
-                  className="w-16 h-16 rounded-xl object-cover shrink-0 border border-white shadow-xs"
+                  className="w-16 h-16 rounded-xl object-contain p-1 bg-white shrink-0 border border-white shadow-xs"
                 />
                 <div className="text-xs space-y-0.5">
                   <span className="font-semibold text-[#1E3D2A] block">Dual Monograph</span>

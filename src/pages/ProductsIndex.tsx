@@ -299,11 +299,11 @@ export const ProductsIndex: React.FC = () => {
                     <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-[#8CC63F]/30 to-transparent blur-2xl group-hover:bg-[#8CC63F]/45 transition-all" />
                     
                     {/* Glass Dish */}
-                    <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104">
+                    <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-8 sm:p-10">
                       <img
                         src={sulfatePkgImg}
                         alt="Pure Nicotine Sulfate 40% Drum and Canister Packaging"
-                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                       />
                       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/40 pointer-events-none" />
                     </div>
@@ -560,11 +560,11 @@ export const ProductsIndex: React.FC = () => {
                     <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#8CC63F]/40 to-[#2E683A]/40 blur-md group-hover:blur-lg transition-all" />
                     
                     {/* Glass Dish / Visual */}
-                    <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-[0_20px_60px_rgba(30,61,42,0.18)] bg-white transition-all duration-700 group-hover:scale-105 group-hover:shadow-[0_25px_70px_rgba(91,154,60,0.3)]">
+                    <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-[0_20px_60px_rgba(30,61,42,0.18)] bg-white transition-all duration-700 group-hover:scale-105 group-hover:shadow-[0_25px_70px_rgba(91,154,60,0.3)] flex items-center justify-center p-8 sm:p-11 lg:p-12">
                       <img
                         src={alkaloidPkgImg}
                         alt="Pure Nicotine Alkaloid Drum and Canister Packaging"
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out"
                       />
                       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/40 pointer-events-none group-hover:opacity-60 transition-opacity" />
                     </div>
@@ -626,11 +626,11 @@ export const ProductsIndex: React.FC = () => {
                     <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-[#8CC63F]/40 to-[#5B9A3C]/20 blur-2xl group-hover:bg-[#8CC63F]/55 transition-all" />
                     
                     {/* Crystal Vial Visual */}
-                    <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104">
+                    <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-8 sm:p-10">
                       <img
                         src={pureNicotinePkgImg}
                         alt="Pure Nicotine USP/EP 99.5%+ Canister and Bottle Packaging"
-                        className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700"
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                       />
                       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/30 pointer-events-none" />
                     </div>

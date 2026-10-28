@@ -145,11 +145,11 @@ export const Navbar: React.FC = () => {
                               : 'border-[#1E3D2A]/8 hover:border-[#5B9A3C]/40 hover:bg-[#F8F9F4]'
                           }`}
                         >
-                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white border border-[#5B9A3C]/20 shrink-0 group-hover/item:border-[#5B9A3C] group-hover/item:scale-105 transition-all shadow-xs relative">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white border border-[#5B9A3C]/20 shrink-0 group-hover/item:border-[#5B9A3C] group-hover/item:scale-105 transition-all shadow-xs relative flex items-center justify-center p-1">
                             <img
                               src={sulfatePkgImg}
                               alt="Nicotine Sulfate 40% Packaging"
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-contain"
                             />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -181,11 +181,11 @@ export const Navbar: React.FC = () => {
                               : 'border-[#1E3D2A]/8 hover:border-[#5B9A3C]/40 hover:bg-[#F8F9F4]'
                           }`}
                         >
-                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white border border-[#5B9A3C]/20 shrink-0 group-hover/item:border-[#5B9A3C] group-hover/item:scale-105 transition-all shadow-xs relative">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white border border-[#5B9A3C]/20 shrink-0 group-hover/item:border-[#5B9A3C] group-hover/item:scale-105 transition-all shadow-xs relative flex items-center justify-center p-1">
                             <img
                               src={alkaloidPkgImg}
                               alt="Nicotine Alkaloid 90% / 95% Packaging"
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-contain"
                             />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -217,11 +217,11 @@ export const Navbar: React.FC = () => {
                               : 'border-[#1E3D2A]/8 hover:border-[#5B9A3C]/40 hover:bg-[#F8F9F4]'
                           }`}
                         >
-                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white border border-[#5B9A3C]/20 shrink-0 group-hover/item:border-[#5B9A3C] group-hover/item:scale-105 transition-all shadow-xs relative">
+                          <div className="w-12 h-12 rounded-xl overflow-hidden bg-white border border-[#5B9A3C]/20 shrink-0 group-hover/item:border-[#5B9A3C] group-hover/item:scale-105 transition-all shadow-xs relative flex items-center justify-center p-1">
                             <img
                               src={pureNicotinePkgImg}
                               alt="Pure Nicotine USP/EP 99.5%+ Packaging"
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-contain"
                             />
                           </div>
                           <div className="flex-1 min-w-0">
@@ -484,7 +484,7 @@ export const Navbar: React.FC = () => {
                     <img
                       src={sulfatePkgImg}
                       alt="Nicotine Sulfate 40%"
-                      className="w-10 h-10 rounded-lg object-cover border border-[#5B9A3C]/20 bg-white shrink-0"
+                      className="w-10 h-10 rounded-lg object-contain p-1 border border-[#5B9A3C]/20 bg-white shrink-0"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
@@ -506,7 +506,7 @@ export const Navbar: React.FC = () => {
                     <img
                       src={alkaloidPkgImg}
                       alt="Nicotine Alkaloid 90% / 95%"
-                      className="w-10 h-10 rounded-lg object-cover border border-[#5B9A3C]/20 bg-white shrink-0"
+                      className="w-10 h-10 rounded-lg object-contain p-1 border border-[#5B9A3C]/20 bg-white shrink-0"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
@@ -528,7 +528,7 @@ export const Navbar: React.FC = () => {
                     <img
                       src={pureNicotinePkgImg}
                       alt="Pure Nicotine USP/EP 99.5%+"
-                      className="w-10 h-10 rounded-lg object-cover border border-[#5B9A3C]/30 bg-white shrink-0"
+                      className="w-10 h-10 rounded-lg object-contain p-1 border border-[#5B9A3C]/30 bg-white shrink-0"
                     />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">

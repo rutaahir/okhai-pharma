@@ -573,12 +573,12 @@ export const HeroWithDualSwapper: React.FC = () => {
                           animate={{ opacity: 1, scale: 1, rotate: 0, y: 0, filter: 'blur(0px)' }}
                           exit={{ opacity: 0, scale: 1.08, rotate: 5, y: -14, filter: 'blur(5px)' }}
                           transition={{ duration: 0.55, ease: LUXURY_EASE }}
-                          className="w-full h-full flex items-center justify-center p-3 sm:p-4 relative"
+                          className="w-full h-full flex items-center justify-center p-5 sm:p-6 pb-7 sm:pb-8 relative"
                         >
                           <img
                             src={currentProduct.featuredImage}
                             alt={currentProduct.name}
-                            className="w-full h-full object-contain drop-shadow-[0_12px_24px_rgba(20,56,35,0.22)] transition-transform duration-700 group-hover:scale-108"
+                            className="w-full h-full object-contain drop-shadow-[0_12px_24px_rgba(20,56,35,0.22)] transition-transform duration-700 group-hover:scale-104"
                           />
                         </motion.div>
                       </AnimatePresence>

@@ -124,11 +124,11 @@ export const ProductNicotineSulfate: React.FC = () => {
               <div className="absolute -inset-4 rounded-full bg-[#8CC63F]/25 blur-2xl group-hover:bg-[#8CC63F]/40 transition-all duration-500" />
               
               {/* Dish Container */}
-              <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104">
+              <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-7 sm:p-9">
                 <img
                   src={sulfatePkgImg}
                   alt="Pure Nicotine Sulfate 40% Drum and Canister Packaging"
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/40 pointer-events-none" />
               </div>

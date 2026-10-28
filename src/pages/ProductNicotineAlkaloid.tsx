@@ -192,7 +192,7 @@ export const ProductNicotineAlkaloid: React.FC = () => {
                 <img
                   src={alkaloidPkgImg}
                   alt="Nicotine Alkaloid 90% / 95% Drum and Canister Packaging"
-                  className="w-16 h-16 rounded-xl object-cover shrink-0 border border-white shadow-xs"
+                  className="w-16 h-16 rounded-xl object-contain p-1 bg-white shrink-0 border border-white shadow-xs"
                 />
                 <div className="text-xs space-y-0.5">
                   <span className="font-semibold text-[#1E3D2A] block">25 KG Drum &amp; 5 KG Can</span>

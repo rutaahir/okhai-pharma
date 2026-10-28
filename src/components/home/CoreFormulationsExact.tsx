@@ -99,11 +99,11 @@ export const CoreFormulationsExact: React.FC = () => {
                 {/* Product Orb Showcase (Increased Size & Impressive Styling) */}
                 <div className="relative shrink-0 flex items-center justify-center mb-6">
                   <div className="absolute inset-0 rounded-full border border-[#8CC63F]/40 scale-110 pointer-events-none" />
-                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square">
+                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square flex items-center justify-center p-5 sm:p-6 lg:p-7">
                     <img
                       src={sulfatePkgImg}
                       alt="Nicotine Sulphate 40% Drum and Canister Packaging"
-                      className="w-full h-full object-cover rounded-full aspect-square transition-transform duration-700 ease-out group-hover:scale-108"
+                      className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                     <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
                   </div>
@@ -181,11 +181,11 @@ export const CoreFormulationsExact: React.FC = () => {
                 {/* Product Orb Showcase (Increased Size & Impressive Styling) */}
                 <div className="relative shrink-0 flex items-center justify-center mb-6">
                   <div className="absolute inset-0 rounded-full border border-sky-400/40 scale-110 pointer-events-none" />
-                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square">
+                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square flex items-center justify-center p-5 sm:p-6 lg:p-7">
                     <img
                       src={alkaloidPkgImg}
                       alt="Nicotine Alkaloid 90% / 95% Drum and Canister Packaging"
-                      className="w-full h-full object-cover rounded-full aspect-square transition-transform duration-700 ease-out group-hover:scale-108"
+                      className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                     <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
                   </div>
@@ -263,11 +263,11 @@ export const CoreFormulationsExact: React.FC = () => {
                 {/* Product Orb Showcase (Increased Size & Impressive Styling) */}
                 <div className="relative shrink-0 flex items-center justify-center mb-6">
                   <div className="absolute inset-0 rounded-full border border-[#8CC63F]/40 scale-110 pointer-events-none" />
-                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square">
+                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square flex items-center justify-center p-5 sm:p-6 lg:p-7">
                     <img
                       src={pureNicotinePkgImg}
                       alt="Pure Nicotine USP/EP 99.5%+ Canister and Bottle Packaging"
-                      className="w-full h-full object-cover rounded-full aspect-square transition-transform duration-700 ease-out group-hover:scale-108"
+                      className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                     <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
                   </div>

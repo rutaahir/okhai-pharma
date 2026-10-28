@@ -240,14 +240,14 @@ export const AttachedProductShowcase: React.FC = () => {
             <div className="absolute inset-0 rounded-full border border-[#8CC63F]/35 scale-110 animate-pulse pointer-events-none" />
             
             {/* Main Product Orb */}
-            <div className="relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full overflow-hidden border-4 border-white shadow-[0_15px_35px_rgba(30,61,42,0.18)] bg-white aspect-square group">
+            <div className="relative w-36 h-36 sm:w-44 sm:h-44 lg:w-48 lg:h-48 rounded-full overflow-hidden border-4 border-white shadow-[0_15px_35px_rgba(30,61,42,0.18)] bg-white aspect-square group flex items-center justify-center p-5 sm:p-6">
               <img
                 key={currentProduct.id}
                 src={currentProduct.image}
                 alt={currentProduct.name}
-                className="w-full h-full object-cover rounded-full aspect-square transition-transform duration-700 ease-out group-hover:scale-108"
+                className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
               />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-black/15 via-transparent to-white/30 pointer-events-none" />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
 
               {/* Floating Slide Counter Pill */}
               <div className="absolute top-2 left-1/2 -translate-x-1/2">
