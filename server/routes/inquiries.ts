@@ -76,11 +76,13 @@ router.post('/', async (req: Request, res: Response) => {
       created_at: new Date().toISOString(),
     };
 
-    // Asynchronously dispatch email alerts so contact form responds immediately
-    sendSuperadminInquiryAlert(createdInquiry).catch((err) => {
-      console.error('[Inquiry API] Email dispatch error:', err);
-    });
+    // Dispatch email alert to Superadmin
+    const emailResult = await sendSuperadminInquiryAlert(createdInquiry);
+    if (!emailResult.success) {
+      console.warn('[Inquiry API] Superadmin email alert warning:', emailResult.error);
+    }
 
+    // Customer acknowledgment
     sendCustomerAcknowledgment(createdInquiry).catch((err) => {
       console.warn('[Inquiry API] Customer ack error:', err);
     });
