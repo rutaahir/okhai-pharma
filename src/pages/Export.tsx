@@ -432,15 +432,15 @@ export const Export: React.FC = () => {
                 </p>
               </div>
 
-              {/* Right Column: Nicotine Air Cargo Dispatch Visual */}
+              {/* Right Column: Nicotine Air Cargo Dispatch Visual (2:1 aspect ratio to prevent left text crop) */}
               <div className="lg:col-span-6 relative">
-                <div className="relative rounded-3xl overflow-hidden border border-[#5B9A3C]/25 shadow-2xl aspect-[16/9.5] group bg-[#EBF2E5]">
+                <div className="relative rounded-3xl overflow-hidden border border-[#5B9A3C]/25 shadow-2xl aspect-[2/1] group bg-[#EBF2E5]">
                   <img
                     src={nicotineAirCargoImg}
                     alt="Nicotine Air Cargo - Palletized UN 1654 Class 6.1 drums loading into cargo airliner"
-                    className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700"
+                    className="w-full h-full object-cover object-left group-hover:scale-102 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
                   {/* Corner Leaf Accent */}
                   <div className="absolute -bottom-3 -right-3 w-20 h-20 pointer-events-none select-none">
@@ -449,7 +449,7 @@ export const Export: React.FC = () => {
                     </svg>
                   </div>
 
-                  <div className="absolute bottom-3 left-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 text-[#1E3D2A] text-xs font-semibold shadow-md backdrop-blur-xs">
+                  <div className="absolute bottom-3 left-3 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/95 text-[#1E3D2A] text-[11px] font-semibold shadow-md backdrop-blur-xs">
                     <Plane className="w-3.5 h-3.5 text-[#5B9A3C]" />
                     <span>UN 1654 Class 6.1 Dangerous Goods Certified · Air Cargo Dispatch</span>
                   </div>
