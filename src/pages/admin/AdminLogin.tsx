@@ -5,6 +5,7 @@ import {
   Leaf,
   Lock,
   User,
+  Mail,
   Eye,
   EyeOff,
   ArrowRight,
@@ -15,6 +16,7 @@ import {
 
 export const AdminLogin: React.FC = () => {
   const [username, setUsername] = useState('superadmin');
+  const [email, setEmail] = useState('rutvikaahir30@gmail.com');
   const [password, setPassword] = useState('Admin@Okhai2026');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -32,7 +34,11 @@ export const AdminLogin: React.FC = () => {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({
+          username: username.trim() || email.trim(),
+          email: email.trim(),
+          password
+        }),
       });
 
       const data = await response.json();
@@ -52,6 +58,7 @@ export const AdminLogin: React.FC = () => {
 
   const handleFillCredentials = () => {
     setUsername('superadmin');
+    setEmail('rutvikaahir30@gmail.com');
     setPassword('Admin@Okhai2026');
     setError('');
   };
@@ -100,11 +107,11 @@ export const AdminLogin: React.FC = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Username / Email Field */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Username Field */}
             <div>
               <label className="block text-xs font-bold text-[#1E3D2A] uppercase tracking-wider mb-1.5 font-mono">
-                Admin Username or Email
+                Admin Username
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#1E3D2A]/50">
@@ -114,9 +121,28 @@ export const AdminLogin: React.FC = () => {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="superadmin or email"
+                  placeholder="superadmin"
                   required
-                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-4 py-3 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
+                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
+                />
+              </div>
+            </div>
+
+            {/* Email Field */}
+            <div>
+              <label className="block text-xs font-bold text-[#1E3D2A] uppercase tracking-wider mb-1.5 font-mono">
+                Superadmin Email
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#1E3D2A]/50">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="rutvikaahir30@gmail.com"
+                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
                 />
               </div>
             </div>
@@ -138,7 +164,7 @@ export const AdminLogin: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
                   required
-                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-11 py-3 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
+                  className="w-full bg-[#FAFBF8] border border-[#1E3D2A]/15 focus:border-[#5B9A3C] rounded-xl pl-10 pr-11 py-2.5 text-xs sm:text-sm text-[#1E3D2A] placeholder:text-[#1E3D2A]/40 focus:outline-none focus:ring-2 focus:ring-[#5B9A3C]/20 transition-all font-medium"
                 />
                 <button
                   type="button"
@@ -183,8 +209,9 @@ export const AdminLogin: React.FC = () => {
               <KeyRound className="w-3.5 h-3.5 text-[#5B9A3C]" />
               <span>Fill Superadmin Demo Credentials</span>
             </button>
-            <div className="text-[10px] text-[#1E3D2A]/60 mt-1.5 font-mono">
-              Username: <strong className="text-[#1E3D2A]">superadmin</strong> · Pass: <strong className="text-[#1E3D2A]">Admin@Okhai2026</strong>
+            <div className="text-[10px] text-[#1E3D2A]/60 mt-1.5 font-mono space-y-0.5">
+              <div>User: <strong className="text-[#1E3D2A]">superadmin</strong> · Pass: <strong className="text-[#1E3D2A]">Admin@Okhai2026</strong></div>
+              <div>Email: <strong className="text-[#5B9A3C]">rutvikaahir30@gmail.com</strong></div>
             </div>
           </div>
 

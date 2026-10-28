@@ -10,17 +10,17 @@ const JWT_SECRET = process.env.JWT_SECRET || 'okhai_pharma_secret_jwt_key_2026_s
 // POST /api/auth/login
 router.post('/login', (req, res: Response) => {
   try {
-    const { username, password } = req.body;
-    if (!username || !password) {
+    const identifier = String(req.body.username || req.body.email || '').trim();
+    const { password } = req.body;
+    if (!identifier || !password) {
       return res.status(400).json({ error: 'Username/Email and Password are required.' });
     }
 
-    const cleanUsername = String(username).trim();
     const admin = db.prepare(`
       SELECT id, username, email, password_hash, full_name, role
       FROM admins
       WHERE username = ? OR email = ?
-    `).get(cleanUsername, cleanUsername) as any;
+    `).get(identifier, identifier) as any;
 
     if (!admin) {
       return res.status(401).json({ error: 'Invalid username or password.' });
