@@ -34,6 +34,7 @@ import sulfatePkgImg from '../assets/images/product-nicotine-sulfate-pkg.jpg';
 import labQcImg from '../assets/images/laboratory_qc_chromatography_1792921813996.jpg';
 import { HplcChromatogramModal } from '../components/products/HplcChromatogramModal';
 import { CommercialQuoteModal } from '../components/products/CommercialQuoteModal';
+import { ImageLightboxModal } from '../components/common/ImageLightboxModal';
 import { FadeInLeft, FadeInRight } from '../components/common/animations';
 
 export const ProductNicotineSulfate: React.FC = () => {
@@ -42,6 +43,7 @@ export const ProductNicotineSulfate: React.FC = () => {
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
   const [hplcModalOpen, setHplcModalOpen] = useState(false);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const [selectedPackaging, setSelectedPackaging] = useState<'50L' | '200L'>('50L');
 
   return (
@@ -60,6 +62,17 @@ export const ProductNicotineSulfate: React.FC = () => {
         isOpen={quoteModalOpen}
         onClose={() => setQuoteModalOpen(false)}
         defaultProduct="Nicotine Sulfate 40%"
+      />
+
+      {/* High-Resolution Packaging Image Lightbox Modal */}
+      <ImageLightboxModal
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        imageSrc={sulfatePkgImg}
+        imageAlt="Nicotine Sulfate 40% Packaging"
+        title="Nicotine Sulfate 40%"
+        subtitle="Water-Soluble Intermediate · CAS 65-30-5 · UN 1658 (PG II)"
+        badge="40% ASSAY"
       />
 
       {/* =========================================================================
@@ -119,12 +132,12 @@ export const ProductNicotineSulfate: React.FC = () => {
 
           {/* Right Column: Crystallization Powder Dish with CAS Card */}
           <FadeInRight className="lg:col-span-5 flex flex-col items-center">
-            <div className="relative w-64 h-64 sm:w-72 sm:h-72 group cursor-pointer" onClick={() => setHplcModalOpen(true)}>
+            <div className="relative w-64 h-64 sm:w-72 sm:h-72 group cursor-pointer" onClick={() => setLightboxOpen(true)} title="Click to view full high-resolution image">
               {/* Glowing Ambient Halo */}
               <div className="absolute -inset-4 rounded-full bg-[#8CC63F]/25 blur-2xl group-hover:bg-[#8CC63F]/40 transition-all duration-500" />
               
               {/* Dish Container */}
-              <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-7 sm:p-9">
+              <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-3.5 sm:p-4.5">
                 <img
                   src={sulfatePkgImg}
                   alt="Pure Nicotine Sulfate 40% Drum and Canister Packaging"

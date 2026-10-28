@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -10,15 +10,43 @@ import {
   ShieldCheck,
   Wind,
   FlaskConical,
-  Globe2
+  Globe2,
+  Eye
 } from 'lucide-react';
 
 import sulfatePkgImg from '../../assets/images/product-nicotine-sulfate-pkg.jpg';
 import alkaloidPkgImg from '../../assets/images/product-nicotine-alkaloid-pkg.jpg';
 import pureNicotinePkgImg from '../../assets/images/product-pure-nicotine-pkg.jpg';
 import { StaggerContainer, StaggerItem, FadeInUp } from '../common/animations';
+import { ImageLightboxModal } from '../common/ImageLightboxModal';
 
 export const CoreFormulationsExact: React.FC = () => {
+  const [lightbox, setLightbox] = useState<{
+    isOpen: boolean;
+    imageSrc: string;
+    imageAlt: string;
+    title: string;
+    subtitle?: string;
+    badge?: string;
+  }>({
+    isOpen: false,
+    imageSrc: '',
+    imageAlt: '',
+    title: '',
+    subtitle: '',
+    badge: ''
+  });
+
+  const openLightbox = (imageSrc: string, title: string, subtitle?: string, badge?: string) => {
+    setLightbox({
+      isOpen: true,
+      imageSrc,
+      imageAlt: `${title} Packaging`,
+      title,
+      subtitle,
+      badge
+    });
+  };
   return (
     <section className="relative py-12 lg:py-16 bg-transparent overflow-hidden text-[#1E3D2A] selection:bg-[#5B9A3C]/20 selection:text-[#1E3D2A]">
       
@@ -97,15 +125,27 @@ export const CoreFormulationsExact: React.FC = () => {
 
               <div>
                 {/* Product Orb Showcase (Increased Size & Impressive Styling) */}
-                <div className="relative shrink-0 flex items-center justify-center mb-6">
-                  <div className="absolute inset-0 rounded-full border border-[#8CC63F]/40 scale-110 pointer-events-none" />
-                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square flex items-center justify-center p-5 sm:p-6 lg:p-7">
+                <div 
+                  onClick={() => openLightbox(sulfatePkgImg, 'Nicotine Sulfate 40%', 'Water-Soluble Intermediate · CAS 65-30-5 · UN 1658', '40% ASSAY')}
+                  className="relative shrink-0 flex items-center justify-center mb-6 cursor-pointer group/orb"
+                  title="Click to view full high-resolution image"
+                >
+                  <div className="absolute inset-0 rounded-full border border-[#8CC63F]/40 scale-110 pointer-events-none group-hover/orb:border-[#8CC63F] group-hover/orb:scale-115 transition-all" />
+                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square flex items-center justify-center p-2.5 sm:p-3 lg:p-3.5 group-hover/orb:shadow-2xl transition-all">
                     <img
                       src={sulfatePkgImg}
                       alt="Nicotine Sulphate 40% Drum and Canister Packaging"
-                      className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
+                      className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover/orb:scale-108"
                     />
                     <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
+                    
+                    {/* Hover Inspect Tooltip */}
+                    <div className="absolute inset-x-0 bottom-3 flex justify-center opacity-0 group-hover/orb:opacity-100 transition-opacity duration-300 pointer-events-none">
+                      <span className="px-2.5 py-1 rounded-full bg-[#1E3D2A]/90 text-white text-[10px] font-mono backdrop-blur-xs flex items-center gap-1 shadow-md">
+                        <Eye className="w-3 h-3 text-[#8CC63F]" />
+                        <span>View Image</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -179,15 +219,27 @@ export const CoreFormulationsExact: React.FC = () => {
 
               <div>
                 {/* Product Orb Showcase (Increased Size & Impressive Styling) */}
-                <div className="relative shrink-0 flex items-center justify-center mb-6">
-                  <div className="absolute inset-0 rounded-full border border-sky-400/40 scale-110 pointer-events-none" />
-                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square flex items-center justify-center p-5 sm:p-6 lg:p-7">
+                <div 
+                  onClick={() => openLightbox(alkaloidPkgImg, 'Nicotine Alkaloid 90% / 95%', 'Active Pharmaceutical Intermediate · CAS 54-11-5 · UN 1654', '95% API')}
+                  className="relative shrink-0 flex items-center justify-center mb-6 cursor-pointer group/orb"
+                  title="Click to view full high-resolution image"
+                >
+                  <div className="absolute inset-0 rounded-full border border-sky-400/40 scale-110 pointer-events-none group-hover/orb:border-sky-400 group-hover/orb:scale-115 transition-all" />
+                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square flex items-center justify-center p-2.5 sm:p-3 lg:p-3.5 group-hover/orb:shadow-2xl transition-all">
                     <img
                       src={alkaloidPkgImg}
                       alt="Nicotine Alkaloid 90% / 95% Drum and Canister Packaging"
-                      className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
+                      className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover/orb:scale-108"
                     />
                     <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
+
+                    {/* Hover Inspect Tooltip */}
+                    <div className="absolute inset-x-0 bottom-3 flex justify-center opacity-0 group-hover/orb:opacity-100 transition-opacity duration-300 pointer-events-none">
+                      <span className="px-2.5 py-1 rounded-full bg-[#1E3D2A]/90 text-white text-[10px] font-mono backdrop-blur-xs flex items-center gap-1 shadow-md">
+                        <Eye className="w-3 h-3 text-[#8CC63F]" />
+                        <span>View Image</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -261,15 +313,27 @@ export const CoreFormulationsExact: React.FC = () => {
 
               <div>
                 {/* Product Orb Showcase (Increased Size & Impressive Styling) */}
-                <div className="relative shrink-0 flex items-center justify-center mb-6">
-                  <div className="absolute inset-0 rounded-full border border-[#8CC63F]/40 scale-110 pointer-events-none" />
-                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square flex items-center justify-center p-5 sm:p-6 lg:p-7">
+                <div 
+                  onClick={() => openLightbox(pureNicotinePkgImg, 'Pure Nicotine USP/EP 99.5%+', 'USP / EP Compendial Monograph · CAS 54-11-5 · UN 1654', '≥99.5% USP/EP')}
+                  className="relative shrink-0 flex items-center justify-center mb-6 cursor-pointer group/orb"
+                  title="Click to view full high-resolution image"
+                >
+                  <div className="absolute inset-0 rounded-full border border-[#8CC63F]/40 scale-110 pointer-events-none group-hover/orb:border-[#8CC63F] group-hover/orb:scale-115 transition-all" />
+                  <div className="relative w-44 h-44 sm:w-48 sm:h-48 lg:w-52 lg:h-52 rounded-full overflow-hidden border-4 border-white shadow-[0_16px_40px_rgba(30,61,42,0.18)] bg-white aspect-square flex items-center justify-center p-2.5 sm:p-3 lg:p-3.5 group-hover/orb:shadow-2xl transition-all">
                     <img
                       src={pureNicotinePkgImg}
                       alt="Pure Nicotine USP/EP 99.5%+ Canister and Bottle Packaging"
-                      className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
+                      className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover/orb:scale-108"
                     />
                     <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none" />
+
+                    {/* Hover Inspect Tooltip */}
+                    <div className="absolute inset-x-0 bottom-3 flex justify-center opacity-0 group-hover/orb:opacity-100 transition-opacity duration-300 pointer-events-none">
+                      <span className="px-2.5 py-1 rounded-full bg-[#1E3D2A]/90 text-white text-[10px] font-mono backdrop-blur-xs flex items-center gap-1 shadow-md">
+                        <Eye className="w-3 h-3 text-[#8CC63F]" />
+                        <span>View Image</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -338,6 +402,17 @@ export const CoreFormulationsExact: React.FC = () => {
         </StaggerContainer>
 
       </div>
+
+      {/* High-Resolution Packaging Image Lightbox Modal */}
+      <ImageLightboxModal
+        isOpen={lightbox.isOpen}
+        onClose={() => setLightbox(prev => ({ ...prev, isOpen: false }))}
+        imageSrc={lightbox.imageSrc}
+        imageAlt={lightbox.imageAlt}
+        title={lightbox.title}
+        subtitle={lightbox.subtitle}
+        badge={lightbox.badge}
+      />
     </section>
   );
 };

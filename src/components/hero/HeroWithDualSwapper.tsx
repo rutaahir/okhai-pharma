@@ -41,6 +41,7 @@ import labTitrationImg from '../../assets/images/facility-lab-titration.jpg';
 import { LUXURY_EASE } from '../common/animations/variants';
 import { HplcChromatogramModal } from '../products/HplcChromatogramModal';
 import { CommercialQuoteModal } from '../products/CommercialQuoteModal';
+import { ImageLightboxModal } from '../common/ImageLightboxModal';
 
 // ============================================================================
 // DATA STRUCTURES
@@ -213,6 +214,7 @@ export const HeroWithDualSwapper: React.FC = () => {
   // Modals
   const [hplcModalOpen, setHplcModalOpen] = useState(false);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const currentProduct = PRODUCTS_DATA[productIdx];
   const currentFacility = FACILITY_SWAPS[facilityIdx];
@@ -268,6 +270,17 @@ export const HeroWithDualSwapper: React.FC = () => {
         isOpen={quoteModalOpen}
         onClose={() => setQuoteModalOpen(false)}
         defaultProduct={getModalProduct(currentProduct.id)}
+      />
+
+      {/* High-Resolution Packaging Image Lightbox Modal */}
+      <ImageLightboxModal
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        imageSrc={currentProduct.featuredImage}
+        imageAlt={currentProduct.name}
+        title={currentProduct.name}
+        subtitle={currentProduct.spec}
+        badge={currentProduct.badge}
       />
 
       {/* =======================================================================
@@ -565,7 +578,11 @@ export const HeroWithDualSwapper: React.FC = () => {
                     <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#8CC63F]/40 via-[#5B9A3C]/25 to-transparent blur-3xl pointer-events-none animate-pulse" />
                     <div className="absolute -inset-2 rounded-full bg-[#8CC63F]/15 blur-xl pointer-events-none" />
 
-                    <div className="relative w-full h-full rounded-full border-[5px] border-white shadow-[0_20px_50px_rgba(18,61,41,0.22)] overflow-hidden bg-gradient-to-b from-white via-[#F9FBF8] to-[#EEF5EB] aspect-square group">
+                    <div 
+                      onClick={() => setLightboxOpen(true)}
+                      className="relative w-full h-full rounded-full border-[5px] border-white shadow-[0_20px_50px_rgba(18,61,41,0.22)] overflow-hidden bg-gradient-to-b from-white via-[#F9FBF8] to-[#EEF5EB] aspect-square group cursor-pointer"
+                      title="Click to view full high-resolution image"
+                    >
                       <AnimatePresence mode="wait">
                         <motion.div
                           key={currentProduct.id}
@@ -573,12 +590,12 @@ export const HeroWithDualSwapper: React.FC = () => {
                           animate={{ opacity: 1, scale: 1, rotate: 0, y: 0, filter: 'blur(0px)' }}
                           exit={{ opacity: 0, scale: 1.08, rotate: 5, y: -14, filter: 'blur(5px)' }}
                           transition={{ duration: 0.55, ease: LUXURY_EASE }}
-                          className="w-full h-full flex items-center justify-center p-5 sm:p-6 pb-7 sm:pb-8 relative"
+                          className="w-full h-full flex items-center justify-center p-3.5 sm:p-4.5 pb-6 sm:pb-7 relative"
                         >
                           <img
                             src={currentProduct.featuredImage}
                             alt={currentProduct.name}
-                            className="w-full h-full object-contain drop-shadow-[0_12px_24px_rgba(20,56,35,0.22)] transition-transform duration-700 group-hover:scale-104"
+                            className="w-full h-full object-contain drop-shadow-[0_12px_24px_rgba(20,56,35,0.22)] transition-transform duration-700 group-hover:scale-108"
                           />
                         </motion.div>
                       </AnimatePresence>
@@ -590,6 +607,14 @@ export const HeroWithDualSwapper: React.FC = () => {
                       <div className="absolute bottom-3 inset-x-3 text-center">
                         <span className="inline-block max-w-[90%] truncate text-[10px] sm:text-[11px] font-mono font-bold text-[#143823] bg-white/95 backdrop-blur-md px-3.5 py-1 rounded-full border border-[#5B9A3C]/35 shadow-md">
                           {currentProduct.badge}
+                        </span>
+                      </div>
+
+                      {/* Hover Inspect Tooltip */}
+                      <div className="absolute inset-x-0 bottom-10 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                        <span className="px-2.5 py-0.5 rounded-full bg-[#1E3D2A]/90 text-white text-[9px] font-mono backdrop-blur-xs flex items-center gap-1 shadow-md">
+                          <Eye className="w-3 h-3 text-[#8CC63F]" />
+                          <span>View Image</span>
                         </span>
                       </div>
                     </div>

@@ -40,6 +40,7 @@ import { FadeInUp, FadeInLeft, FadeInRight, StaggerContainer, StaggerItem } from
 import { COMPANY_DETAILS } from '../data/companyData';
 import { HplcChromatogramModal } from '../components/products/HplcChromatogramModal';
 import { CommercialQuoteModal } from '../components/products/CommercialQuoteModal';
+import { ImageLightboxModal } from '../components/common/ImageLightboxModal';
 
 export const ProductsIndex: React.FC = () => {
   const [filter, setFilter] = useState<'all' | 'pharma' | 'research'>('all');
@@ -55,6 +56,34 @@ export const ProductsIndex: React.FC = () => {
 
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [quoteProduct, setQuoteProduct] = useState<'Nicotine Sulfate 40%' | 'Nicotine Alkaloid 90%' | 'Nicotine Alkaloid 95%' | 'Pure Nicotine USP/EP 99.5%+'>('Nicotine Sulfate 40%');
+
+  // Image Lightbox Modal State
+  const [lightbox, setLightbox] = useState<{
+    isOpen: boolean;
+    imageSrc: string;
+    imageAlt: string;
+    title: string;
+    subtitle?: string;
+    badge?: string;
+  }>({
+    isOpen: false,
+    imageSrc: '',
+    imageAlt: '',
+    title: '',
+    subtitle: '',
+    badge: ''
+  });
+
+  const openLightbox = (imageSrc: string, title: string, subtitle?: string, badge?: string) => {
+    setLightbox({
+      isOpen: true,
+      imageSrc,
+      imageAlt: `${title} Packaging`,
+      title,
+      subtitle,
+      badge
+    });
+  };
 
   // Interactive molecule hover tooltip
   const [hoveredMoleculePart, setHoveredMoleculePart] = useState<string | null>(null);
@@ -86,6 +115,17 @@ export const ProductsIndex: React.FC = () => {
         isOpen={quoteOpen}
         onClose={() => setQuoteOpen(false)}
         defaultProduct={quoteProduct}
+      />
+
+      {/* High-Resolution Packaging Image Lightbox Modal */}
+      <ImageLightboxModal
+        isOpen={lightbox.isOpen}
+        onClose={() => setLightbox(prev => ({ ...prev, isOpen: false }))}
+        imageSrc={lightbox.imageSrc}
+        imageAlt={lightbox.imageAlt}
+        title={lightbox.title}
+        subtitle={lightbox.subtitle}
+        badge={lightbox.badge}
       />
 
       {/* =========================================================================
@@ -213,15 +253,15 @@ export const ProductsIndex: React.FC = () => {
 
                 {/* Center Glass Dish with White Pure Crystalline Powder & 3D Interactive Specular Glow */}
                 <div 
-                  onClick={() => openHplc('Nicotine Intermediates', '54-11-5', '99.85%')}
+                  onClick={() => openLightbox(tobaccoLeavesImg, 'Selected Botanical Intermediate Tobacco Leaves', 'Kasor Agronomy Belt, Gujarat · Hand-Harvested Botanical Origin', 'BOTANICAL ORIGIN')}
                   className="relative w-56 h-56 sm:w-64 sm:h-64 my-2 group cursor-pointer"
-                  title="Click to view interactive HPLC chromatogram trace"
+                  title="Click to view full high-resolution image"
                 >
                   {/* Glowing Ambient Halo */}
                   <div className="absolute -inset-3 rounded-full bg-[#8CC63F]/25 blur-xl group-hover:bg-[#8CC63F]/40 transition-all duration-500" />
                   
                   {/* Botanical Raw Material Container */}
-                  <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/95 shadow-2xl bg-white transition-transform duration-700 group-hover:scale-105 flex items-center justify-center p-3 sm:p-3.5">
+                  <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white/95 shadow-2xl bg-white transition-transform duration-700 group-hover:scale-105 flex items-center justify-center p-2.5 sm:p-3">
                     <img
                       src={tobaccoLeavesImg}
                       alt="Natural Selected Tobacco Leaves Botanical Intermediate Raw Material"
@@ -240,9 +280,9 @@ export const ProductsIndex: React.FC = () => {
 
                   {/* Hover Inspect Tooltip */}
                   <div className="absolute inset-x-0 bottom-3 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <span className="px-3 py-1 rounded-full bg-[#1E3D2A]/90 text-white text-[10px] font-mono backdrop-blur-xs flex items-center gap-1.5 shadow-md">
+                    <span className="px-3.5 py-1 rounded-full bg-[#1E3D2A]/90 text-white text-[10px] font-mono backdrop-blur-xs flex items-center gap-1.5 shadow-md">
                       <Eye className="w-3 h-3 text-[#8CC63F]" />
-                      <span>Inspect Spectrum</span>
+                      <span>View Full Image</span>
                     </span>
                   </div>
                 </div>
@@ -291,15 +331,15 @@ export const ProductsIndex: React.FC = () => {
                 <FadeInLeft className="lg:col-span-5 relative flex items-center justify-center">
                   
                   <div 
-                    onClick={() => openHplc('Nicotine Sulfate 40%', '65-30-5', '99.78%')}
+                    onClick={() => openLightbox(sulfatePkgImg, 'Nicotine Sulfate 40%', 'Water-Soluble Intermediate · CAS 65-30-5 · UN 1658 (PG II)', '40% ASSAY')}
                     className="relative w-64 h-64 sm:w-80 sm:h-80 group cursor-pointer"
-                    title="Click to view analytical HPLC peak trace for Nicotine Sulfate"
+                    title="Click to view full high-resolution image"
                   >
                     {/* Glowing Green Halo */}
                     <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-[#8CC63F]/30 to-transparent blur-2xl group-hover:bg-[#8CC63F]/45 transition-all" />
                     
                     {/* Glass Dish */}
-                    <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-8 sm:p-10">
+                    <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-3.5 sm:p-4.5">
                       <img
                         src={sulfatePkgImg}
                         alt="Pure Nicotine Sulfate 40% Drum and Canister Packaging"
@@ -326,9 +366,9 @@ export const ProductsIndex: React.FC = () => {
 
                     {/* Quick Inspect Pill */}
                     <div className="absolute inset-x-0 bottom-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                      <span className="px-3 py-1 rounded-full bg-[#1E3D2A]/90 text-white text-[11px] font-mono flex items-center gap-1.5 shadow-lg">
-                        <Activity className="w-3 h-3 text-[#8CC63F]" />
-                        <span>Inspect HPLC Trace</span>
+                      <span className="px-3.5 py-1.5 rounded-full bg-[#1E3D2A]/90 text-white text-[11px] font-mono flex items-center gap-1.5 shadow-lg backdrop-blur-xs">
+                        <Eye className="w-3.5 h-3.5 text-[#8CC63F]" />
+                        <span>View Full Image</span>
                       </span>
                     </div>
                   </div>
@@ -551,16 +591,16 @@ export const ProductsIndex: React.FC = () => {
                 <FadeInRight className="lg:col-span-5 order-1 lg:order-2 relative flex items-center justify-center">
                   
                   <div 
-                    onClick={() => openHplc('Nicotine Alkaloid 95% API', '54-11-5', '99.88%')}
+                    onClick={() => openLightbox(alkaloidPkgImg, 'Nicotine Alkaloid 90% / 95%', 'Active Pharmaceutical Intermediate · CAS 54-11-5 · UN 1654 (PG II)', '95% API')}
                     className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-88 lg:h-88 group cursor-pointer"
-                    title="Click to view analytical HPLC peak trace for Nicotine Alkaloid"
+                    title="Click to view full high-resolution image"
                   >
                     {/* Glowing Green Halos with Ambient Breath */}
                     <div className="absolute -inset-6 rounded-full bg-gradient-to-tr from-[#8CC63F]/35 via-[#5B9A3C]/20 to-transparent blur-2xl group-hover:bg-[#8CC63F]/55 group-hover:scale-108 transition-all duration-700 animate-pulse" />
                     <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#8CC63F]/40 to-[#2E683A]/40 blur-md group-hover:blur-lg transition-all" />
                     
                     {/* Glass Dish / Visual */}
-                    <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-[0_20px_60px_rgba(30,61,42,0.18)] bg-white transition-all duration-700 group-hover:scale-105 group-hover:shadow-[0_25px_70px_rgba(91,154,60,0.3)] flex items-center justify-center p-8 sm:p-11 lg:p-12">
+                    <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white shadow-[0_20px_60px_rgba(30,61,42,0.18)] bg-white transition-all duration-700 group-hover:scale-105 group-hover:shadow-[0_25px_70px_rgba(91,154,60,0.3)] flex items-center justify-center p-4 sm:p-5 lg:p-6">
                       <img
                         src={alkaloidPkgImg}
                         alt="Pure Nicotine Alkaloid Drum and Canister Packaging"
@@ -570,13 +610,13 @@ export const ProductsIndex: React.FC = () => {
                     </div>
 
                     {/* Circular CAS Badge on Top-Right */}
-                    <div className="absolute top-2 right-4 w-14 h-14 rounded-full bg-white/95 backdrop-blur-md border border-[#5B9A3C]/35 shadow-lg flex flex-col items-center justify-center text-[#1E3D2A] group-hover:scale-110 group-hover:border-[#5B9A3C] transition-transform">
+                    <div className="absolute top-2 right-4 w-14 h-14 rounded-full bg-white/95 backdrop-blur-md border border-[#5B9A3C]/40 shadow-lg flex flex-col items-center justify-center text-[#1E3D2A] group-hover:scale-110 transition-transform">
                       <span className="text-[9px] font-mono uppercase text-[#5B9A3C] font-bold">CAS</span>
-                      <span className="text-[11px] font-mono font-bold">54-11-5</span>
+                      <span className="text-[11px] font-mono font-bold text-[#1E3D2A]">54-11-5</span>
                     </div>
 
-                    {/* Fresh Green Tobacco Leaves Framing (Right/Bottom Edge) */}
-                    <div className="absolute -bottom-6 -right-6 w-32 h-32 pointer-events-none select-none transition-transform duration-700 group-hover:rotate-6 group-hover:scale-105">
+                    {/* Fresh Green Tobacco Leaves Framing (Left Edge) */}
+                    <div className="absolute -bottom-6 -left-6 w-32 h-32 pointer-events-none select-none">
                       <svg viewBox="0 0 120 120" fill="none" className="w-full h-full drop-shadow-md">
                         <path d="M110,110 C80,80 75,40 100,10 C120,40 125,85 110,110 Z" fill="#6EA446" />
                         <path d="M110,110 Q95,70 100,10" stroke="#2D5A3C" strokeWidth="1" />
@@ -586,10 +626,10 @@ export const ProductsIndex: React.FC = () => {
                     </div>
 
                     {/* Quick Inspect Pill */}
-                    <div className="absolute inset-x-0 bottom-5 flex justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 pointer-events-none">
-                      <span className="px-3.5 py-1.5 rounded-full bg-[#1E3D2A]/95 text-white text-[11px] font-mono flex items-center gap-1.5 shadow-xl backdrop-blur-sm border border-white/20">
-                        <Activity className="w-3.5 h-3.5 text-[#8CC63F] animate-pulse" />
-                        <span className="font-semibold">Inspect HPLC Trace</span>
+                    <div className="absolute inset-x-0 bottom-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                      <span className="px-3.5 py-1.5 rounded-full bg-[#1E3D2A]/90 text-white text-[11px] font-mono flex items-center gap-1.5 shadow-lg backdrop-blur-xs">
+                        <Eye className="w-3.5 h-3.5 text-[#8CC63F]" />
+                        <span>View Full Image</span>
                       </span>
                     </div>
                   </div>
@@ -618,15 +658,15 @@ export const ProductsIndex: React.FC = () => {
                 <FadeInLeft className="lg:col-span-5 relative flex items-center justify-center">
                   
                   <div 
-                    onClick={() => openHplc('Pure Nicotine USP/EP 99.5%+', '54-11-5', '99.92%')}
+                    onClick={() => openLightbox(pureNicotinePkgImg, 'Pure Nicotine USP/EP 99.5%+', 'USP / EP Compendial Monograph · CAS 54-11-5 · UN 1654 (PG II)', '≥99.5% USP/EP')}
                     className="relative w-64 h-64 sm:w-80 sm:h-80 group cursor-pointer"
-                    title="Click to view analytical HPLC peak trace for Pure Nicotine USP/EP"
+                    title="Click to view full high-resolution image"
                   >
                     {/* Glowing Emerald Halo */}
                     <div className="absolute -inset-4 rounded-full bg-gradient-to-tr from-[#8CC63F]/40 to-[#5B9A3C]/20 blur-2xl group-hover:bg-[#8CC63F]/55 transition-all" />
                     
                     {/* Crystal Vial Visual */}
-                    <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-8 sm:p-10">
+                    <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-3.5 sm:p-4.5">
                       <img
                         src={pureNicotinePkgImg}
                         alt="Pure Nicotine USP/EP 99.5%+ Canister and Bottle Packaging"
@@ -653,9 +693,9 @@ export const ProductsIndex: React.FC = () => {
 
                     {/* Quick Inspect Pill */}
                     <div className="absolute inset-x-0 bottom-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                      <span className="px-3 py-1 rounded-full bg-[#1E3D2A]/90 text-white text-[11px] font-mono flex items-center gap-1.5 shadow-lg">
-                        <Activity className="w-3 h-3 text-[#8CC63F]" />
-                        <span>Inspect HPLC Trace</span>
+                      <span className="px-3.5 py-1.5 rounded-full bg-[#1E3D2A]/90 text-white text-[11px] font-mono flex items-center gap-1.5 shadow-lg backdrop-blur-xs">
+                        <Eye className="w-3.5 h-3.5 text-[#8CC63F]" />
+                        <span>View Full Image</span>
                       </span>
                     </div>
                   </div>

@@ -29,6 +29,7 @@ import pureNicotinePkgImg from '../assets/images/product-pure-nicotine-pkg.jpg';
 import labQcImg from '../assets/images/laboratory_qc_chromatography_1792921813996.jpg';
 import { HplcChromatogramModal } from '../components/products/HplcChromatogramModal';
 import { CommercialQuoteModal } from '../components/products/CommercialQuoteModal';
+import { ImageLightboxModal } from '../components/common/ImageLightboxModal';
 import { FadeInLeft, FadeInRight, FadeInUp } from '../components/common/animations';
 
 export const ProductPureNicotine: React.FC = () => {
@@ -37,6 +38,7 @@ export const ProductPureNicotine: React.FC = () => {
   const [openAccordion, setOpenAccordion] = useState<number | null>(0);
   const [hplcModalOpen, setHplcModalOpen] = useState(false);
   const [quoteModalOpen, setQuoteModalOpen] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#F8F9F4] text-[#1E3D2A] pb-24 selection:bg-[#5B9A3C]/20 selection:text-[#1E3D2A]">
@@ -54,6 +56,17 @@ export const ProductPureNicotine: React.FC = () => {
         isOpen={quoteModalOpen}
         onClose={() => setQuoteModalOpen(false)}
         defaultProduct="Pure Nicotine USP/EP 99.5%+"
+      />
+
+      {/* High-Resolution Packaging Image Lightbox Modal */}
+      <ImageLightboxModal
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        imageSrc={pureNicotinePkgImg}
+        imageAlt="Pure Nicotine USP/EP 99.5%+ Packaging"
+        title="Pure Nicotine USP/EP 99.5%+"
+        subtitle="United States & European Pharmacopoeia · CAS 54-11-5 · UN 1654"
+        badge="≥99.5% USP/EP"
       />
 
       {/* =========================================================================
@@ -197,12 +210,16 @@ export const ProductPureNicotine: React.FC = () => {
                 </div>
               </div>
 
-              {/* Product Vial Showcase */}
-              <div className="p-4 rounded-2xl bg-[#F8F9F4] border hairline-border flex items-center gap-4 relative z-10">
+              {/* Product Vial Showcase (Click to Open Full Image) */}
+              <div 
+                onClick={() => setLightboxOpen(true)}
+                className="p-4 rounded-2xl bg-[#F8F9F4] border hairline-border hover:border-[#5B9A3C] transition-all flex items-center gap-4 relative z-10 cursor-pointer group shadow-2xs hover:shadow-md"
+                title="Click to view full high-resolution image"
+              >
                 <img
                   src={pureNicotinePkgImg}
                   alt="Pure Nicotine USP/EP 99.5%+ Canister and Bottle Packaging"
-                  className="w-16 h-16 rounded-xl object-contain p-1 bg-white shrink-0 border border-white shadow-xs"
+                  className="w-16 h-16 rounded-xl object-contain p-1 bg-white shrink-0 border border-white shadow-xs group-hover:scale-105 transition-transform"
                 />
                 <div className="text-xs space-y-0.5">
                   <span className="font-semibold text-[#1E3D2A] block">Dual Monograph</span>
