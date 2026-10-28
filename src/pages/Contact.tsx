@@ -31,11 +31,13 @@ export const Contact: React.FC = () => {
   const [consent, setConsent] = useState(false);
 
   // Status & Validation
+  const [submitting, setSubmitting] = useState(false);
+  const [inquiryId, setInquiryId] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!firstName || !lastName || !company || !email.includes('@') || !phone || !quantity) {
       setErrorMsg('Please complete all required fields.');
@@ -47,7 +49,40 @@ export const Contact: React.FC = () => {
     }
 
     setErrorMsg('');
-    setSubmitted(true);
+    setSubmitting(true);
+
+    try {
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          company,
+          email,
+          phone,
+          quantity,
+          product,
+          entityType,
+          message,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to submit inquiry. Please try again.');
+      }
+
+      setInquiryId(data.inquiryId);
+      setSubmitted(true);
+    } catch (err: any) {
+      setErrorMsg(err?.message || 'Server connection error occurred while submitting.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const contactFaqs = [
@@ -108,19 +143,30 @@ export const Contact: React.FC = () => {
                     <path d="M20 38C19 25 24 16 38 12C28 10 20 18 19 25C18 14 10 8 2 12C14 16 19 25 20 38Z" />
                   </svg>
                 </div>
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAF2E5] border border-[#5B9A3C]/30 text-xs font-mono font-bold text-[#2E683A]">
+                  <span>Ref ID: #OKHAI-{inquiryId || 'NEW'}</span>
+                </div>
                 <h3 className="text-2xl font-serif font-medium text-[#1E3D2A]">
-                  Quotation Request Received
+                  Quotation Request Received &amp; Dispatched
                 </h3>
                 <p className="text-sm text-[#1E3D2A]/75 max-w-md leading-relaxed font-light">
-                  Thank you, {firstName}. Your requirement for <strong className="font-semibold text-[#1E3D2A]">{product}</strong> ({quantity}) has been routed to our commercial desk in Gujarat. A technical sales officer will follow up with pricing and lot availability within 24 business hours.
+                  Thank you, {firstName}. Your requirement for <strong className="font-semibold text-[#1E3D2A]">{product}</strong> ({quantity}) has been saved to our commercial database and an instant notification has been dispatched to Superadmin Rutvik Ahir (<strong className="text-[#5B9A3C]">rutvikaahir30@gmail.com</strong>).
                 </p>
-                <div className="pt-4">
+                <div className="p-3.5 rounded-xl bg-[#FAFBF8] border hairline-border text-xs text-[#1E3D2A]/80 max-w-md text-left space-y-1">
+                  <div className="font-semibold text-[#1E3D2A]">What happens next?</div>
+                  <div className="font-light text-[11px] leading-relaxed">
+                    1. Commercial sales desk verifies batch availability &amp; packaging format.<br />
+                    2. Lot-specific Certificate of Analysis (CoA) &amp; formal quote sent to <span className="font-mono text-[#5B9A3C]">{email}</span> within 24 hours.
+                  </div>
+                </div>
+                <div className="pt-2">
                   <button
                     onClick={() => {
                       setSubmitted(false);
                       setMessage('');
+                      setInquiryId(null);
                     }}
-                    className="px-6 py-2.5 rounded-xl border hairline-border text-xs font-semibold text-[#1E3D2A] hover:bg-[#F8F9F4] transition-colors"
+                    className="px-6 py-2.5 rounded-xl border hairline-border text-xs font-semibold text-[#1E3D2A] hover:bg-[#F8F9F4] transition-colors cursor-pointer"
                   >
                     Submit Another Inquiry
                   </button>
@@ -303,10 +349,20 @@ export const Contact: React.FC = () => {
                 <div className="pt-2">
                   <button
                     type="submit"
-                    className="w-full py-3.5 rounded-xl bg-[#5B9A3C] text-white text-xs font-semibold hover:bg-[#4E8A32] transition-colors flex items-center justify-center gap-2 shadow-sm"
+                    disabled={submitting}
+                    className="w-full py-3.5 rounded-xl bg-[#5B9A3C] hover:bg-[#4E8A32] text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer active:scale-98"
                   >
-                    <Send className="w-4 h-4" />
-                    <span>Submit Quotation Request</span>
+                    {submitting ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Sending Request &amp; Alerting Superadmin...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4" />
+                        <span>Submit Quotation Request</span>
+                      </>
+                    )}
                   </button>
                 </div>
               </form>
