@@ -10,6 +10,7 @@ import {
   ArrowRight,
   AlertCircle
 } from 'lucide-react';
+import heroFacilityBg from '../../assets/images/about-hero-facility.jpg';
 
 export const AdminLogin: React.FC = () => {
   // Exactly 2 fields: 1) Username or Email, 2) Password (both empty)
@@ -65,20 +66,25 @@ export const AdminLogin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0F2317] via-[#1E3D2A] to-[#122A1C] text-white flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 relative overflow-hidden selection:bg-[#8CC63F]/30 selection:text-white">
+    <div className="min-h-screen relative text-white flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 overflow-hidden selection:bg-[#8CC63F]/30 selection:text-white">
       
-      {/* Ambient Radial Lights */}
-      <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-[#5B9A3C]/15 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#8CC63F]/10 rounded-full blur-[130px] pointer-events-none" />
-
-      {/* Decorative Botanical Leaf Watermark */}
-      <div className="absolute -top-16 -right-16 w-80 h-80 opacity-10 pointer-events-none select-none">
-        <svg viewBox="0 0 100 100" fill="currentColor" className="w-full h-full text-[#8CC63F]">
-          <path d="M15,85 Q50,15 85,15 Q85,55 15,85 Z" />
-        </svg>
+      {/* Background Facility Image from Hero Section */}
+      <div className="absolute inset-0 w-full h-full z-0 overflow-hidden pointer-events-none select-none">
+        <img
+          src={heroFacilityBg}
+          alt="Okhai Pharma Manufacturing Facility Gujarat"
+          className="w-full h-full object-cover object-[58%_center] brightness-[0.78] contrast-[1.05]"
+        />
+        {/* Cinematic Botanical Scrim Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0B1E13]/85 via-[#122A1A]/80 to-[#0A1A10]/92" />
+        <div className="absolute inset-0 bg-radial from-transparent via-black/20 to-black/60" />
       </div>
 
-      <div className="max-w-md w-full relative z-10">
+      {/* Ambient Radial Lights */}
+      <div className="absolute top-1/4 left-1/3 w-[600px] h-[600px] bg-[#5B9A3C]/20 rounded-full blur-[140px] pointer-events-none z-[1]" />
+      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-[#8CC63F]/15 rounded-full blur-[130px] pointer-events-none z-[1]" />
+
+      <div className="max-w-md w-full relative z-10 py-10">
         
         {/* Header Branding */}
         <div className="text-center mb-8">
