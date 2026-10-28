@@ -209,11 +209,6 @@ export const Leadership: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Number Badge (01, 02, 03) */}
-                      <span className="font-serif italic text-base sm:text-lg text-[#5B9A3C] font-semibold">
-                        {leader.num}
-                      </span>
-
                       {/* Name */}
                       <h3 className="text-base sm:text-[17px] font-serif font-bold text-[#1E3D2A] mt-1 group-hover:text-[#5B9A3C] transition-colors leading-tight">
                         {leader.name}

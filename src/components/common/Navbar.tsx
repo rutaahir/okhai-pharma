@@ -127,20 +127,21 @@ export const Navbar: React.FC = () => {
                 {/* Desktop Mega Menu Dropdown */}
                 {megaMenuOpen && (
                   <div
-                    className="absolute top-full -left-28 pt-4 w-[620px] transition-all duration-200"
+                    className="absolute top-full -left-28 pt-4 w-[680px] transition-all duration-200"
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
                     <div className="bg-white text-[#1E3D2A] rounded-2xl shadow-xl shadow-[#1E3D2A]/10 border hairline-border p-5 grid grid-cols-12 gap-4">
                       {/* Left: 3 Product Cards with Real Packaging Images (Pure Nicotine 3rd) */}
-                      <div className="col-span-8 flex flex-col gap-2.5">
+                      <div className="col-span-7 flex flex-col gap-2.5">
                         {/* 1. Nicotine Sulfate 40% */}
                         <Link
                           to="/products/nicotine-sulfate-40"
                           onMouseEnter={() => setHoveredProductIndex(0)}
+                          onFocus={() => setHoveredProductIndex(0)}
                           className={`p-2.5 rounded-xl border transition-all group/item flex items-center gap-3.5 ${
                             hoveredProductIndex === 0
-                              ? 'border-[#5B9A3C] bg-[#F4F9F1] shadow-2xs'
+                              ? 'border-[#5B9A3C] bg-[#F4F9F1] shadow-2xs ring-1 ring-[#5B9A3C]/30'
                               : 'border-[#1E3D2A]/8 hover:border-[#5B9A3C]/40 hover:bg-[#F8F9F4]'
                           }`}
                         >
@@ -153,7 +154,9 @@ export const Navbar: React.FC = () => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <h4 className="text-sm font-semibold text-[#1E3D2A] group-hover/item:text-[#5B9A3C] truncate">
+                              <h4 className={`text-sm font-semibold truncate transition-colors ${
+                                hoveredProductIndex === 0 ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] group-hover/item:text-[#5B9A3C]'
+                              }`}>
                                 Nicotine Sulfate 40%
                               </h4>
                               <span className="text-[10px] text-[#5B9A3C] font-mono bg-[#EAF2E5] px-1.5 py-0.2 rounded font-semibold">40% · UN 1658</span>
@@ -171,9 +174,10 @@ export const Navbar: React.FC = () => {
                         <Link
                           to="/products/nicotine-alkaloid-90-95"
                           onMouseEnter={() => setHoveredProductIndex(1)}
+                          onFocus={() => setHoveredProductIndex(1)}
                           className={`p-2.5 rounded-xl border transition-all group/item flex items-center gap-3.5 ${
                             hoveredProductIndex === 1
-                              ? 'border-[#5B9A3C] bg-[#F4F9F1] shadow-2xs'
+                              ? 'border-[#5B9A3C] bg-[#F4F9F1] shadow-2xs ring-1 ring-[#5B9A3C]/30'
                               : 'border-[#1E3D2A]/8 hover:border-[#5B9A3C]/40 hover:bg-[#F8F9F4]'
                           }`}
                         >
@@ -186,7 +190,9 @@ export const Navbar: React.FC = () => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <h4 className="text-sm font-semibold text-[#1E3D2A] group-hover/item:text-[#5B9A3C] truncate">
+                              <h4 className={`text-sm font-semibold truncate transition-colors ${
+                                hoveredProductIndex === 1 ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] group-hover/item:text-[#5B9A3C]'
+                              }`}>
                                 Nicotine Alkaloid 90% / 95%
                               </h4>
                               <span className="text-[10px] text-[#5B9A3C] font-mono bg-[#EAF2E5] px-1.5 py-0.2 rounded font-semibold">95% · API</span>
@@ -204,9 +210,10 @@ export const Navbar: React.FC = () => {
                         <Link
                           to="/products/pure-nicotine-usp-ep-99-5"
                           onMouseEnter={() => setHoveredProductIndex(2)}
+                          onFocus={() => setHoveredProductIndex(2)}
                           className={`p-2.5 rounded-xl border transition-all group/item flex items-center gap-3.5 ${
                             hoveredProductIndex === 2
-                              ? 'border-[#5B9A3C] bg-[#F4F9F1] shadow-2xs'
+                              ? 'border-[#5B9A3C] bg-[#F4F9F1] shadow-2xs ring-1 ring-[#5B9A3C]/30'
                               : 'border-[#1E3D2A]/8 hover:border-[#5B9A3C]/40 hover:bg-[#F8F9F4]'
                           }`}
                         >
@@ -219,7 +226,9 @@ export const Navbar: React.FC = () => {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <h4 className="text-sm font-semibold text-[#1E3D2A] group-hover/item:text-[#5B9A3C] truncate">
+                              <h4 className={`text-sm font-semibold truncate transition-colors ${
+                                hoveredProductIndex === 2 ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] group-hover/item:text-[#5B9A3C]'
+                              }`}>
                                 Pure Nicotine USP/EP 99.5%+
                               </h4>
                             </div>
@@ -233,84 +242,95 @@ export const Navbar: React.FC = () => {
                         </Link>
                       </div>
 
-                      {/* Right: Dynamic Side Panel with Hovered Product Image properly fitted */}
-                      <div className="col-span-4 bg-[#F8FAF5] rounded-xl p-3.5 flex flex-col justify-between border border-[#1E3D2A]/8 overflow-hidden transition-all duration-300">
+                      {/* Right: Dynamic Side Panel showing hovered product image properly fitted */}
+                      <div className="col-span-5 bg-gradient-to-b from-[#F9FAF7] to-[#F1F6EE] rounded-xl p-3 flex flex-col justify-between border border-[#1E3D2A]/10 shadow-2xs overflow-hidden transition-all duration-300">
                         {(() => {
                           const previewItems = [
                             {
                               id: 'nicotine-sulfate-40',
                               name: 'Nicotine Sulfate 40%',
-                              subtitle: 'Water-soluble intermediate',
+                              subtitle: 'Water-soluble intermediate formulation',
                               image: sulfatePkgImg,
                               link: '/products/nicotine-sulfate-40',
                               cas: '65-30-5',
-                              standard: 'Pharma / Research Grade'
+                              badge: '40% Active',
+                              standard: 'Pharma / Technical Grade'
                             },
                             {
                               id: 'nicotine-alkaloid-90-95',
                               name: 'Nicotine Alkaloid 90% / 95%',
-                              subtitle: 'Pharma API & distilled alkaloid',
+                              subtitle: 'Pharma API & vacuum-distilled extract',
                               image: alkaloidPkgImg,
                               link: '/products/nicotine-alkaloid-90-95',
                               cas: '54-11-5',
-                              standard: 'API Grade'
+                              badge: '95% API',
+                              standard: 'Distilled Alkaloid'
                             },
                             {
                               id: 'pure-nicotine-usp-ep-99-5',
                               name: 'Pure Nicotine USP/EP 99.5%+',
-                              subtitle: 'High-stability neutral API base',
+                              subtitle: 'High-purity neutral pharmaceutical base',
                               image: pureNicotinePkgImg,
                               link: '/products/pure-nicotine-usp-ep-99-5',
                               cas: '54-11-5',
+                              badge: '99.5%+ Pure',
                               standard: 'USP / EP Monograph'
                             }
                           ];
                           const active = previewItems[hoveredProductIndex] || previewItems[0];
                           return (
-                            <>
-                              <div>
-                                {/* Packaging Image properly fitted in box */}
-                                <div className="w-full h-28 rounded-lg overflow-hidden bg-white border border-[#5B9A3C]/20 shadow-2xs flex items-center justify-center p-2 mb-2 relative">
-                                  <img
-                                    key={active.id}
-                                    src={active.image}
-                                    alt={active.name}
-                                    className="w-full h-full object-contain transition-all duration-300 animate-in fade-in zoom-in-95"
-                                  />
-                                  <div className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded bg-black/65 text-white text-[8px] font-mono backdrop-blur-xs">
-                                    CAS {active.cas}
-                                  </div>
+                            <div className="flex flex-col h-full justify-between">
+                              {/* Product Photo Box - perfectly fitted & clickable */}
+                              <Link
+                                to={active.link}
+                                className="relative w-full h-[150px] rounded-lg overflow-hidden bg-white border border-[#5B9A3C]/25 shadow-xs flex items-center justify-center p-2.5 group/preview hover:border-[#5B9A3C] transition-all cursor-pointer"
+                                title={`Open ${active.name}`}
+                              >
+                                <img
+                                  key={active.id}
+                                  src={active.image}
+                                  alt={`${active.name} packaging preview`}
+                                  className="w-full h-full object-contain drop-shadow-sm group-hover/preview:scale-105 transition-transform duration-300 animate-in fade-in zoom-in-95"
+                                />
+                                {/* Top Badges */}
+                                <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded bg-[#1E3D2A]/85 text-white text-[9px] font-mono tracking-tight backdrop-blur-xs font-medium">
+                                  CAS {active.cas}
                                 </div>
+                                <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-[#5B9A3C] text-white text-[9px] font-mono font-semibold tracking-tight shadow-xs">
+                                  {active.badge}
+                                </div>
+                              </Link>
 
-                                <span className="text-[9px] uppercase tracking-wider font-mono text-[#5B9A3C] font-semibold block">
+                              {/* Info & Action Links */}
+                              <div className="pt-2">
+                                <span className="text-[10px] uppercase tracking-wider font-mono text-[#5B9A3C] font-semibold block truncate">
                                   {active.standard}
                                 </span>
                                 <h5 className="text-xs font-serif font-bold text-[#1E3D2A] mt-0.5 truncate">
                                   {active.name}
                                 </h5>
-                                <p className="text-[11px] text-[#1E3D2A]/70 mt-0.5 line-clamp-1 leading-relaxed">
+                                <p className="text-[11px] text-[#1E3D2A]/70 mt-0.5 line-clamp-1">
                                   {active.subtitle}
                                 </p>
-                              </div>
 
-                              {/* Bottom Action Links */}
-                              <div className="pt-2 mt-2 border-t border-[#1E3D2A]/8 flex items-center justify-between">
-                                <Link
-                                  to={active.link}
-                                  className="text-[11px] font-semibold text-[#5B9A3C] hover:text-[#1E3D2A] transition-colors flex items-center gap-1"
-                                >
-                                  <span>Specs</span>
-                                  <ArrowRight className="w-3 h-3" />
-                                </Link>
-                                <Link
-                                  to="/downloads"
-                                  className="flex items-center gap-1 text-[11px] font-semibold text-[#1E3D2A] hover:text-[#5B9A3C] transition-colors"
-                                >
-                                  <FileDown className="w-3.5 h-3.5 text-[#5B9A3C]" />
-                                  <span>Brochure</span>
-                                </Link>
+                                <div className="mt-2 pt-2 border-t border-[#1E3D2A]/10 flex items-center justify-between">
+                                  <Link
+                                    to={active.link}
+                                    className="text-[11px] font-semibold text-[#5B9A3C] hover:text-[#1E3D2A] transition-colors flex items-center gap-1 group/spec"
+                                  >
+                                    <span>Specifications</span>
+                                    <ArrowRight className="w-3 h-3 group-hover/spec:translate-x-0.5 transition-transform" />
+                                  </Link>
+                                  <Link
+                                    to="/downloads"
+                                    className="flex items-center gap-1 text-[11px] font-semibold text-[#1E3D2A]/75 hover:text-[#5B9A3C] transition-colors"
+                                  >
+                                    <FileDown className="w-3 h-3 text-[#5B9A3C]" />
+                                    <span>Brochure</span>
+                                  </Link>
+                                </div>
                               </div>
-                            </>
+                            </div>
                           );
                         })()}
                       </div>
@@ -515,7 +535,6 @@ export const Navbar: React.FC = () => {
                         <span className="text-sm font-semibold text-[#1E3D2A] group-hover:text-[#5B9A3C]">
                           Pure Nicotine USP/EP 99.5%+
                         </span>
-                        <span className="text-[10px] font-mono text-white bg-[#5B9A3C] px-1.5 py-0.5 rounded-full font-bold">USP/EP</span>
                       </div>
                       <span className="text-[11px] text-[#1E3D2A]/60 block truncate">Pharmaceutical API base</span>
                     </div>
