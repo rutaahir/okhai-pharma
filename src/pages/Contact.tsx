@@ -150,7 +150,7 @@ export const Contact: React.FC = () => {
                   Quotation Request Received &amp; Dispatched
                 </h3>
                 <p className="text-sm text-[#1E3D2A]/75 max-w-md leading-relaxed font-light">
-                  Thank you, {firstName}. Your requirement for <strong className="font-semibold text-[#1E3D2A]">{product}</strong> ({quantity}) has been saved to our commercial database and an instant notification has been dispatched to Superadmin Rutvik Ahir (<strong className="text-[#5B9A3C]">rutvikaahir30@gmail.com</strong>).
+                  Thank you, {firstName}. Your requirement for <strong className="font-semibold text-[#1E3D2A]">{product}</strong> ({quantity}) has been saved to our commercial database and an instant notification has been dispatched to our commercial administration team.
                 </p>
                 <div className="p-3.5 rounded-xl bg-[#FAFBF8] border hairline-border text-xs text-[#1E3D2A]/80 max-w-md text-left space-y-1">
                   <div className="font-semibold text-[#1E3D2A]">What happens next?</div>

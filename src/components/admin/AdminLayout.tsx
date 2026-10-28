@@ -241,7 +241,7 @@ export const AdminLayout: React.FC = () => {
             {/* Email Dispatch Live Indicator */}
             <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#EAF2E5] border border-[#5B9A3C]/30 text-xs font-mono text-[#2E683A]">
               <span className="w-2 h-2 rounded-full bg-[#5B9A3C] animate-pulse" />
-              <span>SMTP Connected: rutvikaahir30@gmail.com</span>
+              <span>SMTP Dispatch Active</span>
             </div>
 
             {/* Refresh Button */}

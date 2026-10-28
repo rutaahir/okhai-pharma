@@ -183,7 +183,7 @@ export const AdminInquiries: React.FC = () => {
         setInquiries((prev) =>
           prev.map((item) => (item.id === id ? { ...item, email_sent: 1, email_error: null } : item))
         );
-        showAlert('success', `Alert re-dispatched to Superadmin (rutvikaahir30@gmail.com)`);
+        showAlert('success', `Alert re-dispatched to administrator inbox.`);
       } else {
         throw new Error(data.error || 'Failed to dispatch email');
       }
@@ -521,7 +521,7 @@ export const AdminInquiries: React.FC = () => {
                       {inq.email_sent ? (
                         <span
                           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#EAF2E5] text-[#2E683A]"
-                          title="Delivered to rutvikaahir30@gmail.com"
+                          title="Delivered to administrator inbox"
                         >
                           <CheckCircle2 className="w-3 h-3 text-[#5B9A3C]" />
                           <span>Sent</span>

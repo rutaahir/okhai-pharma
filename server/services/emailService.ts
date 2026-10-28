@@ -27,13 +27,29 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+function getSuperadminEmail(): string {
+  if (process.env.SUPERADMIN_EMAIL) return process.env.SUPERADMIN_EMAIL;
+  try {
+    const admin = db.prepare("SELECT email FROM admins WHERE role = 'superadmin' ORDER BY id ASC LIMIT 1").get() as any;
+    if (admin?.email) return admin.email;
+  } catch (err) {
+    console.error('[Email Service] Error querying admin recipient from database:', err);
+  }
+  return '';
+}
+
 /**
- * Sends a notification email to Superadmin (rutvikaahir30@gmail.com)
+ * Sends a notification email to the administrator
  * when a new inquiry is submitted on the website.
  */
 export async function sendSuperadminInquiryAlert(inquiry: InquiryData): Promise<{ success: boolean; error?: string }> {
-  const superadminEmail = process.env.SUPERADMIN_EMAIL || 'rutvikaahir30@gmail.com';
+  const superadminEmail = getSuperadminEmail();
   const senderEmail = process.env.SMTP_USER || 'socialbuzz31@gmail.com';
+
+  if (!superadminEmail) {
+    console.warn('[Email Service] No administrator email configured in database or environment. Alert email skipped.');
+    return { success: false, error: 'Administrator email not found.' };
+  }
 
   // Professional transactional subject without spam-triggering emojis
   const subject = `New Quotation Request #OKHAI-${inquiry.id}: ${inquiry.product} (${inquiry.quantity}) - ${inquiry.company}`;

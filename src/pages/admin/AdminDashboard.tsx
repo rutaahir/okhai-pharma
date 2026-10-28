@@ -30,7 +30,7 @@ interface StatsData {
 }
 
 export const AdminDashboard: React.FC = () => {
-  const { authFetch } = useAdminAuth();
+  const { authFetch, admin } = useAdminAuth();
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -282,7 +282,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="mt-5 space-y-2.5 text-xs">
               <div className="p-3 rounded-xl bg-white/10 border border-white/10 flex items-center justify-between">
                 <span className="text-white/70">Superadmin Recipient:</span>
-                <span className="font-mono font-bold text-[#8CC63F]">rutvikaahir30@gmail.com</span>
+                <span className="font-mono font-bold text-[#8CC63F]">{admin?.email || 'Administrator Inbox'}</span>
               </div>
               <div className="p-3 rounded-xl bg-white/10 border border-white/10 flex items-center justify-between">
                 <span className="text-white/70">SMTP Outbox:</span>

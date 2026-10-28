@@ -70,22 +70,19 @@ export function initDatabase() {
     CREATE INDEX IF NOT EXISTS idx_inquiries_created_at ON inquiries(created_at);
   `);
 
-  // Seed default superadmin if not already present
-  const adminUsername = process.env.ADMIN_INITIAL_USERNAME || 'superadmin';
-  const adminEmail = process.env.SUPERADMIN_EMAIL || 'rutvikaahir30@gmail.com';
-  const adminPassword = process.env.ADMIN_INITIAL_PASSWORD || 'Admin@Okhai2026';
-
-  const existingAdmin = db.prepare('SELECT id FROM admins WHERE username = ? OR email = ?').get(adminUsername, adminEmail);
-  if (!existingAdmin) {
+  // Create initial admin only if the admins table is empty and credentials are provided via environment variables
+  const adminCount = (db.prepare('SELECT count(*) as count FROM admins').get() as any)?.count || 0;
+  if (adminCount === 0 && process.env.ADMIN_INITIAL_USERNAME && process.env.ADMIN_INITIAL_PASSWORD) {
+    const adminUsername = process.env.ADMIN_INITIAL_USERNAME;
+    const adminEmail = process.env.ADMIN_INITIAL_EMAIL || process.env.SUPERADMIN_EMAIL || '';
+    const adminPassword = process.env.ADMIN_INITIAL_PASSWORD;
     const salt = bcrypt.genSaltSync(10);
     const passwordHash = bcrypt.hashSync(adminPassword, salt);
     
     db.prepare(`
       INSERT INTO admins (username, email, password_hash, full_name, role)
       VALUES (?, ?, ?, ?, ?)
-    `).run(adminUsername, adminEmail, passwordHash, 'Rutvik Ahir (Superadmin)', 'superadmin');
-    
-    console.log(`[Database] Initial superadmin created: ${adminUsername} (${adminEmail})`);
+    `).run(adminUsername, adminEmail, passwordHash, 'Administrator', 'superadmin');
   }
 }
 

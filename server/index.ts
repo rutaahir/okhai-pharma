@@ -30,8 +30,7 @@ const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🌿 OKHAI PHARMA BACKEND SERVER RUNNING`);
   console.log(`📡 URL: http://localhost:${PORT}`);
   console.log(`🔐 Admin Auth: /api/auth/login`);
-  console.log(`📬 Inquiries API: /api/inquiries`);
-  console.log(`📧 Superadmin Alert Email: ${process.env.SUPERADMIN_EMAIL || 'rutvikaahir30@gmail.com'}`);
+  console.log(`📧 Inquiries Email Alerts: Active (Configured in Database)`);
   console.log(`=======================================================`);
 });
 
