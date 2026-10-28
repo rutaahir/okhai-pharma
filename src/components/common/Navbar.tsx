@@ -439,7 +439,7 @@ export const Navbar: React.FC = () => {
 
       {/* 3. Mobile Fullscreen Frosted Overlay */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-[#F8F9F4]/98 backdrop-blur-2xl flex flex-col justify-between pt-24 pb-28 px-6 lg:hidden overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-[#F8F9F4]/98 backdrop-blur-2xl flex flex-col justify-between pt-24 pb-12 px-6 lg:hidden overflow-y-auto">
           <div className="flex flex-col gap-5 max-w-md mx-auto w-full">
             <Link
               to="/"
@@ -598,40 +598,6 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
       )}
-
-      {/* 4. Mobile Sticky Bottom Action Bar (Thumb friendly, 48px targets) */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-xl border-t border-[#1E3D2A]/10 px-3 py-2 shadow-2xl">
-        <div className="grid grid-cols-3 gap-2 max-w-md mx-auto">
-          {/* Call */}
-          <a
-            href={`tel:${COMPANY_DETAILS.phone.replace(/\s+/g, '')}`}
-            className="flex items-center justify-center gap-1.5 h-12 rounded-xl border border-[#1E3D2A]/15 bg-[#F8F9F4] text-[#1E3D2A] text-xs font-semibold active:scale-98 transition-transform"
-          >
-            <Phone className="w-4 h-4 text-[#5B9A3C]" />
-            <span>Call</span>
-          </a>
-
-          {/* WhatsApp */}
-          <a
-            href={COMPANY_DETAILS.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1.5 h-12 rounded-xl bg-[#25D366]/15 border border-[#25D366]/30 text-[#128C7E] text-xs font-semibold active:scale-98 transition-transform"
-          >
-            <MessageSquare className="w-4 h-4 text-[#25D366]" />
-            <span>WhatsApp</span>
-          </a>
-
-          {/* Quote */}
-          <button
-            onClick={() => navigate('/contact')}
-            className="flex items-center justify-center gap-1.5 h-12 rounded-xl bg-[#5B9A3C] text-white text-xs font-semibold active:scale-98 transition-transform shadow-md shadow-[#5B9A3C]/20"
-          >
-            <span>Quote</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
     </>
   );
 };

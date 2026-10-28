@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="relative bg-[#07130A] text-white pt-8 sm:pt-10 lg:pt-12 pb-6 sm:pb-8 overflow-hidden border-t border-[#8CC63F]/20">
+    <footer className="relative bg-[#07130A] text-white pt-8 sm:pt-10 lg:pt-12 pb-24 sm:pb-10 overflow-hidden border-t border-[#8CC63F]/20">
       
       {/* Subtle Ambient Radial Lights */}
       <div className="absolute top-0 left-1/3 w-[500px] h-[220px] bg-[#5B9A3C]/10 rounded-full blur-[100px] pointer-events-none" />

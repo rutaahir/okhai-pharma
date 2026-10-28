@@ -102,20 +102,34 @@ export const FloatingActionHub: React.FC = () => {
   ];
 
   return (
-    <div ref={panelRef} className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-50 pointer-events-auto">
-      
-      {/* =======================================================================
-          1. ELEVATED FLOATING POPUP DRAWER
-      ======================================================================= */}
+    <>
+      {/* Background Dimmer Backdrop on Mobile Viewports */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.88, y: 16, transformOrigin: 'bottom right' }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 14 }}
-            transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="absolute bottom-16 sm:bottom-20 right-0 w-[calc(100vw-2.5rem)] sm:w-[410px] max-h-[82vh] bg-white/95 backdrop-blur-2xl rounded-3xl border border-[#5B9A3C]/35 shadow-[0_25px_60px_rgba(20,56,35,0.25)] flex flex-col overflow-hidden text-[#1E3D2A]"
-          >
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsOpen(false)}
+            className="fixed inset-0 bg-black/40 backdrop-blur-[2px] z-40 sm:hidden pointer-events-auto"
+          />
+        )}
+      </AnimatePresence>
+
+      <div ref={panelRef} className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 pointer-events-auto">
+        
+        {/* =======================================================================
+            1. ELEVATED FLOATING POPUP DRAWER
+        ======================================================================= */}
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 14, transformOrigin: 'bottom right' }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.92, y: 12 }}
+              transition={{ type: 'spring', damping: 26, stiffness: 320 }}
+              className="absolute bottom-14 sm:bottom-20 right-0 w-[calc(100vw-2rem)] sm:w-[410px] max-h-[84vh] bg-white/95 backdrop-blur-2xl rounded-3xl border border-[#5B9A3C]/35 shadow-[0_25px_60px_rgba(20,56,35,0.25)] flex flex-col overflow-hidden text-[#1E3D2A] z-40"
+            >
             {/* Header: Brand Identity & Close Button */}
             <div className="relative px-5 py-4 bg-gradient-to-r from-[#143823] via-[#1E4D35] to-[#143823] text-white flex items-center justify-between shrink-0">
               {/* Subtle Ambient Radial Glow */}
@@ -338,11 +352,11 @@ export const FloatingActionHub: React.FC = () => {
               exit={{ opacity: 0, scale: 0.7, y: 10 }}
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.92 }}
-              className="w-11 h-11 rounded-full bg-white/95 hover:bg-white text-[#143823] hover:text-[#5B9A3C] border-2 border-[#5B9A3C]/35 shadow-[0_10px_25px_rgba(20,56,35,0.2)] flex items-center justify-center cursor-pointer transition-colors group"
+              className="w-9 h-9 sm:w-11 sm:h-11 rounded-full bg-white/95 hover:bg-white text-[#143823] hover:text-[#5B9A3C] border-2 border-[#5B9A3C]/35 shadow-[0_8px_20px_rgba(20,56,35,0.18)] flex items-center justify-center cursor-pointer transition-colors group"
               title="Scroll to top"
               aria-label="Scroll to top"
             >
-              <ChevronUp className="w-5 h-5 text-[#143823] group-hover:text-[#5B9A3C] transition-transform group-hover:-translate-y-0.5" />
+              <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 text-[#143823] group-hover:text-[#5B9A3C] transition-transform group-hover:-translate-y-0.5" />
             </motion.button>
           )}
         </AnimatePresence>
@@ -351,7 +365,7 @@ export const FloatingActionHub: React.FC = () => {
         <motion.button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          whileHover={{ scale: 1.05, y: -2 }}
+          whileHover={{ scale: 1.04, y: -1 }}
           whileTap={{ scale: 0.94 }}
           className="relative group cursor-pointer focus:outline-hidden"
           title={isOpen ? "Close desk" : "Open Okhai Pharma Commercial Desk & Catalog"}
@@ -361,13 +375,13 @@ export const FloatingActionHub: React.FC = () => {
           <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[#8CC63F] via-[#5B9A3C] to-[#D4AF37] opacity-60 blur-md group-hover:opacity-90 animate-pulse transition-opacity" />
 
           {/* Luxury Button Body */}
-          <div className="relative px-4 sm:px-5 py-3 rounded-full bg-gradient-to-r from-[#143823] via-[#1E4D35] to-[#143823] text-white border border-[#8CC63F]/50 shadow-[0_12px_35px_rgba(20,56,35,0.35)] flex items-center gap-2.5">
+          <div className="relative px-3.5 py-2.5 sm:px-5 sm:py-3 rounded-full bg-gradient-to-r from-[#143823] via-[#1E4D35] to-[#143823] text-white border border-[#8CC63F]/50 shadow-[0_12px_35px_rgba(20,56,35,0.35)] flex items-center gap-2 sm:gap-2.5">
             {/* Animated Icon */}
-            <div className="w-7 h-7 rounded-full bg-white/15 backdrop-blur-xs flex items-center justify-center text-[#8CC63F] shrink-0">
+            <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/15 backdrop-blur-xs flex items-center justify-center text-[#8CC63F] shrink-0">
               {isOpen ? (
-                <X className="w-4 h-4 text-white rotate-0 transition-transform duration-300" />
+                <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white rotate-0 transition-transform duration-300" />
               ) : (
-                <Sparkles className="w-4 h-4 text-[#8CC63F] animate-spin" style={{ animationDuration: '8s' }} />
+                <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#8CC63F] animate-spin" style={{ animationDuration: '8s' }} />
               )}
             </div>
 
@@ -388,5 +402,6 @@ export const FloatingActionHub: React.FC = () => {
       </div>
 
     </div>
+    </>
   );
 };
