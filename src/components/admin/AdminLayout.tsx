@@ -257,8 +257,8 @@ export const AdminLayout: React.FC = () => {
 
         </header>
 
-        {/* Dynamic Nested Page Content */}
-        <main className="flex-1 p-4 sm:p-8 max-w-7xl mx-auto w-full">
+        {/* Dynamic Nested Page Content - Full Device Width */}
+        <main className="flex-1 p-3 sm:p-5 w-full max-w-none">
           <Outlet />
         </main>
 
