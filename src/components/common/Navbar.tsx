@@ -466,10 +466,17 @@ export const Navbar: React.FC = () => {
       >
         {/* Drawer Header with Logo & Prominent Close Button */}
         <div className="flex items-center justify-between px-3.5 py-3 border-b border-[#1E3D2A]/10 bg-[#FAFBF8]">
-          <div className="flex items-center gap-1.5">
-            <img src="/logo.png" alt="Okhai Pharma" className="h-6 w-auto object-contain" />
-            <span className="font-serif font-bold text-xs text-[#1E3D2A] truncate">Okhai Pharma</span>
-          </div>
+          <Link
+            to="/"
+            onClick={(e) => {
+              setMobileMenuOpen(false);
+              handleLogoClick(e);
+            }}
+            className="flex items-center cursor-pointer"
+            aria-label="Okhai Pharma Home"
+          >
+            <img src="/logo.png" alt="Okhai Pharma" className="h-7 w-auto object-contain" />
+          </Link>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(false)}
