@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {
   Phone,
   Mail,
@@ -22,10 +22,18 @@ import { COMPANY_DETAILS } from '../../data/companyData';
 import { FadeInUp, StaggerContainer, StaggerItem } from './animations';
 
 export const Footer: React.FC = () => {
+  const location = useLocation();
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState('');
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.location.reload();
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -124,7 +132,11 @@ export const Footer: React.FC = () => {
           
           {/* Column 1: Brand & Credentials (3.5 cols) */}
           <StaggerItem className="lg:col-span-4 flex flex-col gap-3.5">
-            <Link to="/" className="inline-block bg-white px-3 py-1.5 rounded-xl w-fit shadow-sm">
+            <Link
+              to="/"
+              onClick={handleLogoClick}
+              className="inline-block bg-white px-3 py-1.5 rounded-xl w-fit shadow-sm cursor-pointer"
+            >
               <img
                 src="/logo.png"
                 alt="Okhai Pharma Intermediates"

@@ -58,6 +58,13 @@ export const Navbar: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (location.pathname === '/') {
+      e.preventDefault();
+      window.location.reload();
+    }
+  };
+
   return (
     <>
       {/* 1. Main Glass Floating Navbar (Sticky on scroll, permanently white pill) */}
@@ -71,7 +78,12 @@ export const Navbar: React.FC = () => {
         >
           <div className="flex items-center justify-between gap-4">
             {/* Logo lockup */}
-            <Link to="/" className="flex items-center gap-3 group shrink-0" aria-label="Okhai Pharma Home">
+            <Link
+              to="/"
+              onClick={handleLogoClick}
+              className="flex items-center gap-3 group shrink-0 cursor-pointer"
+              aria-label="Okhai Pharma Home"
+            >
               <img
                 src="/logo.png"
                 alt="Okhai Pharma Intermediates Logo"
