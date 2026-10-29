@@ -209,6 +209,7 @@ const FACILITY_SWAPS: FacilitySwapItem[] = [
 export const HeroWithDualSwapper: React.FC = () => {
   const [productIdx, setProductIdx] = useState<number>(0);
   const [facilityIdx, setFacilityIdx] = useState<number>(0);
+  const [mobileSubIdx, setMobileSubIdx] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
   // Modals
@@ -228,6 +229,15 @@ export const HeroWithDualSwapper: React.FC = () => {
     }, 4000);
     return () => clearInterval(timer);
   }, [isPaused]);
+
+  // Mobile sub-images auto-rotation for Swap 3 (GC, HPLC & Titration)
+  useEffect(() => {
+    if (isPaused || facilityIdx !== 2) return;
+    const subTimer = setInterval(() => {
+      setMobileSubIdx((prev) => (prev + 1) % 3);
+    }, 2200);
+    return () => clearInterval(subTimer);
+  }, [isPaused, facilityIdx]);
 
   // Master Navigation handlers (rotates both swappers)
   const handlePrev = () => {
@@ -821,8 +831,117 @@ export const HeroWithDualSwapper: React.FC = () => {
                         transition={{ duration: 0.52, ease: LUXURY_EASE }}
                         className="w-full"
                       >
-                        {/* 3 Analytical Sub-Images */}
-                        <div className="grid grid-cols-3 gap-2 sm:gap-3 h-56 sm:h-64 lg:h-[268px]">
+                        {/* Mobile View: Show 3 Analytical Images ONE BY ONE */}
+                        <div className="block sm:hidden">
+                          {/* Segmented Selector for 3 Analytical Tests */}
+                          <div className="flex items-center justify-between gap-1 mb-2 p-1 rounded-xl bg-white/80 border border-[#143823]/10 shadow-2xs">
+                            {currentFacility.subImages?.map((item, idx) => (
+                              <button
+                                key={item.id}
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setMobileSubIdx(idx);
+                                }}
+                                className={`flex-1 py-1 px-1.5 rounded-lg text-[10px] font-semibold transition-all flex items-center justify-center gap-1 ${
+                                  mobileSubIdx === idx
+                                    ? 'bg-[#143823] text-white shadow-xs'
+                                    : 'text-[#143823]/70 hover:bg-white'
+                                }`}
+                              >
+                                <span className={`w-1.5 h-1.5 rounded-full ${mobileSubIdx === idx ? 'bg-[#8CC63F]' : 'bg-[#143823]/25'}`} />
+                                <span className="truncate">{item.title}</span>
+                              </button>
+                            ))}
+                          </div>
+
+                          {/* Single Active Analytical Card on Mobile */}
+                          <div className="relative w-full rounded-2xl overflow-hidden bg-white border border-[#CBDCC5] shadow-xs flex flex-col justify-between">
+                            <AnimatePresence mode="wait">
+                              {(() => {
+                                const activeItem = currentFacility.subImages?.[mobileSubIdx] || currentFacility.subImages?.[0];
+                                if (!activeItem) return null;
+                                return (
+                                  <motion.div
+                                    key={activeItem.id}
+                                    initial={{ opacity: 0, x: 14 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: -14 }}
+                                    transition={{ duration: 0.3, ease: LUXURY_EASE }}
+                                    onClick={() => {
+                                      if (activeItem.isModal) setHplcModalOpen(true);
+                                    }}
+                                    className="relative w-full flex flex-col justify-between cursor-pointer"
+                                  >
+                                    <div className="relative w-full h-[155px] overflow-hidden bg-[#FAFBF7]">
+                                      <img
+                                        src={activeItem.image}
+                                        alt={activeItem.title}
+                                        className="w-full h-full object-cover"
+                                      />
+                                      <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-mono text-white font-bold border border-white/10 shadow-sm flex items-center gap-1">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[#8CC63F]" />
+                                        <span>{activeItem.tag}</span>
+                                      </div>
+
+                                      {/* Arrow navigation buttons on mobile */}
+                                      <div className="absolute inset-y-0 inset-x-2 flex items-center justify-between pointer-events-none">
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setMobileSubIdx((prev) => (prev === 0 ? 2 : prev - 1));
+                                          }}
+                                          className="w-7 h-7 rounded-full bg-black/55 text-white flex items-center justify-center pointer-events-auto backdrop-blur-xs active:scale-90 shadow-md"
+                                          aria-label="Previous analytical test"
+                                        >
+                                          <ChevronLeft className="w-4 h-4" />
+                                        </button>
+                                        <button
+                                          type="button"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setMobileSubIdx((prev) => (prev + 1) % 3);
+                                          }}
+                                          className="w-7 h-7 rounded-full bg-black/55 text-white flex items-center justify-center pointer-events-auto backdrop-blur-xs active:scale-90 shadow-md"
+                                          aria-label="Next analytical test"
+                                        >
+                                          <ChevronRight className="w-4 h-4" />
+                                        </button>
+                                      </div>
+
+                                      {activeItem.isModal && (
+                                        <div className="absolute bottom-2 right-2 px-2.5 py-0.5 rounded-full bg-[#143823]/90 text-white text-[9px] font-mono backdrop-blur-xs border border-[#8CC63F]/30 flex items-center gap-1 shadow-md">
+                                          <Eye className="w-3 h-3 text-[#8CC63F]" />
+                                          <span>View Chromatogram</span>
+                                        </div>
+                                      )}
+                                    </div>
+
+                                    <div className="p-2.5 bg-white flex items-center justify-between">
+                                      <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-2">
+                                          <h4 className="text-xs font-bold text-[#143823] truncate">
+                                            {activeItem.title}
+                                          </h4>
+                                          <span className="text-[10px] font-mono text-[#5B9A3C] bg-[#EAF2E5] px-1.5 py-0.2 rounded font-semibold">
+                                            0{mobileSubIdx + 1}/03
+                                          </span>
+                                        </div>
+                                        <p className="text-[11px] text-[#4F6456] truncate font-light mt-0.5">
+                                          {activeItem.sub}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </motion.div>
+                                );
+                              })()}
+                            </AnimatePresence>
+                          </div>
+                        </div>
+
+                        {/* Desktop View: 3 Analytical Sub-Images side-by-side */}
+                        <div className="hidden sm:grid sm:grid-cols-3 gap-2 sm:gap-3 h-56 sm:h-64 lg:h-[268px]">
                           {currentFacility.subImages?.map((item) => (
                             <div
                               key={item.id}
