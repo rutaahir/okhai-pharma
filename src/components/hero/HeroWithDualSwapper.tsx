@@ -210,6 +210,8 @@ export const HeroWithDualSwapper: React.FC = () => {
   const [productIdx, setProductIdx] = useState<number>(0);
   const [facilityIdx, setFacilityIdx] = useState<number>(0);
   const [mobileSubIdx, setMobileSubIdx] = useState<number>(0);
+  const [slideDirection, setSlideDirection] = useState<number>(1);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
   const [isPaused, setIsPaused] = useState<boolean>(false);
 
   // Modals
@@ -219,6 +221,21 @@ export const HeroWithDualSwapper: React.FC = () => {
 
   const currentProduct = PRODUCTS_DATA[productIdx];
   const currentFacility = FACILITY_SWAPS[facilityIdx];
+
+  const handleNextSub = () => {
+    setSlideDirection(1);
+    setMobileSubIdx((prev) => (prev + 1) % 3);
+  };
+
+  const handlePrevSub = () => {
+    setSlideDirection(-1);
+    setMobileSubIdx((prev) => (prev === 0 ? 2 : prev - 1));
+  };
+
+  const handleSelectSub = (idx: number) => {
+    setSlideDirection(idx > mobileSubIdx ? 1 : -1);
+    setMobileSubIdx(idx);
+  };
 
   // Automatic synchronized swapping timer (every 4 seconds)
   useEffect(() => {
@@ -230,12 +247,13 @@ export const HeroWithDualSwapper: React.FC = () => {
     return () => clearInterval(timer);
   }, [isPaused]);
 
-  // Mobile sub-images auto-rotation for Swap 3 (GC, HPLC & Titration)
+  // Mobile sub-images auto-sliding for Swap 3 (GC, HPLC & Titration)
   useEffect(() => {
     if (isPaused || facilityIdx !== 2) return;
     const subTimer = setInterval(() => {
+      setSlideDirection(1);
       setMobileSubIdx((prev) => (prev + 1) % 3);
-    }, 2200);
+    }, 2800);
     return () => clearInterval(subTimer);
   }, [isPaused, facilityIdx]);
 
@@ -831,19 +849,19 @@ export const HeroWithDualSwapper: React.FC = () => {
                         transition={{ duration: 0.52, ease: LUXURY_EASE }}
                         className="w-full"
                       >
-                        {/* Mobile View: Show 3 Analytical Images ONE BY ONE */}
-                        <div className="block sm:hidden">
+                        {/* Mobile & Tablet View (<1024px): Show ONLY 1 Image at a Time and Slide One by One */}
+                        <div className="block lg:hidden">
                           {/* Segmented Selector for 3 Analytical Tests */}
-                          <div className="flex items-center justify-between gap-1 mb-2 p-1 rounded-xl bg-white/80 border border-[#143823]/10 shadow-2xs">
+                          <div className="flex items-center justify-between gap-1 mb-2.5 p-1 rounded-xl bg-white/80 border border-[#143823]/10 shadow-2xs">
                             {currentFacility.subImages?.map((item, idx) => (
                               <button
                                 key={item.id}
                                 type="button"
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  setMobileSubIdx(idx);
+                                  handleSelectSub(idx);
                                 }}
-                                className={`flex-1 py-1 px-1.5 rounded-lg text-[10px] font-semibold transition-all flex items-center justify-center gap-1 ${
+                                className={`flex-1 py-1.5 px-2 rounded-lg text-[11px] font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
                                   mobileSubIdx === idx
                                     ? 'bg-[#143823] text-white shadow-xs'
                                     : 'text-[#143823]/70 hover:bg-white'
@@ -855,8 +873,18 @@ export const HeroWithDualSwapper: React.FC = () => {
                             ))}
                           </div>
 
-                          {/* Single Active Analytical Card on Mobile */}
-                          <div className="relative w-full rounded-2xl overflow-hidden bg-white border border-[#CBDCC5] shadow-xs flex flex-col justify-between">
+                          {/* Single Active Analytical Card on Mobile with Slide Animation */}
+                          <div
+                            onTouchStart={(e) => setTouchStart(e.targetTouches[0].clientX)}
+                            onTouchEnd={(e) => {
+                              if (touchStart === null) return;
+                              const touchEnd = e.changedTouches[0].clientX;
+                              if (touchStart - touchEnd > 35) handleNextSub();
+                              if (touchEnd - touchStart > 35) handlePrevSub();
+                              setTouchStart(null);
+                            }}
+                            className="relative w-full rounded-2xl overflow-hidden bg-white border border-[#CBDCC5] shadow-xs flex flex-col justify-between"
+                          >
                             <AnimatePresence mode="wait">
                               {(() => {
                                 const activeItem = currentFacility.subImages?.[mobileSubIdx] || currentFacility.subImages?.[0];
@@ -864,24 +892,30 @@ export const HeroWithDualSwapper: React.FC = () => {
                                 return (
                                   <motion.div
                                     key={activeItem.id}
-                                    initial={{ opacity: 0, x: 14 }}
+                                    initial={{ opacity: 0, x: slideDirection > 0 ? 120 : -120 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: -14 }}
-                                    transition={{ duration: 0.3, ease: LUXURY_EASE }}
+                                    exit={{ opacity: 0, x: slideDirection > 0 ? -120 : 120 }}
+                                    transition={{ duration: 0.38, ease: LUXURY_EASE }}
                                     onClick={() => {
                                       if (activeItem.isModal) setHplcModalOpen(true);
                                     }}
-                                    className="relative w-full flex flex-col justify-between cursor-pointer"
+                                    className="relative w-full flex flex-col justify-between cursor-pointer select-none"
                                   >
-                                    <div className="relative w-full h-[155px] overflow-hidden bg-[#FAFBF7]">
+                                    <div className="relative w-full h-[170px] overflow-hidden bg-[#FAFBF7]">
                                       <img
                                         src={activeItem.image}
                                         alt={activeItem.title}
                                         className="w-full h-full object-cover"
                                       />
-                                      <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-mono text-white font-bold border border-white/10 shadow-sm flex items-center gap-1">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-[#8CC63F]" />
+                                      {/* Top Tag */}
+                                      <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-black/75 backdrop-blur-md text-[10px] font-mono text-white font-bold border border-white/10 shadow-sm flex items-center gap-1.5">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-[#8CC63F] animate-pulse" />
                                         <span>{activeItem.tag}</span>
+                                      </div>
+
+                                      {/* Top-Right Counter */}
+                                      <div className="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-[#143823]/90 backdrop-blur-md text-[#8CC63F] text-[10px] font-mono font-bold border border-[#8CC63F]/30 shadow-sm">
+                                        0{mobileSubIdx + 1} / 03
                                       </div>
 
                                       {/* Arrow navigation buttons on mobile */}
@@ -890,9 +924,9 @@ export const HeroWithDualSwapper: React.FC = () => {
                                           type="button"
                                           onClick={(e) => {
                                             e.stopPropagation();
-                                            setMobileSubIdx((prev) => (prev === 0 ? 2 : prev - 1));
+                                            handlePrevSub();
                                           }}
-                                          className="w-7 h-7 rounded-full bg-black/55 text-white flex items-center justify-center pointer-events-auto backdrop-blur-xs active:scale-90 shadow-md"
+                                          className="w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center pointer-events-auto backdrop-blur-xs active:scale-90 shadow-md border border-white/20 cursor-pointer"
                                           aria-label="Previous analytical test"
                                         >
                                           <ChevronLeft className="w-4 h-4" />
@@ -901,9 +935,9 @@ export const HeroWithDualSwapper: React.FC = () => {
                                           type="button"
                                           onClick={(e) => {
                                             e.stopPropagation();
-                                            setMobileSubIdx((prev) => (prev + 1) % 3);
+                                            handleNextSub();
                                           }}
-                                          className="w-7 h-7 rounded-full bg-black/55 text-white flex items-center justify-center pointer-events-auto backdrop-blur-xs active:scale-90 shadow-md"
+                                          className="w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white flex items-center justify-center pointer-events-auto backdrop-blur-xs active:scale-90 shadow-md border border-white/20 cursor-pointer"
                                           aria-label="Next analytical test"
                                         >
                                           <ChevronRight className="w-4 h-4" />
@@ -911,24 +945,24 @@ export const HeroWithDualSwapper: React.FC = () => {
                                       </div>
 
                                       {activeItem.isModal && (
-                                        <div className="absolute bottom-2 right-2 px-2.5 py-0.5 rounded-full bg-[#143823]/90 text-white text-[9px] font-mono backdrop-blur-xs border border-[#8CC63F]/30 flex items-center gap-1 shadow-md">
+                                        <div className="absolute bottom-2 right-2 px-2.5 py-0.5 rounded-full bg-[#143823]/95 text-white text-[9.5px] font-mono backdrop-blur-xs border border-[#8CC63F]/40 flex items-center gap-1 shadow-md">
                                           <Eye className="w-3 h-3 text-[#8CC63F]" />
                                           <span>View Chromatogram</span>
                                         </div>
                                       )}
                                     </div>
 
-                                    <div className="p-2.5 bg-white flex items-center justify-between">
+                                    <div className="p-3 bg-white flex items-center justify-between">
                                       <div className="min-w-0 flex-1">
                                         <div className="flex items-center gap-2">
-                                          <h4 className="text-xs font-bold text-[#143823] truncate">
+                                          <h4 className="text-sm font-bold text-[#143823] truncate">
                                             {activeItem.title}
                                           </h4>
                                           <span className="text-[10px] font-mono text-[#5B9A3C] bg-[#EAF2E5] px-1.5 py-0.2 rounded font-semibold">
-                                            0{mobileSubIdx + 1}/03
+                                            Slide 0{mobileSubIdx + 1}
                                           </span>
                                         </div>
-                                        <p className="text-[11px] text-[#4F6456] truncate font-light mt-0.5">
+                                        <p className="text-xs text-[#4F6456] truncate font-light mt-0.5">
                                           {activeItem.sub}
                                         </p>
                                       </div>
@@ -938,10 +972,27 @@ export const HeroWithDualSwapper: React.FC = () => {
                               })()}
                             </AnimatePresence>
                           </div>
+
+                          {/* Slide Indicator Dots Below Card */}
+                          <div className="flex items-center justify-center gap-2 mt-2.5">
+                            {currentFacility.subImages?.map((_, idx) => (
+                              <button
+                                key={idx}
+                                type="button"
+                                onClick={() => handleSelectSub(idx)}
+                                className={`transition-all duration-300 rounded-full cursor-pointer ${
+                                  mobileSubIdx === idx
+                                    ? 'w-7 h-2 bg-[#143823]'
+                                    : 'w-2 h-2 bg-[#143823]/25 hover:bg-[#143823]/50'
+                                }`}
+                                aria-label={`Go to slide ${idx + 1}`}
+                              />
+                            ))}
+                          </div>
                         </div>
 
-                        {/* Desktop View: 3 Analytical Sub-Images side-by-side */}
-                        <div className="hidden sm:grid sm:grid-cols-3 gap-2 sm:gap-3 h-56 sm:h-64 lg:h-[268px]">
+                        {/* Desktop View (>=1024px): 3 Analytical Sub-Images side-by-side */}
+                        <div className="hidden lg:grid lg:grid-cols-3 gap-2 sm:gap-3 h-56 sm:h-64 lg:h-[268px]">
                           {currentFacility.subImages?.map((item) => (
                             <div
                               key={item.id}
