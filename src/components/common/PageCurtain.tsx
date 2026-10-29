@@ -39,7 +39,7 @@ export const PageCurtain: React.FC<{ children: React.ReactNode }> = ({ children 
           {/* Official Company Logo in Elegant Elevated Glass Card */}
           <div className="relative px-6 py-4 rounded-2xl bg-white/95 backdrop-blur-md border border-white shadow-[0_15px_35px_rgba(20,56,35,0.12)] ring-1 ring-[#5B9A3C]/20 flex items-center justify-center">
             <img
-              src={okhaiLogo}
+              src="/logo.png"
               alt="Okhai Pharma Intermediates Pvt. Ltd."
               className="h-12 sm:h-14 w-auto object-contain drop-shadow-xs"
             />

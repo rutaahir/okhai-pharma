@@ -73,7 +73,7 @@ export const Navbar: React.FC = () => {
             {/* Logo lockup */}
             <Link to="/" className="flex items-center gap-3 group shrink-0" aria-label="Okhai Pharma Home">
               <img
-                src="/assets/aistudio/image_7ccf5a84.png"
+                src="/logo.png"
                 alt="Okhai Pharma Intermediates Logo"
                 className="h-11 sm:h-13 md:h-14 w-auto object-contain transition-transform duration-300 group-hover:scale-102"
               />

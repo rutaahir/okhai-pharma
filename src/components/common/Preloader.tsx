@@ -53,7 +53,7 @@ export const Preloader: React.FC<{ onComplete: () => void }> = ({ onComplete }) 
           {/* Official Company Logo in Luxury Glass Plinth */}
           <div className="relative px-6 py-5 sm:px-8 sm:py-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-white shadow-[0_25px_60px_rgba(20,56,35,0.15)] ring-1 ring-[#5B9A3C]/20 transition-all duration-700">
             <img
-              src={okhaiLogo}
+              src="/logo.png"
               alt="Okhai Pharma Intermediates Pvt. Ltd."
               className="h-16 sm:h-20 w-auto object-contain drop-shadow-sm transition-transform duration-700"
             />

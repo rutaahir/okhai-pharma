@@ -126,7 +126,7 @@ export const Footer: React.FC = () => {
           <StaggerItem className="lg:col-span-4 flex flex-col gap-3.5">
             <Link to="/" className="inline-block bg-white px-3 py-1.5 rounded-xl w-fit shadow-sm">
               <img
-                src="/assets/aistudio/image_7ccf5a84.png"
+                src="/logo.png"
                 alt="Okhai Pharma Intermediates"
                 className="h-10 sm:h-12 w-auto object-contain"
               />
