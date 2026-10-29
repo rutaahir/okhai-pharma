@@ -131,7 +131,7 @@ export const ProductsIndex: React.FC = () => {
       {/* =========================================================================
           1. HERO SECTION: "Standardized nicotine intermediates. Chromatographically certified."
       ========================================================================= */}
-      <section className="relative pt-24 sm:pt-28 pb-14 sm:pb-20 overflow-hidden bg-gradient-to-b from-[#FAFBF8] via-[#F4F8F1] to-[#EAF2E6]">
+      <section className="relative pt-28 sm:pt-32 lg:pt-36 pb-14 sm:pb-20 overflow-hidden bg-gradient-to-b from-[#FAFBF8] via-[#F4F8F1] to-[#EAF2E6]">
         
         {/* Ambient Radial Lights */}
         <div className="absolute top-0 right-1/4 w-[650px] h-[450px] bg-[#8CC63F]/12 rounded-full blur-[110px] pointer-events-none" />

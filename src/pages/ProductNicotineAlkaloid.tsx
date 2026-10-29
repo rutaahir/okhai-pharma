@@ -71,7 +71,7 @@ export const ProductNicotineAlkaloid: React.FC = () => {
       {/* =========================================================================
           1. BREADCRUMB & HERO SECTION
       ========================================================================= */}
-      <section className="pt-10 pb-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="pt-28 sm:pt-32 lg:pt-36 pb-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 text-xs font-mono text-[#1E3D2A]/60 mb-6">
           <Link to="/" className="hover:text-[#5B9A3C] transition-colors">Home</Link>
           <ChevronRight className="w-3 h-3" />

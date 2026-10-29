@@ -78,7 +78,7 @@ export const ProductNicotineSulfate: React.FC = () => {
       {/* =========================================================================
           1. BREADCRUMB & HERO SECTION
       ========================================================================= */}
-      <section className="pt-10 pb-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <section className="pt-28 sm:pt-32 lg:pt-36 pb-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 text-xs font-mono text-[#1E3D2A]/60 mb-6">
           <Link to="/" className="hover:text-[#5B9A3C] transition-colors">Home</Link>
           <ChevronRight className="w-3 h-3" />
@@ -130,51 +130,94 @@ export const ProductNicotineSulfate: React.FC = () => {
             </div>
           </FadeInLeft>
 
-          {/* Right Column: Crystallization Powder Dish with CAS Card */}
+          {/* Right Column: Radial Purity Gauge & Packaging Card */}
           <FadeInRight className="lg:col-span-5 flex flex-col items-center">
-            <div className="relative w-64 h-64 sm:w-72 sm:h-72 group cursor-pointer" onClick={() => setLightboxOpen(true)} title="Click to view full high-resolution image">
-              {/* Glowing Ambient Halo */}
-              <div className="absolute -inset-4 rounded-full bg-[#8CC63F]/25 blur-2xl group-hover:bg-[#8CC63F]/40 transition-all duration-500" />
-              
-              {/* Dish Container */}
-              <div className="relative w-full h-full rounded-full overflow-hidden border-2 border-white shadow-2xl bg-white transition-transform duration-700 group-hover:scale-104 flex items-center justify-center p-3.5 sm:p-4.5">
+            <div className="p-6 rounded-3xl bg-white border hairline-border shadow-xl space-y-5 w-full max-w-sm relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-[#8CC63F]/10 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="flex items-center justify-between relative z-10">
+                <span className="text-xs font-mono text-[#5B9A3C] uppercase tracking-wider font-semibold">
+                  Analytical Assay Gauge
+                </span>
+                <span className="text-xs font-mono text-[#1E3D2A]/60">Spectrophotometric / Titration</span>
+              </div>
+
+              {/* Animated Purity Gauge Dial */}
+              <div className="flex flex-col items-center py-2 relative z-10">
+                <div className="relative w-40 h-40 flex items-center justify-center">
+                  <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      className="text-[#E6EEDF]"
+                      strokeWidth="8"
+                      stroke="currentColor"
+                      fill="transparent"
+                    />
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="40"
+                      className="text-[#5B9A3C] transition-all duration-700 ease-out"
+                      strokeWidth="8"
+                      strokeDasharray={251.2}
+                      strokeDashoffset={251.2 - (251.2 * 0.40)}
+                      strokeLinecap="round"
+                      stroke="currentColor"
+                      fill="transparent"
+                    />
+                  </svg>
+                  <div className="absolute flex flex-col items-center">
+                    <span className="text-3xl font-serif font-bold text-[#1E3D2A] tabular-nums">
+                      40.0%
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-[#5B9A3C] font-semibold">
+                      Min Purity
+                    </span>
+                  </div>
+                </div>
+                <p className="text-xs text-center text-[#1E3D2A]/70 mt-3 font-medium">
+                  Water Soluble Botanical Intermediate
+                </p>
+              </div>
+
+              {/* Product Packaging Showcase (Click to Open Full Image) */}
+              <div 
+                onClick={() => setLightboxOpen(true)}
+                className="p-3.5 rounded-2xl bg-[#F8F9F4] border hairline-border hover:border-[#5B9A3C] transition-all flex items-center gap-3.5 relative z-10 cursor-pointer group shadow-2xs hover:shadow-md"
+                title="Click to view full high-resolution image"
+              >
                 <img
                   src={sulfatePkgImg}
-                  alt="Pure Nicotine Sulfate 40% Drum and Canister Packaging"
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
+                  alt="Nicotine Sulfate 40% Drum and Canister Packaging"
+                  className="w-16 h-16 rounded-xl object-contain p-1 bg-white shrink-0 border border-white shadow-xs group-hover:scale-105 transition-transform"
                 />
-                <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/40 pointer-events-none" />
+                <div className="text-xs space-y-0.5">
+                  <span className="font-semibold text-[#1E3D2A] block">25 KG Drum &amp; 5 KG Can</span>
+                  <p className="text-[#1E3D2A]/70 text-[11px]">
+                    Direct factory packaging with tamper-evident seal and moisture barrier.
+                  </p>
+                  <span className="text-[10px] font-mono text-[#5B9A3C] block font-medium">Standardized UN Packaging</span>
+                </div>
               </div>
 
-              {/* Circular CAS Badge */}
-              <div className="absolute top-2 right-4 w-14 h-14 rounded-full bg-white/95 backdrop-blur-md border border-[#5B9A3C]/30 shadow-lg flex flex-col items-center justify-center text-[#1E3D2A] group-hover:scale-110 transition-transform">
-                <span className="text-[9px] font-mono uppercase text-[#5B9A3C] font-semibold">CAS</span>
-                <span className="text-[11px] font-mono font-bold">65-30-5</span>
+              {/* Cleanroom Standards Checklist */}
+              <div className="pt-3 border-t hairline-border text-[11px] text-[#1E3D2A]/70 space-y-1.5">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#5B9A3C]" />
+                  <span>Extracted from Nicotiana tabacum in Gujarat</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Wind className="w-3.5 h-3.5 text-[#5B9A3C]" />
+                  <span>Packaged under sealed industrial containment</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
+                  <span>CAS 65-30-5 · UN 1658 Class 6.1 (PG II)</span>
+                </div>
               </div>
 
-              {/* Foliage Decals */}
-              <div className="absolute -bottom-6 -left-6 w-28 h-28 pointer-events-none select-none opacity-80">
-                <svg viewBox="0 0 100 100" fill="none" className="w-full h-full">
-                  <path d="M10,90 Q40,10 90,10 Q90,60 10,90 Z" fill="#5B9A3C" />
-                </svg>
-              </div>
-
-              {/* Hover Badge */}
-              <div className="absolute inset-x-0 bottom-4 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <span className="px-3 py-1 rounded-full bg-[#1E3D2A]/90 text-white text-[10px] font-mono backdrop-blur-xs flex items-center gap-1.5 shadow-md">
-                  <Activity className="w-3 h-3 text-[#8CC63F]" />
-                  <span>Inspect HPLC Spectrum</span>
-                </span>
-              </div>
-            </div>
-
-            {/* Quick Parameter Strip */}
-            <div className="mt-4 flex items-center gap-3 text-xs font-mono text-[#1E3D2A]/70 bg-white/80 backdrop-blur-xs px-4 py-2 rounded-xl border hairline-border shadow-xs">
-              <span className="text-[#5B9A3C] font-bold">Assay: 40.0% w/w</span>
-              <span className="text-[#1E3D2A]/30">•</span>
-              <span>Water Soluble</span>
-              <span className="text-[#1E3D2A]/30">•</span>
-              <span>UN 1658 (PG II)</span>
             </div>
           </FadeInRight>
 
