@@ -131,7 +131,7 @@ export const ProductsIndex: React.FC = () => {
       {/* =========================================================================
           1. HERO SECTION: "Standardized nicotine intermediates. Chromatographically certified."
       ========================================================================= */}
-      <section className="relative pt-28 sm:pt-32 lg:pt-36 pb-14 sm:pb-20 overflow-hidden bg-gradient-to-b from-[#FAFBF8] via-[#F4F8F1] to-[#EAF2E6]">
+      <section className="relative pt-24 sm:pt-28 pb-8 sm:pb-12 overflow-hidden bg-gradient-to-b from-[#FAFBF8] via-[#F4F8F1] to-[#EAF2E6]">
         
         {/* Ambient Radial Lights */}
         <div className="absolute top-0 right-1/4 w-[650px] h-[450px] bg-[#8CC63F]/12 rounded-full blur-[110px] pointer-events-none" />
@@ -321,7 +321,7 @@ export const ProductsIndex: React.FC = () => {
       ========================================================================= */}
       {(filter === 'all' || filter === 'pharma') && (
         <RevealOnScroll>
-          <section className="relative py-14 sm:py-20 bg-[#FAFBF8] overflow-hidden border-b border-[#1E3D2A]/8 animate-fadeIn">
+          <section className="relative py-10 sm:py-14 bg-[#FAFBF8] overflow-hidden border-b border-[#1E3D2A]/8 animate-fadeIn">
             
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
               
@@ -648,7 +648,7 @@ export const ProductsIndex: React.FC = () => {
       ========================================================================= */}
       {(filter === 'all' || filter === 'pharma') && (
         <RevealOnScroll>
-          <section className="relative py-14 sm:py-20 bg-white overflow-hidden border-b border-[#1E3D2A]/8 animate-fadeIn">
+          <section className="relative py-10 sm:py-14 bg-white overflow-hidden border-b border-[#1E3D2A]/8 animate-fadeIn">
             
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
               
@@ -804,7 +804,7 @@ export const ProductsIndex: React.FC = () => {
           4. PRODUCT SPECIFICATIONS & COMPARISON (Interactive Table with Tabs)
       ========================================================================= */}
       <RevealOnScroll>
-        <section className="relative py-14 sm:py-20 bg-[#FAFBF8] overflow-hidden">
+        <section className="relative py-10 sm:py-14 bg-[#FAFBF8] overflow-hidden">
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
@@ -1010,7 +1010,7 @@ export const ProductsIndex: React.FC = () => {
           5. WHERE OUR PRODUCTS MAKE AN IMPACT (5 Application Cards)
       ========================================================================= */}
       <RevealOnScroll>
-        <section className="relative py-14 sm:py-20 bg-gradient-to-b from-[#FAFBF8] via-[#F4F8F1] to-[#EAF2E6] overflow-hidden">
+        <section className="relative py-10 sm:py-14 bg-gradient-to-b from-[#FAFBF8] via-[#F4F8F1] to-[#EAF2E6] overflow-hidden">
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             

@@ -41,7 +41,7 @@ export const ProductPureNicotine: React.FC = () => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#F8F9F4] text-[#1E3D2A] pb-24 selection:bg-[#5B9A3C]/20 selection:text-[#1E3D2A]">
+    <div className="min-h-screen bg-[#F8F9F4] text-[#1E3D2A] pb-10 sm:pb-12 selection:bg-[#5B9A3C]/20 selection:text-[#1E3D2A]">
       
       {/* Interactive Modals */}
       <HplcChromatogramModal
@@ -72,8 +72,8 @@ export const ProductPureNicotine: React.FC = () => {
       {/* =========================================================================
           1. BREADCRUMB & HERO SECTION
       ========================================================================= */}
-      <section className="pt-28 sm:pt-32 lg:pt-36 pb-14 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="flex items-center gap-2 text-xs font-mono text-[#1E3D2A]/60 mb-6">
+      <section className="pt-24 sm:pt-28 pb-6 sm:pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="flex items-center gap-2 text-xs font-mono text-[#1E3D2A]/60 mb-3 sm:mb-4">
           <Link to="/" className="hover:text-[#5B9A3C] transition-colors">Home</Link>
           <ChevronRight className="w-3 h-3" />
           <Link to="/products" className="hover:text-[#5B9A3C] transition-colors">Products</Link>
@@ -255,7 +255,7 @@ export const ProductPureNicotine: React.FC = () => {
       {/* =========================================================================
           2. ELEVATED TABS NAVIGATION
       ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8">
         <div className="bg-white/80 backdrop-blur-md p-1.5 rounded-2xl border hairline-border shadow-sm flex items-center gap-1.5 overflow-x-auto">
           {[
             { id: 'overview', label: 'Product Overview', icon: Layers },
@@ -289,7 +289,7 @@ export const ProductPureNicotine: React.FC = () => {
       {/* =========================================================================
           3. TAB CONTENT PANELS & COMMERCIAL SOURCING DESK
       ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10 sm:mb-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
           
           {/* Main Tab Panel Column */}
