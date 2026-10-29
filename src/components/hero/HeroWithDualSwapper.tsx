@@ -477,11 +477,11 @@ export const HeroWithDualSwapper: React.FC = () => {
             <div className="relative z-20 flex items-center justify-between gap-4 mb-4 sm:mb-5">
               
               {/* Left Side Label */}
-              <div className="flex items-center gap-2">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#143823] text-white shadow-md text-xs font-semibold">
-                  <Package className="w-3.5 h-3.5 text-[#8CC63F]" />
-                  <span>Our Products &amp; Infrastructure</span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#8CC63F] animate-pulse" />
+              <div className="flex items-center gap-2 min-w-0">
+                <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 rounded-full bg-[#143823] text-white shadow-md text-[11px] sm:text-xs font-semibold truncate">
+                  <Package className="w-3.5 h-3.5 text-[#8CC63F] shrink-0" />
+                  <span className="truncate">Our Products &amp; Infrastructure</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#8CC63F] animate-pulse shrink-0" />
                 </div>
               </div>
 
@@ -572,15 +572,15 @@ export const HeroWithDualSwapper: React.FC = () => {
                 {/* 4. Product Body: Terrarium Dome & 4 Specification Pills */}
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-5 my-1">
                   
-                  {/* Terrarium Dome Packaging Visual (Increased Size & Impressive Luxury Styling) */}
-                  <div className="relative shrink-0 w-44 h-44 sm:w-52 sm:h-52 lg:w-60 lg:h-60 xl:w-64 xl:h-64 flex items-center justify-center">
+                  {/* Terrarium Dome Packaging Visual (Optimized for Mobile & Desktop Fitting) */}
+                  <div className="relative shrink-0 w-48 h-48 sm:w-56 sm:h-56 lg:w-60 lg:h-60 xl:w-64 xl:h-64 flex items-center justify-center">
                     {/* Glowing Emerald Multi-layer Aura */}
                     <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-[#8CC63F]/40 via-[#5B9A3C]/25 to-transparent blur-3xl pointer-events-none animate-pulse" />
                     <div className="absolute -inset-2 rounded-full bg-[#8CC63F]/15 blur-xl pointer-events-none" />
 
                     <div 
                       onClick={() => setLightboxOpen(true)}
-                      className="relative w-full h-full rounded-full border-[5px] border-white shadow-[0_20px_50px_rgba(18,61,41,0.22)] overflow-hidden bg-gradient-to-b from-white via-[#F9FBF8] to-[#EEF5EB] aspect-square group cursor-pointer"
+                      className="relative w-full h-full rounded-full border-4 sm:border-[5px] border-white shadow-[0_20px_50px_rgba(18,61,41,0.22)] overflow-hidden bg-gradient-to-b from-white via-[#F9FBF8] to-[#EEF5EB] aspect-square group cursor-pointer"
                       title="Click to view full high-resolution image"
                     >
                       <AnimatePresence mode="wait">
@@ -590,12 +590,12 @@ export const HeroWithDualSwapper: React.FC = () => {
                           animate={{ opacity: 1, scale: 1, rotate: 0, y: 0, filter: 'blur(0px)' }}
                           exit={{ opacity: 0, scale: 1.08, rotate: 5, y: -14, filter: 'blur(5px)' }}
                           transition={{ duration: 0.55, ease: LUXURY_EASE }}
-                          className="w-full h-full flex items-center justify-center p-3.5 sm:p-4.5 pb-6 sm:pb-7 relative"
+                          className="w-full h-full flex items-center justify-center p-3 sm:p-4 pb-4 sm:pb-5 relative"
                         >
                           <img
                             src={currentProduct.featuredImage}
                             alt={currentProduct.name}
-                            className="w-full h-full object-contain drop-shadow-[0_12px_24px_rgba(20,56,35,0.22)] transition-transform duration-700 group-hover:scale-108"
+                            className="w-full h-full max-h-[82%] object-contain drop-shadow-[0_12px_24px_rgba(20,56,35,0.22)] transition-transform duration-700 group-hover:scale-105"
                           />
                         </motion.div>
                       </AnimatePresence>
@@ -604,14 +604,14 @@ export const HeroWithDualSwapper: React.FC = () => {
                       <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-transparent via-white/15 to-white/60 pointer-events-none" />
 
                       {/* Monograph Badge */}
-                      <div className="absolute bottom-3 inset-x-3 text-center">
-                        <span className="inline-block max-w-[90%] truncate text-[10px] sm:text-[11px] font-mono font-bold text-[#143823] bg-white/95 backdrop-blur-md px-3.5 py-1 rounded-full border border-[#5B9A3C]/35 shadow-md">
+                      <div className="absolute bottom-2 sm:bottom-2.5 inset-x-2 text-center pointer-events-none">
+                        <span className="inline-block max-w-[92%] truncate text-[9.5px] sm:text-[11px] font-mono font-bold text-[#143823] bg-white/95 backdrop-blur-md px-2.5 py-0.5 sm:px-3.5 sm:py-1 rounded-full border border-[#5B9A3C]/35 shadow-sm">
                           {currentProduct.badge}
                         </span>
                       </div>
 
                       {/* Hover Inspect Tooltip */}
-                      <div className="absolute inset-x-0 bottom-10 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                      <div className="absolute inset-x-0 bottom-9 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                         <span className="px-2.5 py-0.5 rounded-full bg-[#1E3D2A]/90 text-white text-[9px] font-mono backdrop-blur-xs flex items-center gap-1 shadow-md">
                           <Eye className="w-3 h-3 text-[#8CC63F]" />
                           <span>View Image</span>
@@ -629,42 +629,42 @@ export const HeroWithDualSwapper: React.FC = () => {
                         animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
                         exit={{ opacity: 0, x: -12, filter: 'blur(4px)' }}
                         transition={{ duration: 0.48, ease: LUXURY_EASE }}
-                        className="grid grid-cols-2 gap-2"
+                        className="grid grid-cols-2 gap-1.5 sm:gap-2"
                       >
                         {/* Purity */}
-                        <div className="p-2.5 rounded-xl bg-white/95 border border-[#5B9A3C]/15 shadow-2xs">
+                        <div className="p-2 sm:p-2.5 rounded-xl bg-white/95 border border-[#5B9A3C]/15 shadow-2xs min-h-[56px] flex flex-col justify-center">
                           <div className="flex items-center gap-1.5 text-[#5B9A3C] mb-0.5">
-                            <Leaf className="w-3 h-3 text-[#5B9A3C]" />
+                            <Leaf className="w-3 h-3 text-[#5B9A3C] shrink-0" />
                             <span className="text-[9px] uppercase font-mono tracking-wider text-[#143823]/60 font-medium">Purity</span>
                           </div>
-                          <span className="text-xs font-mono font-bold text-[#143823] block truncate">{currentProduct.purity}</span>
+                          <span className="text-[11px] sm:text-xs font-mono font-bold text-[#143823] block leading-tight">{currentProduct.purity}</span>
                         </div>
 
                         {/* Appearance */}
-                        <div className="p-2.5 rounded-xl bg-white/95 border border-[#5B9A3C]/15 shadow-2xs">
+                        <div className="p-2 sm:p-2.5 rounded-xl bg-white/95 border border-[#5B9A3C]/15 shadow-2xs min-h-[56px] flex flex-col justify-center">
                           <div className="flex items-center gap-1.5 text-[#5B9A3C] mb-0.5">
-                            <Droplet className="w-3 h-3 text-[#5B9A3C]" />
+                            <Droplet className="w-3 h-3 text-[#5B9A3C] shrink-0" />
                             <span className="text-[9px] uppercase font-mono tracking-wider text-[#143823]/60 font-medium">Appearance</span>
                           </div>
-                          <span className="text-xs font-mono font-bold text-[#143823] block truncate">{currentProduct.appearance}</span>
+                          <span className="text-[11px] sm:text-xs font-mono font-bold text-[#143823] block leading-tight break-words">{currentProduct.appearance}</span>
                         </div>
 
                         {/* CAS No. */}
-                        <div className="p-2.5 rounded-xl bg-white/95 border border-[#5B9A3C]/15 shadow-2xs">
+                        <div className="p-2 sm:p-2.5 rounded-xl bg-white/95 border border-[#5B9A3C]/15 shadow-2xs min-h-[56px] flex flex-col justify-center">
                           <div className="flex items-center gap-1.5 text-[#5B9A3C] mb-0.5">
-                            <FlaskConical className="w-3 h-3 text-[#5B9A3C]" />
+                            <FlaskConical className="w-3 h-3 text-[#5B9A3C] shrink-0" />
                             <span className="text-[9px] uppercase font-mono tracking-wider text-[#143823]/60 font-medium">CAS No.</span>
                           </div>
-                          <span className="text-xs font-mono font-bold text-[#143823] block truncate">{currentProduct.cas}</span>
+                          <span className="text-[11px] sm:text-xs font-mono font-bold text-[#143823] block leading-tight">{currentProduct.cas}</span>
                         </div>
 
                         {/* Standard */}
-                        <div className="p-2.5 rounded-xl bg-white/95 border border-[#5B9A3C]/15 shadow-2xs">
+                        <div className="p-2 sm:p-2.5 rounded-xl bg-white/95 border border-[#5B9A3C]/15 shadow-2xs min-h-[56px] flex flex-col justify-center">
                           <div className="flex items-center gap-1.5 text-[#5B9A3C] mb-0.5">
-                            <ShieldCheck className="w-3 h-3 text-[#5B9A3C]" />
+                            <ShieldCheck className="w-3 h-3 text-[#5B9A3C] shrink-0" />
                             <span className="text-[9px] uppercase font-mono tracking-wider text-[#143823]/60 font-medium">Standard</span>
                           </div>
-                          <span className="text-xs font-mono font-bold text-[#5B9A3C] block truncate">{currentProduct.standard}</span>
+                          <span className="text-[11px] sm:text-xs font-mono font-bold text-[#5B9A3C] block leading-tight break-words">{currentProduct.standard}</span>
                         </div>
                       </motion.div>
                     </AnimatePresence>

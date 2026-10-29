@@ -449,167 +449,213 @@ export const Navbar: React.FC = () => {
         </div>
       </header>
 
-      {/* 3. Mobile Fullscreen Frosted Overlay */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 bg-[#F8F9F4]/98 backdrop-blur-2xl flex flex-col justify-between pt-24 pb-12 px-6 lg:hidden overflow-y-auto">
-          <div className="flex flex-col gap-5 max-w-md mx-auto w-full">
-            <Link
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-2xl font-serif font-semibold text-[#1E3D2A] hover:text-[#5B9A3C] transition-colors"
+      {/* 3. Mobile Backdrop Overlay (Click outside to close) */}
+      <div
+        onClick={() => setMobileMenuOpen(false)}
+        className={`fixed inset-0 z-50 bg-black/45 backdrop-blur-xs transition-opacity duration-300 lg:hidden ${
+          mobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        aria-hidden="true"
+      />
+
+      {/* 4. Mobile Side Drawer (Half part of screen width with prominent Close button) */}
+      <div
+        className={`fixed top-0 right-0 bottom-0 z-[60] w-[65%] sm:w-[50%] max-w-[280px] bg-white shadow-2xl transition-transform duration-300 ease-out lg:hidden flex flex-col justify-between overflow-hidden border-l border-[#1E3D2A]/10 ${
+          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full pointer-events-none'
+        }`}
+      >
+        {/* Drawer Header with Logo & Prominent Close Button */}
+        <div className="flex items-center justify-between px-3.5 py-3 border-b border-[#1E3D2A]/10 bg-[#FAFBF8]">
+          <div className="flex items-center gap-1.5">
+            <img src="/logo.png" alt="Okhai Pharma" className="h-6 w-auto object-contain" />
+            <span className="font-serif font-bold text-xs text-[#1E3D2A] truncate">Okhai Pharma</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(false)}
+            className="w-8 h-8 rounded-lg border border-[#1E3D2A]/20 bg-white text-[#1E3D2A] hover:bg-[#1E3D2A] hover:text-white flex items-center justify-center transition-colors cursor-pointer shadow-xs active:scale-90"
+            aria-label="Close navigation menu"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Scrollable Navigation Links */}
+        <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
+          <Link
+            to="/"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`text-base font-serif font-semibold py-1.5 transition-colors ${
+              isActive('/') && location.pathname === '/' ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] hover:text-[#5B9A3C]'
+            }`}
+          >
+            Home
+          </Link>
+
+          <Link
+            to="/about"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`text-base font-serif font-semibold py-1.5 transition-colors ${
+              isActive('/about') ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] hover:text-[#5B9A3C]'
+            }`}
+          >
+            About Us
+          </Link>
+
+          {/* Mobile Products Accordion */}
+          <div className="border-y border-[#1E3D2A]/8 py-2">
+            <button
+              type="button"
+              onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
+              className="w-full flex items-center justify-between text-base font-serif font-semibold text-[#1E3D2A] py-1 cursor-pointer"
             >
-              Home
-            </Link>
+              <span>Products</span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${mobileProductsOpen ? 'rotate-180 text-[#5B9A3C]' : ''}`} />
+            </button>
+            {mobileProductsOpen && (
+              <div className="mt-2 pl-2 flex flex-col gap-2">
+                <Link
+                  to="/products"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="text-xs font-semibold text-[#5B9A3C] py-1"
+                >
+                  All Products Overview →
+                </Link>
+                {/* 1. Nicotine Sulfate 40% */}
+                <Link
+                  to="/products/nicotine-sulfate-40"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-[#F4F9F1] transition-all group"
+                >
+                  <img
+                    src={sulfatePkgImg}
+                    alt="Nicotine Sulfate 40%"
+                    className="w-8 h-8 rounded-md object-contain p-0.5 border border-[#5B9A3C]/20 bg-white shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-semibold text-[#1E3D2A] group-hover:text-[#5B9A3C] block truncate">
+                      Nicotine Sulfate 40%
+                    </span>
+                    <span className="text-[10px] text-[#1E3D2A]/60 block truncate">Water-soluble intermediate</span>
+                  </div>
+                </Link>
 
-            <Link
-              to="/about"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-2xl font-serif font-semibold text-[#1E3D2A] hover:text-[#5B9A3C] transition-colors"
-            >
-              About Us
-            </Link>
+                {/* 2. Nicotine Alkaloid 90% / 95% */}
+                <Link
+                  to="/products/nicotine-alkaloid-90-95"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 p-1.5 rounded-lg hover:bg-[#F4F9F1] transition-all group"
+                >
+                  <img
+                    src={alkaloidPkgImg}
+                    alt="Nicotine Alkaloid 90% / 95%"
+                    className="w-8 h-8 rounded-md object-contain p-0.5 border border-[#5B9A3C]/20 bg-white shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-semibold text-[#1E3D2A] group-hover:text-[#5B9A3C] block truncate">
+                      Nicotine Alkaloid 95%
+                    </span>
+                    <span className="text-[10px] text-[#1E3D2A]/60 block truncate">Pharma API alkaloid</span>
+                  </div>
+                </Link>
 
-            {/* Mobile Products Accordion */}
-            <div className="border-b border-[#1E3D2A]/10 pb-3">
-              <button
-                onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
-                className="w-full flex items-center justify-between text-2xl font-serif font-semibold text-[#1E3D2A]"
-              >
-                <span>Products</span>
-                <ChevronDown className={`w-5 h-5 transition-transform ${mobileProductsOpen ? 'rotate-180 text-[#5B9A3C]' : ''}`} />
-              </button>
-              {mobileProductsOpen && (
-                <div className="mt-3 pl-3 flex flex-col gap-2.5">
-                  <Link
-                    to="/products"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-sm font-semibold text-[#5B9A3C]"
-                  >
-                    All Products Overview →
-                  </Link>
-                  {/* 1. Nicotine Sulfate 40% */}
-                  <Link
-                    to="/products/nicotine-sulfate-40"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F4F9F1] transition-all group"
-                  >
-                    <img
-                      src={sulfatePkgImg}
-                      alt="Nicotine Sulfate 40%"
-                      className="w-10 h-10 rounded-lg object-contain p-1 border border-[#5B9A3C]/20 bg-white shrink-0"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-[#1E3D2A] group-hover:text-[#5B9A3C]">
-                          Nicotine Sulfate 40%
-                        </span>
-                        <span className="text-[10px] font-mono text-[#5B9A3C] bg-[#EAF2E5] px-1.5 py-0.5 rounded font-bold">40%</span>
-                      </div>
-                      <span className="text-[11px] text-[#1E3D2A]/60 block truncate">Water-soluble intermediate</span>
-                    </div>
-                  </Link>
+                {/* 3. Pure Nicotine USP/EP 99.5%+ */}
+                <Link
+                  to="/products/pure-nicotine-usp-ep-99-5"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-2.5 p-1.5 rounded-lg bg-[#F4F9F1]/80 hover:bg-[#F4F9F1] transition-all group border border-[#5B9A3C]/20"
+                >
+                  <img
+                    src={pureNicotinePkgImg}
+                    alt="Pure Nicotine USP/EP 99.5%+"
+                    className="w-8 h-8 rounded-md object-contain p-0.5 border border-[#5B9A3C]/30 bg-white shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-xs font-semibold text-[#1E3D2A] group-hover:text-[#5B9A3C] block truncate">
+                      Pure Nicotine ≥99.5%
+                    </span>
+                    <span className="text-[10px] text-[#1E3D2A]/60 block truncate">USP / EP Compendial</span>
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
 
-                  {/* 2. Nicotine Alkaloid 90% / 95% */}
-                  <Link
-                    to="/products/nicotine-alkaloid-90-95"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F4F9F1] transition-all group"
-                  >
-                    <img
-                      src={alkaloidPkgImg}
-                      alt="Nicotine Alkaloid 90% / 95%"
-                      className="w-10 h-10 rounded-lg object-contain p-1 border border-[#5B9A3C]/20 bg-white shrink-0"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-[#1E3D2A] group-hover:text-[#5B9A3C]">
-                          Nicotine Alkaloid 90% / 95%
-                        </span>
-                        <span className="text-[10px] font-mono text-[#5B9A3C] bg-[#EAF2E5] px-1.5 py-0.5 rounded font-bold">95%</span>
-                      </div>
-                      <span className="text-[11px] text-[#1E3D2A]/60 block truncate">Pharma API &amp; distilled alkaloid</span>
-                    </div>
-                  </Link>
+          <Link
+            to="/quality-process"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`text-base font-serif font-semibold py-1.5 transition-colors ${
+              isActive('/quality-process') ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] hover:text-[#5B9A3C]'
+            }`}
+          >
+            Quality &amp; Process
+          </Link>
 
-                  {/* 3. Pure Nicotine USP/EP 99.5%+ (3rd product) */}
-                  <Link
-                    to="/products/pure-nicotine-usp-ep-99-5"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 p-2 rounded-xl bg-[#F4F9F1]/80 hover:bg-[#F4F9F1] transition-all group border border-[#5B9A3C]/20"
-                  >
-                    <img
-                      src={pureNicotinePkgImg}
-                      alt="Pure Nicotine USP/EP 99.5%+"
-                      className="w-10 h-10 rounded-lg object-contain p-1 border border-[#5B9A3C]/30 bg-white shrink-0"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-[#1E3D2A] group-hover:text-[#5B9A3C]">
-                          Pure Nicotine USP/EP 99.5%+
-                        </span>
-                      </div>
-                      <span className="text-[11px] text-[#1E3D2A]/60 block truncate">Pharmaceutical API base</span>
-                    </div>
-                  </Link>
-                </div>
-              )}
-            </div>
+          <Link
+            to="/leadership"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`text-base font-serif font-semibold py-1.5 transition-colors ${
+              isActive('/leadership') ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] hover:text-[#5B9A3C]'
+            }`}
+          >
+            Leadership
+          </Link>
 
-            <Link
-              to="/quality-process"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-2xl font-serif font-semibold text-[#1E3D2A] hover:text-[#5B9A3C] transition-colors"
-            >
-              Quality &amp; Process
-            </Link>
+          <Link
+            to="/export"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`text-base font-serif font-semibold py-1.5 transition-colors ${
+              isActive('/export') ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] hover:text-[#5B9A3C]'
+            }`}
+          >
+            Global Export
+          </Link>
 
-            <Link
-              to="/leadership"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-2xl font-serif font-semibold text-[#1E3D2A] hover:text-[#5B9A3C] transition-colors"
-            >
-              Leadership
-            </Link>
+          <Link
+            to="/downloads"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`text-base font-serif font-semibold py-1.5 transition-colors ${
+              isActive('/downloads') ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] hover:text-[#5B9A3C]'
+            }`}
+          >
+            Downloads &amp; Specs
+          </Link>
 
-            <Link
-              to="/export"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-2xl font-serif font-semibold text-[#1E3D2A] hover:text-[#5B9A3C] transition-colors"
-            >
-              Global Export
-            </Link>
+          <Link
+            to="/contact"
+            onClick={() => setMobileMenuOpen(false)}
+            className={`text-base font-serif font-semibold py-1.5 transition-colors ${
+              isActive('/contact') ? 'text-[#5B9A3C]' : 'text-[#1E3D2A] hover:text-[#5B9A3C]'
+            }`}
+          >
+            Contact Us
+          </Link>
 
-            <Link
-              to="/downloads"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-2xl font-serif font-semibold text-[#1E3D2A] hover:text-[#5B9A3C] transition-colors"
-            >
-              Downloads &amp; Specs
-            </Link>
-
+          <div className="pt-2">
             <Link
               to="/contact"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-2xl font-serif font-semibold text-[#1E3D2A] hover:text-[#5B9A3C] transition-colors"
+              className="w-full py-2.5 rounded-xl text-center text-xs font-semibold bg-[#1E3D2A] text-white hover:bg-[#2D5A3C] transition-colors block shadow-sm"
             >
-              Contact Us
+              Request a Quote
             </Link>
           </div>
+        </div>
 
-          <div className="max-w-md mx-auto w-full pt-6 border-t border-[#1E3D2A]/10 flex flex-col gap-3 text-xs text-[#1E3D2A]/80">
-            <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-[#5B9A3C]" />
-              <a href={`tel:${COMPANY_DETAILS.phone.replace(/\s+/g, '')}`} className="font-mono tabular-nums">
-                {COMPANY_DETAILS.phone}
-              </a>
-            </div>
-            <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-[#5B9A3C]" />
-              <a href={`mailto:${COMPANY_DETAILS.email}`}>{COMPANY_DETAILS.email}</a>
-            </div>
+        {/* Drawer Footer Contact Strip */}
+        <div className="p-3.5 border-t border-[#1E3D2A]/10 bg-[#FAFBF8] flex flex-col gap-2 text-[11px] text-[#1E3D2A]/80">
+          <div className="flex items-center gap-2">
+            <Phone className="w-3.5 h-3.5 text-[#5B9A3C] shrink-0" />
+            <a href={`tel:${COMPANY_DETAILS.phone.replace(/\s+/g, '')}`} className="font-mono truncate">
+              {COMPANY_DETAILS.phone}
+            </a>
+          </div>
+          <div className="flex items-center gap-2">
+            <Mail className="w-3.5 h-3.5 text-[#5B9A3C] shrink-0" />
+            <a href={`mailto:${COMPANY_DETAILS.email}`} className="truncate">{COMPANY_DETAILS.email}</a>
           </div>
         </div>
-      )}
+      </div>
     </>
   );
 };

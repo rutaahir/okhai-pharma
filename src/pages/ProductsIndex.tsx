@@ -175,51 +175,57 @@ export const ProductsIndex: React.FC = () => {
               </p>
 
               {/* Category Filter Tabs with Dynamic Count Badges & Micro-animations */}
-              <div className="mt-8 flex flex-wrap items-center gap-2.5 sm:gap-3 p-1.5 bg-white/70 backdrop-blur-md rounded-full border border-[#1E3D2A]/10 shadow-xs max-w-fit">
+              <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 sm:gap-2.5 p-1.5 bg-white/80 backdrop-blur-md rounded-2xl sm:rounded-full border border-[#1E3D2A]/10 shadow-xs w-full sm:w-auto sm:max-w-fit">
                 <button
                   type="button"
                   onClick={() => setFilter('all')}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center gap-2 ${
+                  className={`px-4 py-2.5 sm:py-2 rounded-xl sm:rounded-full text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center justify-between sm:justify-start gap-2.5 ${
                     filter === 'all'
                       ? 'bg-[#1E3D2A] text-white shadow-md shadow-[#1E3D2A]/25'
                       : 'text-[#1E3D2A]/75 hover:text-[#1E3D2A] hover:bg-white/80'
                   }`}
                 >
-                  <Layers className={`w-3.5 h-3.5 ${filter === 'all' ? 'text-[#8CC63F]' : 'text-[#5B9A3C]'}`} />
-                  <span>All Formulations</span>
-                  <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${filter === 'all' ? 'bg-white/20 text-white' : 'bg-[#EAF2E5] text-[#2E683A]'}`}>
-                    2
+                  <div className="flex items-center gap-2">
+                    <Layers className={`w-3.5 h-3.5 ${filter === 'all' ? 'text-[#8CC63F]' : 'text-[#5B9A3C]'}`} />
+                    <span>All Formulations</span>
+                  </div>
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${filter === 'all' ? 'bg-white/20 text-white' : 'bg-[#EAF2E5] text-[#2E683A]'}`}>
+                    3
                   </span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setFilter('pharma')}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center gap-2 ${
+                  className={`px-4 py-2.5 sm:py-2 rounded-xl sm:rounded-full text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center justify-between sm:justify-start gap-2.5 ${
                     filter === 'pharma'
                       ? 'bg-[#1E3D2A] text-white shadow-md shadow-[#1E3D2A]/25'
                       : 'text-[#1E3D2A]/75 hover:text-[#1E3D2A] hover:bg-white/80'
                   }`}
                 >
-                  <FlaskConical className={`w-3.5 h-3.5 ${filter === 'pharma' ? 'text-[#8CC63F]' : 'text-[#5B9A3C]'}`} />
-                  <span>Pharma &amp; API Grade</span>
-                  <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${filter === 'pharma' ? 'bg-white/20 text-white' : 'bg-[#EAF2E5] text-[#2E683A]'}`}>
-                    1
+                  <div className="flex items-center gap-2">
+                    <FlaskConical className={`w-3.5 h-3.5 ${filter === 'pharma' ? 'text-[#8CC63F]' : 'text-[#5B9A3C]'}`} />
+                    <span>Pharma &amp; API Grade</span>
+                  </div>
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${filter === 'pharma' ? 'bg-white/20 text-white' : 'bg-[#EAF2E5] text-[#2E683A]'}`}>
+                    2
                   </span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setFilter('research')}
-                  className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center gap-2 ${
+                  className={`px-4 py-2.5 sm:py-2 rounded-xl sm:rounded-full text-xs font-semibold tracking-wide transition-all duration-300 cursor-pointer flex items-center justify-between sm:justify-start gap-2.5 ${
                     filter === 'research'
                       ? 'bg-[#1E3D2A] text-white shadow-md shadow-[#1E3D2A]/25'
                       : 'text-[#1E3D2A]/75 hover:text-[#1E3D2A] hover:bg-white/80'
                   }`}
                 >
-                  <Atom className={`w-3.5 h-3.5 ${filter === 'research' ? 'text-[#8CC63F]' : 'text-[#5B9A3C]'}`} />
-                  <span>Research &amp; Technical</span>
-                  <span className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${filter === 'research' ? 'bg-white/20 text-white' : 'bg-[#EAF2E5] text-[#2E683A]'}`}>
+                  <div className="flex items-center gap-2">
+                    <Atom className={`w-3.5 h-3.5 ${filter === 'research' ? 'text-[#8CC63F]' : 'text-[#5B9A3C]'}`} />
+                    <span>Research &amp; Technical</span>
+                  </div>
+                  <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full ${filter === 'research' ? 'bg-white/20 text-white' : 'bg-[#EAF2E5] text-[#2E683A]'}`}>
                     1
                   </span>
                 </button>
@@ -332,7 +338,7 @@ export const ProductsIndex: React.FC = () => {
                   
                   <div 
                     onClick={() => openLightbox(sulfatePkgImg, 'Nicotine Sulfate 40%', 'Water-Soluble Intermediate · CAS 65-30-5 · UN 1658 (PG II)', '40% ASSAY')}
-                    className="relative w-64 h-64 sm:w-80 sm:h-80 group cursor-pointer"
+                    className="relative w-56 h-56 sm:w-80 sm:h-80 group cursor-pointer"
                     title="Click to view full high-resolution image"
                   >
                     {/* Glowing Green Halo */}
@@ -592,7 +598,7 @@ export const ProductsIndex: React.FC = () => {
                   
                   <div 
                     onClick={() => openLightbox(alkaloidPkgImg, 'Nicotine Alkaloid 90% / 95%', 'Active Pharmaceutical Intermediate · CAS 54-11-5 · UN 1654 (PG II)', '95% API')}
-                    className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-88 lg:h-88 group cursor-pointer"
+                    className="relative w-56 h-56 sm:w-80 sm:h-80 lg:w-88 lg:h-88 group cursor-pointer"
                     title="Click to view full high-resolution image"
                   >
                     {/* Glowing Green Halos with Ambient Breath */}
@@ -659,7 +665,7 @@ export const ProductsIndex: React.FC = () => {
                   
                   <div 
                     onClick={() => openLightbox(pureNicotinePkgImg, 'Pure Nicotine USP/EP 99.5%+', 'USP / EP Compendial Monograph · CAS 54-11-5 · UN 1654 (PG II)', '≥99.5% USP/EP')}
-                    className="relative w-64 h-64 sm:w-80 sm:h-80 group cursor-pointer"
+                    className="relative w-56 h-56 sm:w-80 sm:h-80 group cursor-pointer"
                     title="Click to view full high-resolution image"
                   >
                     {/* Glowing Emerald Halo */}
