@@ -572,7 +572,7 @@ export const HeroWithDualSwapper: React.FC = () => {
                   </AnimatePresence>
 
                   {/* 3. Interactive Active Status Navigation Pill Tabs */}
-                  <div className="flex items-center gap-2 mb-4 p-1 rounded-2xl bg-white/70 border border-[#143823]/10 overflow-x-auto shadow-2xs">
+                  <div className="flex items-center gap-2 mb-4 p-1 rounded-2xl bg-white/70 border border-[#143823]/10 overflow-x-auto scrollbar-thin shadow-2xs">
                     {PRODUCTS_DATA.map((prod, idx) => {
                       const isActive = productIdx === idx;
                       return (
@@ -743,7 +743,7 @@ export const HeroWithDualSwapper: React.FC = () => {
                   </AnimatePresence>
 
                   {/* 3. Interactive Active Status Navigation Pill Tabs */}
-                  <div className="flex items-center gap-2 mb-4 p-1 rounded-2xl bg-white/70 border border-[#143823]/10 overflow-x-auto shadow-2xs">
+                  <div className="flex items-center gap-2 mb-4 p-1 rounded-2xl bg-white/70 border border-[#143823]/10 overflow-x-auto scrollbar-thin shadow-2xs">
                     {FACILITY_SWAPS.map((fac, idx) => {
                       const isActive = facilityIdx === idx;
                       return (
