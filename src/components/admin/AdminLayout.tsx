@@ -14,7 +14,8 @@ import {
   ShieldCheck,
   MailCheck,
   CheckCircle2,
-  Clock
+  Clock,
+  ScanLine
 } from 'lucide-react';
 
 export const AdminLayout: React.FC = () => {
@@ -155,6 +156,26 @@ export const AdminLayout: React.FC = () => {
                   {newCount} NEW
                 </span>
               )}
+            </NavLink>
+
+            <NavLink
+              to="/admin/leads"
+              onClick={() => setMobileMenuOpen(false)}
+              className={({ isActive }) =>
+                `flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-semibold transition-all ${
+                  isActive
+                    ? 'bg-[#8CC63F] text-[#1E3D2A] shadow-md shadow-[#8CC63F]/20 font-bold'
+                    : 'text-white/80 hover:bg-white/10 hover:text-white'
+                }`
+              }
+            >
+              <div className="flex items-center gap-3">
+                <ScanLine className="w-4 h-4 shrink-0" />
+                <span>Scanned Leads (AI OCR)</span>
+              </div>
+              <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-white/15 text-[#8CC63F]">
+                AI
+              </span>
             </NavLink>
 
             <div className="px-3 pt-5 pb-1 text-[10px] font-mono uppercase tracking-widest text-white/40 font-semibold">

@@ -19,6 +19,7 @@ import { Downloads } from './pages/Downloads';
 import { Contact } from './pages/Contact';
 import { Legal } from './pages/Legal';
 import { NotFound } from './pages/NotFound';
+import { LeadPage } from './pages/LeadPage';
 
 // Admin Context & Components
 import { AdminAuthProvider } from './context/AdminAuthContext';
@@ -27,6 +28,8 @@ import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminLogin } from './pages/admin/AdminLogin';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { AdminInquiries } from './pages/admin/AdminInquiries';
+import { AdminLeadsDashboard } from './pages/admin/AdminLeadsDashboard';
+import { AdminLeadDetail } from './pages/admin/AdminLeadDetail';
 
 export default function App() {
   const [preloaderDone, setPreloaderDone] = useState(false);
@@ -53,6 +56,8 @@ export default function App() {
             <Route element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="inquiries" element={<AdminInquiries />} />
+              <Route path="leads" element={<AdminLeadsDashboard />} />
+              <Route path="leads/:id" element={<AdminLeadDetail />} />
             </Route>
           </Route>
 
@@ -69,6 +74,7 @@ export default function App() {
             <Route path="/export" element={<Export />} />
             <Route path="/downloads" element={<Downloads />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/lead" element={<LeadPage />} />
             <Route path="/legal" element={<Legal />} />
             <Route path="*" element={<NotFound />} />
           </Route>

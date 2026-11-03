@@ -438,6 +438,9 @@ export const QualityProcess: React.FC = () => {
       <HplcChromatogramModal
         isOpen={hplcModalOpen}
         onClose={() => setHplcModalOpen(false)}
+        productName="Pure Nicotine USP/EP 99.5%+"
+        casNumber="54-11-5"
+        purityScore="99.92%"
       />
     </div>
   );

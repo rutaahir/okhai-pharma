@@ -6,6 +6,18 @@ coverage/
 *.log
 .env*
 !.env.example
-data/*.db
-data/*.db-wal
-data/*.db-shm
+
+# Databases & Uploaded Media
+data/
+media/
+*.sqlite3
+db.sqlite3
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Scratch & Temporary
+scratch/
+

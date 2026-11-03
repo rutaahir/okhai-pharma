@@ -307,7 +307,7 @@ export const HeroWithDualSwapper: React.FC = () => {
         imageSrc={currentProduct.featuredImage}
         imageAlt={currentProduct.name}
         title={currentProduct.name}
-        subtitle={currentProduct.spec}
+        subtitle={currentProduct.subtitle}
         badge={currentProduct.badge}
       />
 

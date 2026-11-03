@@ -13,6 +13,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { COMPANY_DETAILS, PRODUCTS } from '../../data/companyData';
+import { BrochureModal } from './BrochureModal';
 import sulfatePkgImg from '../../assets/images/product-nicotine-sulfate-pkg.jpg';
 import alkaloidPkgImg from '../../assets/images/product-nicotine-alkaloid-pkg.jpg';
 import pureNicotinePkgImg from '../../assets/images/product-pure-nicotine-pkg.jpg';
@@ -25,6 +26,7 @@ export const Navbar: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileProductsOpen, setMobileProductsOpen] = useState(false);
   const [hoveredProductIndex, setHoveredProductIndex] = useState(0);
+  const [brochureModalOpen, setBrochureModalOpen] = useState(false);
   const megaMenuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -333,13 +335,17 @@ export const Navbar: React.FC = () => {
                                     <span>Specifications</span>
                                     <ArrowRight className="w-3 h-3 group-hover/spec:translate-x-0.5 transition-transform" />
                                   </Link>
-                                  <Link
-                                    to="/downloads"
-                                    className="flex items-center gap-1 text-[11px] font-semibold text-[#1E3D2A]/75 hover:text-[#5B9A3C] transition-colors"
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setMegaMenuOpen(false);
+                                      setBrochureModalOpen(true);
+                                    }}
+                                    className="flex items-center gap-1 text-[11px] font-semibold text-[#1E3D2A]/75 hover:text-[#5B9A3C] transition-colors cursor-pointer"
                                   >
                                     <FileDown className="w-3 h-3 text-[#5B9A3C]" />
                                     <span>Brochure</span>
-                                  </Link>
+                                  </button>
                                 </div>
                               </div>
                             </div>
@@ -415,14 +421,15 @@ export const Navbar: React.FC = () => {
             {/* Right Action Buttons */}
             <div className="hidden sm:flex items-center gap-3">
               {/* Secondary Brochure Button */}
-              <Link
-                to="/downloads"
-                className="hidden md:flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl border border-[#1E3D2A]/15 text-[#1E3D2A] hover:border-[#5B9A3C] hover:bg-[#E6EEDF]/40 transition-colors"
-                title="Download Corporate Brochure"
+              <button
+                type="button"
+                onClick={() => setBrochureModalOpen(true)}
+                className="hidden md:flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-xl border border-[#1E3D2A]/15 text-[#1E3D2A] hover:border-[#5B9A3C] hover:bg-[#E6EEDF]/40 transition-colors cursor-pointer"
+                title="View & Download Corporate Brochure"
               >
                 <FileDown className="w-3.5 h-3.5 text-[#5B9A3C]" />
                 <span>Brochure</span>
-              </Link>
+              </button>
 
               {/* Primary Request a Quote Button */}
               <Link
@@ -628,6 +635,23 @@ export const Navbar: React.FC = () => {
             Downloads &amp; Specs
           </Link>
 
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setBrochureModalOpen(true);
+            }}
+            className="w-full flex items-center justify-between text-base font-serif font-semibold py-1.5 text-[#1E3D2A] hover:text-[#5B9A3C] transition-colors cursor-pointer text-left"
+          >
+            <span className="flex items-center gap-2">
+              <FileDown className="w-4 h-4 text-[#5B9A3C]" />
+              <span>Brochure</span>
+            </span>
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#EAF2E5] text-[#5B9A3C] font-bold">
+              PDF Preview
+            </span>
+          </button>
+
           <Link
             to="/contact"
             onClick={() => setMobileMenuOpen(false)}
@@ -663,6 +687,12 @@ export const Navbar: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Corporate Brochure Modal Preview & Download */}
+      <BrochureModal
+        isOpen={brochureModalOpen}
+        onClose={() => setBrochureModalOpen(false)}
+      />
     </>
   );
 };

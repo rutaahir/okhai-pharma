@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
+    "django": "python manage.py runserver 8000",
     "server": "tsx server/index.ts",
-    "dev:all": "concurrently -n \"api,web\" -c \"cyan,green\" \"tsx server/index.ts\" \"vite --port=3000 --host=0.0.0.0\"",
+    "dev:all": "concurrently -n \"django,api,web\" -c \"magenta,cyan,green\" \"python manage.py runserver 8000\" \"tsx server/index.ts\" \"vite --port=3000 --host=0.0.0.0\"",
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",

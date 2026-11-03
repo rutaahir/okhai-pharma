@@ -493,7 +493,7 @@ export const AttachedProductShowcase: React.FC = () => {
         imageSrc={currentProduct.image}
         imageAlt={currentProduct.name}
         title={currentProduct.name}
-        subtitle={currentProduct.category}
+        subtitle={currentProduct.subtitle}
         badge={currentProduct.badge}
       />
     </div>
