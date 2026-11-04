@@ -453,9 +453,27 @@ class SuperAdminPasscodesView(APIView):
             entry.max_uses = request.data['max_uses'] or None
         if 'expires_at' in request.data:
             entry.expires_at = request.data['expires_at'] or None
-        entry.save()
+        if 'passcode' in request.data and str(request.data['passcode']).strip():
+            raw_p = str(request.data['passcode']).strip()
+            entry.passcode_hash = make_password(raw_p)
+            if request.data.get('rotate'):
+                LeadAccessPasscode.objects.exclude(id=entry.id).filter(is_active=True).update(is_active=False)
+                entry.is_active = True
 
+        entry.save()
         return Response(LeadAccessPasscodeSerializer(entry).data)
+
+    def delete(self, request):
+        passcode_id = request.query_params.get('id') or request.data.get('id')
+        if not passcode_id:
+            return Response({'error': 'Passcode ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            entry = LeadAccessPasscode.objects.get(id=passcode_id)
+            entry.delete()
+            return Response({'success': True, 'message': 'Passcode deleted successfully.'})
+        except LeadAccessPasscode.DoesNotExist:
+            return Response({'error': 'Passcode not found.'}, status=status.HTTP_404_NOT_FOUND)
 
 class SuperAdminLeadStatsView(APIView):
     """

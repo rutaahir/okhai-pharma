@@ -348,6 +348,8 @@ export async function updateSuperAdminPasscode(
     id: number;
     is_active?: boolean;
     label?: string;
+    passcode?: string;
+    rotate?: boolean;
     max_uses?: number | null;
     expires_at?: string | null;
   }
@@ -358,7 +360,22 @@ export async function updateSuperAdminPasscode(
     body: JSON.stringify(data),
   });
   if (!res.ok) {
-    throw new Error('Failed to update passcode');
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to update passcode');
+  }
+  return res.json();
+}
+
+export async function deleteSuperAdminPasscode(
+  authFetch: (url: string, opts?: RequestInit) => Promise<Response>,
+  id: number
+): Promise<{ success: boolean; message?: string }> {
+  const res = await authFetch(`/api/superadmin/lead-passcodes/?id=${id}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to delete passcode');
   }
   return res.json();
 }

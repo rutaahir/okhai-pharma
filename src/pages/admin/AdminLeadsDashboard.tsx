@@ -26,7 +26,9 @@ import {
   User,
   SlidersHorizontal,
   Loader2,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Pencil,
+  Copy
 } from 'lucide-react';
 import { useAdminAuth } from '../../context/AdminAuthContext';
 import {
@@ -36,6 +38,7 @@ import {
   getSuperAdminPasscodes,
   createSuperAdminPasscode,
   updateSuperAdminPasscode,
+  deleteSuperAdminPasscode,
   getAuthenticatedMediaUrl
 } from '../../services/leadApi';
 import {
@@ -73,12 +76,23 @@ export const AdminLeadsDashboard: React.FC = () => {
 
   // Passcode Modal
   const [showPasscodeModal, setShowPasscodeModal] = useState<boolean>(false);
-  const [newPasscodeLabel, setNewPasscodeLabel] = useState<string>('');
+  const [newPasscodeLabel, setNewPasscodeLabel] = useState<string>('Okhai Commercial Desk');
   const [newPasscodePin, setNewPasscodePin] = useState<string>('');
-  const [newPasscodeRotate, setNewPasscodeRotate] = useState<boolean>(false);
+  const [newPasscodeRotate, setNewPasscodeRotate] = useState<boolean>(true);
   const [newPasscodeMaxUses, setNewPasscodeMaxUses] = useState<string>('');
   const [passcodeError, setPasscodeError] = useState<string | null>(null);
   const [isCreatingPasscode, setIsCreatingPasscode] = useState<boolean>(false);
+
+  // Edit Existing Passcode
+  const [editingPasscodeId, setEditingPasscodeId] = useState<number | null>(null);
+  const [editPasscodeLabel, setEditPasscodeLabel] = useState<string>('');
+  const [editPasscodePin, setEditPasscodePin] = useState<string>('');
+  const [editPasscodeRotate, setEditPasscodeRotate] = useState<boolean>(true);
+  const [isSavingEdit, setIsSavingEdit] = useState<boolean>(false);
+
+  // Last Saved PIN Alert & Copy Feedback
+  const [lastSavedPinInfo, setLastSavedPinInfo] = useState<{ pin: string; label: string } | null>(null);
+  const [copiedPin, setCopiedPin] = useState<boolean>(false);
 
   // Toast notice
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -205,22 +219,81 @@ export const AdminLeadsDashboard: React.FC = () => {
     setIsCreatingPasscode(true);
 
     try {
+      const pinIssued = newPasscodePin.trim();
+      const labelIssued = newPasscodeLabel.trim() || 'Okhai Commercial Desk';
       await createSuperAdminPasscode(authFetch, {
-        label: newPasscodeLabel.trim() || 'Commercial Desk PIN',
-        passcode: newPasscodePin.trim(),
+        label: labelIssued,
+        passcode: pinIssued,
         rotate: newPasscodeRotate,
         max_uses: newPasscodeMaxUses ? parseInt(newPasscodeMaxUses, 10) : null,
       });
-      showToast('New lead passcode created successfully.');
-      setNewPasscodeLabel('');
+      setLastSavedPinInfo({ pin: pinIssued, label: labelIssued });
+      showToast(`New passcode issued! PIN: ${pinIssued}`);
+      setNewPasscodeLabel('Okhai Commercial Desk');
       setNewPasscodePin('');
       setNewPasscodeMaxUses('');
-      setNewPasscodeRotate(false);
+      setNewPasscodeRotate(true);
       fetchPasscodes();
     } catch (err: any) {
       setPasscodeError(err.message || 'Failed to create passcode');
     } finally {
       setIsCreatingPasscode(false);
+    }
+  };
+
+  // Edit Existing Passcode
+  const handleStartEdit = (p: LeadPasscodeItem) => {
+    setEditingPasscodeId(p.id);
+    setEditPasscodeLabel(p.label);
+    setEditPasscodePin('');
+    setEditPasscodeRotate(true);
+    setPasscodeError(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingPasscodeId(null);
+    setEditPasscodeLabel('');
+    setEditPasscodePin('');
+  };
+
+  const handleSaveEditPasscode = async (id: number) => {
+    if (!editPasscodeLabel.trim()) {
+      setPasscodeError('Label cannot be empty.');
+      return;
+    }
+    setIsSavingEdit(true);
+    setPasscodeError(null);
+    try {
+      const pinUpdated = editPasscodePin.trim();
+      await updateSuperAdminPasscode(authFetch, {
+        id,
+        label: editPasscodeLabel.trim(),
+        ...(pinUpdated ? { passcode: pinUpdated, rotate: editPasscodeRotate } : {}),
+      });
+      if (pinUpdated) {
+        setLastSavedPinInfo({ pin: pinUpdated, label: editPasscodeLabel.trim() });
+        showToast(`Passcode updated! New PIN: ${pinUpdated}`);
+      } else {
+        showToast('Passcode label updated.');
+      }
+      setEditingPasscodeId(null);
+      fetchPasscodes();
+    } catch (err: any) {
+      setPasscodeError(err.message || 'Failed to update passcode');
+    } finally {
+      setIsSavingEdit(false);
+    }
+  };
+
+  // Delete Passcode
+  const handleDeletePasscode = async (id: number, label: string) => {
+    if (!window.confirm(`Are you sure you want to delete passcode "${label}"?`)) return;
+    try {
+      await deleteSuperAdminPasscode(authFetch, id);
+      showToast(`Passcode "${label}" deleted.`);
+      fetchPasscodes();
+    } catch (err: any) {
+      showToast(err.message || 'Failed to delete passcode');
     }
   };
 
@@ -238,6 +311,11 @@ export const AdminLeadsDashboard: React.FC = () => {
   const generateRandomPin = () => {
     const pin = Math.floor(100000 + Math.random() * 900000).toString();
     setNewPasscodePin(pin);
+  };
+
+  const generateRandomPinForEdit = () => {
+    const pin = Math.floor(100000 + Math.random() * 900000).toString();
+    setEditPasscodePin(pin);
   };
 
   // Export URL helper
@@ -793,23 +871,54 @@ export const AdminLeadsDashboard: React.FC = () => {
                   <span>Lead Access Passcodes</span>
                 </h3>
                 <p className="text-xs text-[#1E3D2A]/60 mt-0.5">
-                  Commercial desk passcodes allow clients to unlock the lead submission gate.
+                  Commercial desk passcodes allow clients to unlock the lead submission gate at <code className="bg-black/5 px-1 py-0.5 rounded text-[#1E3D2A]">/lead</code>.
                 </p>
               </div>
 
               <button
                 type="button"
-                onClick={() => setShowPasscodeModal(false)}
-                className="p-1.5 rounded-xl text-[#1E3D2A]/40 hover:text-[#1E3D2A] hover:bg-black/5"
+                onClick={() => {
+                  setShowPasscodeModal(false);
+                  setEditingPasscodeId(null);
+                  setPasscodeError(null);
+                }}
+                className="p-1.5 rounded-xl text-[#1E3D2A]/40 hover:text-[#1E3D2A] hover:bg-black/5 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
+            {/* Active PIN Feedback Alert */}
+            {lastSavedPinInfo && (
+              <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 flex items-center justify-between gap-3 text-xs animate-in fade-in">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>
+                    Active PIN for <strong>{lastSavedPinInfo.label}</strong> set to:{' '}
+                    <span className="font-mono font-bold bg-white px-2 py-0.5 rounded border border-emerald-300 text-emerald-800 tracking-wider">
+                      {lastSavedPinInfo.pin}
+                    </span>
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    navigator.clipboard.writeText(lastSavedPinInfo.pin);
+                    setCopiedPin(true);
+                    setTimeout(() => setCopiedPin(false), 2000);
+                  }}
+                  className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-medium text-[11px] flex items-center gap-1.5 cursor-pointer shrink-0"
+                >
+                  {copiedPin ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                  <span>{copiedPin ? 'Copied!' : 'Copy PIN'}</span>
+                </button>
+              </div>
+            )}
+
             {/* Create New Passcode Form */}
             <form onSubmit={handleCreatePasscode} className="p-4 rounded-2xl bg-[#F8F9F4] border border-[#1E3D2A]/10 space-y-4">
               <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#1E3D2A]">
-                Issue / Rotate New Passcode
+                Issue / Set New Passcode PIN
               </h4>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -821,7 +930,7 @@ export const AdminLeadsDashboard: React.FC = () => {
                     type="text"
                     value={newPasscodeLabel}
                     onChange={(e) => setNewPasscodeLabel(e.target.value)}
-                    placeholder="e.g. CPHI 2026 Exhibition PIN"
+                    placeholder="e.g. Okhai Commercial Desk"
                     className="w-full px-3 py-2 rounded-xl bg-white border border-[#1E3D2A]/15 text-xs focus:outline-none focus:border-[#5B9A3C]"
                   />
                 </div>
@@ -829,12 +938,12 @@ export const AdminLeadsDashboard: React.FC = () => {
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <label className="text-[11px] font-mono text-[#1E3D2A]/70">
-                      Passcode PIN
+                      New Passcode PIN
                     </label>
                     <button
                       type="button"
                       onClick={generateRandomPin}
-                      className="text-[10px] font-mono font-bold text-[#5B9A3C] hover:underline"
+                      className="text-[10px] font-mono font-bold text-[#5B9A3C] hover:underline cursor-pointer"
                     >
                       Generate 6-Digit
                     </button>
@@ -843,7 +952,7 @@ export const AdminLeadsDashboard: React.FC = () => {
                     type="text"
                     value={newPasscodePin}
                     onChange={(e) => setNewPasscodePin(e.target.value)}
-                    placeholder="e.g. 984521"
+                    placeholder="e.g. 998877 or 6-digit PIN"
                     className="w-full px-3 py-2 rounded-xl bg-white border border-[#1E3D2A]/15 text-xs font-mono font-bold text-[#1E3D2A] tracking-wider focus:outline-none focus:border-[#5B9A3C]"
                   />
                 </div>
@@ -857,7 +966,9 @@ export const AdminLeadsDashboard: React.FC = () => {
                     onChange={(e) => setNewPasscodeRotate(e.target.checked)}
                     className="rounded text-[#5B9A3C]"
                   />
-                  <span className="text-[#1E3D2A]/80 font-medium">Deactivate all previous passcodes (Rotate)</span>
+                  <span className="text-[#1E3D2A]/80 font-medium">
+                    Deactivate other passcodes (Rotate) &mdash; <span className="text-[#5B9A3C] font-semibold">Recommended</span>
+                  </span>
                 </label>
               </div>
 
@@ -875,47 +986,154 @@ export const AdminLeadsDashboard: React.FC = () => {
                   className="px-4 py-2 rounded-xl bg-[#5B9A3C] hover:bg-[#4e8532] text-white text-xs font-semibold flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isCreatingPasscode ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />}
-                  <span>Issue Passcode</span>
+                  <span>Issue &amp; Activate Passcode</span>
                 </button>
               </div>
             </form>
 
             {/* Existing Passcodes List */}
             <div className="space-y-3">
-              <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#1E3D2A]">
-                Existing Commercial Passcodes ({passcodes.length})
-              </h4>
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#1E3D2A]">
+                  Existing Commercial Passcodes ({passcodes.length})
+                </h4>
+                <span className="text-[11px] text-[#1E3D2A]/60 font-mono">
+                  {passcodes.filter(p => p.is_active).length} Active Desk Key{passcodes.filter(p => p.is_active).length === 1 ? '' : 's'}
+                </span>
+              </div>
 
-              <div className="divide-y divide-[#1E3D2A]/10 border border-[#1E3D2A]/10 rounded-2xl overflow-hidden">
-                {passcodes.map((p) => (
-                  <div key={p.id} className="p-3.5 bg-white flex items-center justify-between gap-4">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-xs text-[#1E3D2A]">{p.label}</span>
-                        <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
-                          p.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'
-                        }`}>
-                          {p.is_active ? 'ACTIVE' : 'INACTIVE'}
-                        </span>
-                      </div>
-                      <div className="text-[10px] font-mono text-[#1E3D2A]/50 mt-0.5">
-                        Used {p.uses_count} time{p.uses_count === 1 ? '' : 's'} · Created by {p.created_by} on {new Date(p.created_at).toLocaleDateString()}
-                      </div>
+              <div className="divide-y divide-[#1E3D2A]/10 border border-[#1E3D2A]/10 rounded-2xl overflow-hidden bg-white">
+                {passcodes.map((p) => {
+                  const isEditing = editingPasscodeId === p.id;
+                  return (
+                    <div key={p.id} className="p-4 space-y-3">
+                      {isEditing ? (
+                        <div className="space-y-3 bg-[#F8F9F4] p-3.5 rounded-xl border border-[#5B9A3C]/30">
+                          <div className="text-xs font-bold text-[#1E3D2A] flex items-center gap-1.5">
+                            <Pencil className="w-3.5 h-3.5 text-[#5B9A3C]" />
+                            <span>Change PIN / Edit &ldquo;{p.label}&rdquo;</span>
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="block text-[11px] font-mono text-[#1E3D2A]/70 mb-1">
+                                Label
+                              </label>
+                              <input
+                                type="text"
+                                value={editPasscodeLabel}
+                                onChange={(e) => setEditPasscodeLabel(e.target.value)}
+                                className="w-full px-3 py-1.5 rounded-xl bg-white border border-[#1E3D2A]/15 text-xs focus:outline-none focus:border-[#5B9A3C]"
+                              />
+                            </div>
+
+                            <div>
+                              <div className="flex items-center justify-between mb-1">
+                                <label className="text-[11px] font-mono text-[#1E3D2A]/70">
+                                  New Passcode PIN
+                                </label>
+                                <button
+                                  type="button"
+                                  onClick={generateRandomPinForEdit}
+                                  className="text-[10px] font-mono font-bold text-[#5B9A3C] hover:underline cursor-pointer"
+                                >
+                                  Generate 6-Digit
+                                </button>
+                              </div>
+                              <input
+                                type="text"
+                                value={editPasscodePin}
+                                onChange={(e) => setEditPasscodePin(e.target.value)}
+                                placeholder="Enter new PIN (e.g. 998877)"
+                                className="w-full px-3 py-1.5 rounded-xl bg-white border border-[#1E3D2A]/15 text-xs font-mono font-bold text-[#1E3D2A] tracking-wider focus:outline-none focus:border-[#5B9A3C]"
+                              />
+                            </div>
+                          </div>
+
+                          <label className="flex items-center gap-2 cursor-pointer text-xs">
+                            <input
+                              type="checkbox"
+                              checked={editPasscodeRotate}
+                              onChange={(e) => setEditPasscodeRotate(e.target.checked)}
+                              className="rounded text-[#5B9A3C]"
+                            />
+                            <span className="text-[#1E3D2A]/80 font-medium">
+                              Make this the only active passcode (Rotate others)
+                            </span>
+                          </label>
+
+                          <div className="flex items-center justify-end gap-2 pt-1">
+                            <button
+                              type="button"
+                              onClick={handleCancelEdit}
+                              className="px-3 py-1.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 text-xs font-medium cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="button"
+                              disabled={isSavingEdit}
+                              onClick={() => handleSaveEditPasscode(p.id)}
+                              className="px-3.5 py-1.5 rounded-lg bg-[#5B9A3C] hover:bg-[#4e8532] text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                            >
+                              {isSavingEdit ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                              <span>Save Changes</span>
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-semibold text-xs text-[#1E3D2A]">{p.label}</span>
+                              <span className={`px-2 py-0.5 rounded text-[9px] font-mono font-bold ${
+                                p.is_active ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-gray-100 text-gray-500'
+                              }`}>
+                                {p.is_active ? 'ACTIVE' : 'INACTIVE'}
+                              </span>
+                            </div>
+                            <div className="text-[10px] font-mono text-[#1E3D2A]/50 mt-0.5">
+                              Used {p.uses_count} time{p.uses_count === 1 ? '' : 's'} · Created by {p.created_by} on {new Date(p.created_at).toLocaleDateString()}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => handleStartEdit(p)}
+                              className="px-2.5 py-1 rounded-lg border border-[#1E3D2A]/20 text-[#1E3D2A] hover:bg-[#F8F9F4] text-xs font-medium flex items-center gap-1 cursor-pointer"
+                              title="Change PIN or rename label"
+                            >
+                              <Pencil className="w-3 h-3 text-[#5B9A3C]" />
+                              <span>Change PIN</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleTogglePasscodeActive(p.id, p.is_active)}
+                              className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
+                                p.is_active
+                                  ? 'border border-amber-200 text-amber-700 hover:bg-amber-50'
+                                  : 'border border-green-200 text-green-700 hover:bg-green-50'
+                              }`}
+                            >
+                              {p.is_active ? 'Deactivate' : 'Activate'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeletePasscode(p.id, p.label)}
+                              className="p-1 rounded-lg text-red-500 hover:text-red-700 hover:bg-red-50 cursor-pointer"
+                              title="Delete this passcode"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => handleTogglePasscodeActive(p.id, p.is_active)}
-                      className={`px-3 py-1 rounded-lg text-xs font-semibold cursor-pointer ${
-                        p.is_active
-                          ? 'border border-red-200 text-red-600 hover:bg-red-50'
-                          : 'border border-green-200 text-green-700 hover:bg-green-50'
-                      }`}
-                    >
-                      {p.is_active ? 'Deactivate' : 'Activate'}
-                    </button>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 

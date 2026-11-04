@@ -103,7 +103,11 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Protected Lead Media - NEVER served publicly
 LEAD_MEDIA_ROOT = DATA_DIR / 'lead_media'
-LEAD_MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
+for sub_dir in ['', 'files', 'voice', 'preprocessed']:
+    try:
+        (LEAD_MEDIA_ROOT / sub_dir).mkdir(parents=True, exist_ok=True)
+    except Exception:
+        pass
 MEDIA_ROOT = LEAD_MEDIA_ROOT
 MEDIA_URL = '/media/'
 
