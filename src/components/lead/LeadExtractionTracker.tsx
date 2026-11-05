@@ -21,7 +21,9 @@ import {
   Volume2,
   X,
   Share2,
-  CheckCircle
+  CheckCircle,
+  AlertTriangle,
+  Camera
 } from 'lucide-react';
 import {
   pollLeadStatus,
@@ -123,12 +125,23 @@ export const LeadExtractionTracker: React.FC<LeadExtractionTrackerProps> = ({
 
   const isCompleted =
     leadStatus?.job?.status === 'COMPLETED' ||
+    leadStatus?.job?.status === 'SUCCEEDED' ||
+    leadStatus?.job?.status === 'PARTIAL' ||
+    leadStatus?.job?.status === 'FAILED' ||
     leadStatus?.status === 'VERIFIED' ||
-    leadStatus?.status === 'NEEDS_REVIEW';
+    leadStatus?.status === 'NEEDS_REVIEW' ||
+    leadStatus?.status === 'FAILED';
+  const isFailed = leadStatus?.status === 'FAILED' || leadStatus?.job?.status === 'FAILED';
+  const isPartial = leadStatus?.job?.status === 'PARTIAL';
   const isLeadConfirmed = Boolean(leadStatus?.is_customer_confirmed || isConfirmedLocally);
   const progressPercent = leadStatus?.job?.progress_percent ?? 15;
   const currentStep = leadStatus?.job?.current_step || 'Initializing AI optical pipeline...';
   const contact = leadStatus?.extracted_preview;
+  const firstFile = leadStatus?.files?.[0];
+  const cardPreviewUrl = firstFile?.thumbnail_url || firstFile?.download_url;
+
+  // Calculate real confidence
+  const confScore = Math.round((contact?.overall_confidence ?? 0) * 100);
 
   // Save edited fields to backend database & immediately update SuperAdmin columns
   const handleSaveContact = async () => {
@@ -337,33 +350,87 @@ Web: https://okhaipharma.com`;
           2. EXTRACTION STATUS & PROGRESS BAR
       ===================================================================== */}
       <div className="p-6 rounded-3xl bg-white/95 backdrop-blur-xl border border-[#1E3D2A]/10 shadow-lg shadow-[#1E3D2A]/5 space-y-4">
+        {/* Progress Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {!isCompleted ? (
               <Loader2 className="w-4 h-4 text-[#5B9A3C] animate-spin" />
+            ) : isFailed ? (
+              <AlertTriangle className="w-4 h-4 text-red-600" />
             ) : (
               <Sparkles className="w-4 h-4 text-[#5B9A3C]" />
             )}
             <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#1E3D2A]">
-              {!isCompleted ? 'AI Optical Extraction in Progress' : 'Extraction Complete'}
+              {!isCompleted
+                ? 'AI Optical Extraction in Progress'
+                : isFailed
+                ? 'Could Not Read Image Clearly'
+                : isPartial
+                ? 'Partial Extraction Completed'
+                : 'Extraction Complete'}
             </h4>
           </div>
-          <span className="text-xs font-mono font-bold text-[#5B9A3C]">
-            {progressPercent}%
+          <span
+            className={`text-xs font-mono font-bold ${
+              isFailed ? 'text-red-600' : isPartial ? 'text-amber-600' : 'text-[#5B9A3C]'
+            }`}
+          >
+            {isFailed ? '0%' : `${progressPercent}%`}
           </span>
         </div>
 
         {/* Progress Bar */}
         <div className="w-full h-2.5 bg-[#F0F2EB] rounded-full overflow-hidden shadow-inner">
           <div
-            className="h-full bg-gradient-to-r from-[#5B9A3C] to-[#8CC63F] rounded-full transition-all duration-700 ease-out"
-            style={{ width: `${progressPercent}%` }}
+            className={`h-full rounded-full transition-all duration-700 ease-out ${
+              isFailed
+                ? 'bg-red-500'
+                : isPartial
+                ? 'bg-amber-500'
+                : 'bg-gradient-to-r from-[#5B9A3C] to-[#8CC63F]'
+            }`}
+            style={{ width: `${isFailed ? 100 : progressPercent}%` }}
           />
         </div>
 
         <p className="text-xs text-[#1E3D2A]/70 font-mono">
           {currentStep}
         </p>
+
+        {/* Unreadable or Failed Image Warning Card */}
+        {isFailed && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-amber-50/90 border border-amber-300 text-amber-900 space-y-3 animate-in fade-in">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <h5 className="text-xs font-bold font-serif text-amber-950">
+                  Could not read this image clearly
+                </h5>
+                <p className="text-xs text-amber-800 leading-relaxed">
+                  {leadStatus?.job?.error_message ||
+                    'The uploaded document did not contain legible contact text or was too blurry/dimly lit to extract automatically.'}
+                </p>
+                <div className="mt-2 text-[11px] text-amber-900/80 space-y-0.5 bg-amber-100/50 p-2.5 rounded-xl border border-amber-200">
+                  <div className="font-semibold text-amber-950">Tips for an instant extraction:</div>
+                  <div>• Lay the business card flat on a dark or neutral surface with good light.</div>
+                  <div>• Hold camera directly above to avoid steep perspective angles.</div>
+                  <div>• Tap your phone screen to focus on the text before snapping.</div>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="px-4 py-2 rounded-xl bg-amber-700 hover:bg-amber-800 text-white text-xs font-bold transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+              >
+                <Camera className="w-3.5 h-3.5" />
+                <span>Retake Photo</span>
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* ===================================================================
             3. VERIFIED CONTACT PREVIEW (WITH EDIT IN EVERY FIELD & SAVE)
@@ -379,8 +446,16 @@ Web: https://okhaipharma.com`;
               </span>
 
               <div className="flex items-center gap-2">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold bg-[#EAF2E5] text-[#5B9A3C] border border-[#5B9A3C]/30 shadow-2xs">
-                  {((contact.overall_confidence || 0.8) * 100).toFixed(0)}% Confidence
+                <span
+                  className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold border shadow-2xs ${
+                    confScore >= 80
+                      ? 'bg-[#EAF2E5] text-[#5B9A3C] border-[#5B9A3C]/30'
+                      : confScore >= 50
+                      ? 'bg-amber-50 text-amber-700 border-amber-300'
+                      : 'bg-stone-100 text-stone-600 border-stone-300'
+                  }`}
+                >
+                  {confScore}% Confidence
                 </span>
 
                 {!isEditing ? (
@@ -410,183 +485,226 @@ Web: https://okhaipharma.com`;
               </div>
             </div>
 
-            {/* Editable or View-Only Form Fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+            {/* Side-by-side: Cropped Card Image preview + Extracted fields */}
+            <div className={`grid grid-cols-1 ${cardPreviewUrl ? 'lg:grid-cols-12' : ''} gap-5 items-start`}>
               
-              {/* Name Field */}
-              <div className="p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
-                    <User className="w-3 h-3 text-[#5B9A3C]" />
-                    <span>Contact Person Name</span>
-                  </span>
-                  {!isEditing && (
-                    <button
-                      type="button"
-                      onClick={() => setIsEditing(true)}
-                      className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
-                      title="Edit Name"
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </button>
-                  )}
-                </div>
-
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editForm.name}
-                    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                    placeholder="Full Name"
-                    className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs font-semibold text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
-                  />
-                ) : (
-                  <div className="font-semibold text-[#1E3D2A] text-sm">
-                    {editForm.name || contact.name || 'Direct Commercial Contact'}
+              {/* Cropped Card Preview */}
+              {cardPreviewUrl && (
+                <div className="lg:col-span-5 p-3 rounded-2xl bg-white border border-[#1E3D2A]/10 shadow-xs flex flex-col items-center justify-center space-y-2">
+                  <div className="w-full h-48 rounded-xl overflow-hidden bg-[#F0F2EB] flex items-center justify-center border border-[#1E3D2A]/5">
+                    <img
+                      src={getAuthenticatedMediaUrl(cardPreviewUrl)}
+                      alt="Cropped card preview"
+                      className="w-full h-full object-contain"
+                    />
                   </div>
-                )}
-              </div>
-
-              {/* Company / Organization */}
-              <div className="p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
-                    <Building className="w-3 h-3 text-[#5B9A3C]" />
-                    <span>Company / Organization</span>
-                  </span>
-                  {!isEditing && (
-                    <button
-                      type="button"
-                      onClick={() => setIsEditing(true)}
-                      className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
-                      title="Edit Organization"
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </button>
-                  )}
-                </div>
-
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editForm.company}
-                    onChange={(e) => setEditForm({ ...editForm, company: e.target.value })}
-                    placeholder="Company or Firm Name"
-                    className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs font-semibold text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
-                  />
-                ) : (
-                  <div className="font-semibold text-[#1E3D2A] text-sm">
-                    {editForm.company || contact.company || 'Not Specified'}
+                  <div className="flex items-center gap-1 text-[10px] font-mono text-[#1E3D2A]/60">
+                    <Sparkles className="w-3 h-3 text-[#5B9A3C]" />
+                    <span>Perspective unwarped card crop</span>
                   </div>
-                )}
-              </div>
-
-              {/* Phone Number */}
-              <div className="p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
-                    <Phone className="w-3 h-3 text-[#5B9A3C]" />
-                    <span>Phone Number</span>
-                  </span>
-                  {!isEditing && (
-                    <button
-                      type="button"
-                      onClick={() => setIsEditing(true)}
-                      className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
-                      title="Edit Phone"
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </button>
-                  )}
                 </div>
+              )}
 
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editForm.phone}
-                    onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                    placeholder="+91 98765 43210"
-                    className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs font-mono font-semibold text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
-                  />
-                ) : (
-                  <a
-                    href={`tel:${editForm.phone || contact.primary_phone}`}
-                    className="font-mono font-semibold text-[#5B9A3C] hover:underline block"
-                  >
-                    {editForm.phone || contact.primary_phone || 'None provided'}
-                  </a>
-                )}
-              </div>
-
-              {/* Email Address */}
-              <div className="p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
-                    <Mail className="w-3 h-3 text-[#5B9A3C]" />
-                    <span>Corporate Email</span>
-                  </span>
-                  {!isEditing && (
-                    <button
-                      type="button"
-                      onClick={() => setIsEditing(true)}
-                      className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
-                      title="Edit Email"
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </button>
-                  )}
-                </div>
-
-                {isEditing ? (
-                  <input
-                    type="email"
-                    value={editForm.email}
-                    onChange={(e) => {
-                      setEditForm({ ...editForm, email: e.target.value });
-                      setEmailInput(e.target.value);
-                    }}
-                    placeholder="contact@company.com"
-                    className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs font-mono text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
-                  />
-                ) : (
-                  <div className="font-mono text-[#1E3D2A]/90 truncate">
-                    {editForm.email || (contact.emails && contact.emails[0]) || 'Not provided'}
+              {/* Editable or View-Only Form Fields */}
+              <div className={`${cardPreviewUrl ? 'lg:col-span-7' : ''} grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs`}>
+                
+                {/* Name Field */}
+                <div className="p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
+                      <User className="w-3 h-3 text-[#5B9A3C]" />
+                      <span>Contact Person Name</span>
+                    </span>
+                    {!isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
+                        title="Edit Name"
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                    )}
                   </div>
-                )}
-              </div>
 
-              {/* Location / Address (Full Width) */}
-              <div className="sm:col-span-2 p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
-                    <MapPin className="w-3 h-3 text-[#5B9A3C]" />
-                    <span>Registered Location / Address</span>
-                  </span>
-                  {!isEditing && (
-                    <button
-                      type="button"
-                      onClick={() => setIsEditing(true)}
-                      className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
-                      title="Edit Address"
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </button>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.name}
+                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                      placeholder="Full Name"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs font-semibold text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
+                    />
+                  ) : (
+                    <div className="font-semibold text-[#1E3D2A] text-sm">
+                      {editForm.name || contact.name ? (
+                        <span>{editForm.name || contact.name}</span>
+                      ) : (
+                        <span className="text-[#1E3D2A]/40 italic text-xs font-mono font-normal">Not detected</span>
+                      )}
+                    </div>
                   )}
                 </div>
 
-                {isEditing ? (
-                  <textarea
-                    rows={2}
-                    value={editForm.address}
-                    onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
-                    placeholder="Street, Industrial Area, City, State, PIN"
-                    className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
-                  />
-                ) : (
-                  <div className="text-[#1E3D2A]/85 leading-relaxed">
-                    {editForm.address || contact.address_raw || 'Gujarat, India'}
+                {/* Company / Organization */}
+                <div className="p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
+                      <Building className="w-3 h-3 text-[#5B9A3C]" />
+                      <span>Company / Organization</span>
+                    </span>
+                    {!isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
+                        title="Edit Organization"
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                    )}
                   </div>
-                )}
+
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.company}
+                      onChange={(e) => setEditForm({ ...editForm, company: e.target.value })}
+                      placeholder="Company or Firm Name"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs font-semibold text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
+                    />
+                  ) : (
+                    <div className="font-semibold text-[#1E3D2A] text-sm">
+                      {editForm.company || contact.company ? (
+                        <span>{editForm.company || contact.company}</span>
+                      ) : (
+                        <span className="text-[#1E3D2A]/40 italic text-xs font-mono font-normal">Not detected</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Phone Number */}
+                <div className="p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
+                      <Phone className="w-3 h-3 text-[#5B9A3C]" />
+                      <span>Phone Number</span>
+                    </span>
+                    {!isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
+                        title="Edit Phone"
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      value={editForm.phone}
+                      onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                      placeholder="+91 98765 43210"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs font-mono font-semibold text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
+                    />
+                  ) : (
+                    <div>
+                      {editForm.phone || contact.primary_phone ? (
+                        <a
+                          href={`tel:${editForm.phone || contact.primary_phone}`}
+                          className="font-mono font-semibold text-[#5B9A3C] hover:underline block"
+                        >
+                          {editForm.phone || contact.primary_phone}
+                        </a>
+                      ) : (
+                        <span className="text-[#1E3D2A]/40 italic text-xs font-mono font-normal">Not detected</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Email Address */}
+                <div className="p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
+                      <Mail className="w-3 h-3 text-[#5B9A3C]" />
+                      <span>Corporate Email</span>
+                    </span>
+                    {!isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
+                        title="Edit Email"
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {isEditing ? (
+                    <input
+                      type="email"
+                      value={editForm.email}
+                      onChange={(e) => {
+                        setEditForm({ ...editForm, email: e.target.value });
+                        setEmailInput(e.target.value);
+                      }}
+                      placeholder="contact@company.com"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs font-mono text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
+                    />
+                  ) : (
+                    <div className="font-mono text-[#1E3D2A]/90 truncate">
+                      {editForm.email || (contact.emails && contact.emails[0]) ? (
+                        <span>{editForm.email || contact.emails[0]}</span>
+                      ) : (
+                        <span className="text-[#1E3D2A]/40 italic text-xs font-mono font-normal">Not detected</span>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Location / Address (Full Width) */}
+                <div className="sm:col-span-2 p-3 rounded-2xl bg-white border border-[#1E3D2A]/8 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] uppercase font-mono text-[#1E3D2A]/50 flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-[#5B9A3C]" />
+                      <span>Registered Location / Address</span>
+                    </span>
+                    {!isEditing && (
+                      <button
+                        type="button"
+                        onClick={() => setIsEditing(true)}
+                        className="text-[#1E3D2A]/40 hover:text-[#5B9A3C]"
+                        title="Edit Address"
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </button>
+                    )}
+                  </div>
+
+                  {isEditing ? (
+                    <textarea
+                      rows={2}
+                      value={editForm.address}
+                      onChange={(e) => setEditForm({ ...editForm, address: e.target.value })}
+                      placeholder="Street, Industrial Area, City, State, PIN"
+                      className="w-full px-2.5 py-1.5 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/20 text-xs text-[#1E3D2A] focus:outline-none focus:border-[#5B9A3C]"
+                    />
+                  ) : (
+                    <div className="text-[#1E3D2A]/85 leading-relaxed">
+                      {editForm.address || contact.address_raw ? (
+                        <span>{editForm.address || contact.address_raw}</span>
+                      ) : (
+                        <span className="text-[#1E3D2A]/40 italic text-xs font-mono font-normal">Not detected</span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
 

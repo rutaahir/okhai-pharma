@@ -1,6 +1,7 @@
 from django.urls import path
 from leads.views import (
     LeadUnlockView,
+    LeadVerifySessionView,
     LeadSubmitView,
     LeadStatusView,
     LeadCustomerContactUpdateView,
@@ -22,6 +23,7 @@ urlpatterns = [
     # PUBLIC LEAD ENDPOINTS (Passcode-protected)
     # =========================================================================
     path('lead/unlock/', LeadUnlockView.as_view(), name='lead-unlock'),
+    path('lead/verify-session/', LeadVerifySessionView.as_view(), name='lead-verify-session'),
     path('lead/submit/', LeadSubmitView.as_view(), name='lead-submit'),
     path('lead/status/<uuid:id>/', LeadStatusView.as_view(), name='lead-status'),
     path('lead/contact/<uuid:id>/', LeadCustomerContactUpdateView.as_view(), name='lead-customer-contact-update'),

@@ -10,8 +10,40 @@ import {
 const LEAD_TOKEN_STORAGE_KEY = 'okhai_lead_passcode_token';
 const LEAD_LABEL_STORAGE_KEY = 'okhai_lead_passcode_label';
 
+/**
+ * Decodes the JWT token client-side and checks if exp timestamp is valid.
+ */
+export function isLeadTokenExpired(token?: string | null): boolean {
+  if (!token) return true;
+  try {
+    const parts = token.split('.');
+    if (parts.length !== 3) return true;
+    const base64Url = parts[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    const payload = JSON.parse(jsonPayload);
+    if (!payload.exp) return false;
+    // Expired if current time exceeds exp (with 30 second safety margin)
+    return Date.now() >= (payload.exp * 1000 - 30000);
+  } catch (e) {
+    return true;
+  }
+}
+
 export function getLeadPasscodeToken(): string | null {
-  return localStorage.getItem(LEAD_TOKEN_STORAGE_KEY) || sessionStorage.getItem(LEAD_TOKEN_STORAGE_KEY);
+  const token = localStorage.getItem(LEAD_TOKEN_STORAGE_KEY) || sessionStorage.getItem(LEAD_TOKEN_STORAGE_KEY);
+  if (!token) return null;
+  // If token is already expired, purge it immediately so stale sessions are rejected instantly
+  if (isLeadTokenExpired(token)) {
+    clearLeadPasscodeToken();
+    return null;
+  }
+  return token;
 }
 
 export function setLeadPasscodeToken(token: string, label?: string) {
@@ -44,6 +76,47 @@ export function getLeadPasscodeLabel(): string {
     sessionStorage.getItem(LEAD_LABEL_STORAGE_KEY) ||
     'Active Commercial Session'
   );
+}
+
+/**
+ * Verifies the current lead session with the backend.
+ * Checks token signature, expiry, and whether the passcode was rotated.
+ */
+export async function verifyLeadSession(): Promise<{
+  valid: boolean;
+  label?: string;
+  expires_in?: number;
+  error?: string;
+}> {
+  const token = getLeadPasscodeToken();
+  if (!token) {
+    return { valid: false, error: 'No active passcode token.' };
+  }
+
+  try {
+    const res = await fetch('/api/lead/verify-session/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Lead-Passcode-Token': token,
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ token })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data.valid) {
+      clearLeadPasscodeToken();
+      return { valid: false, error: data.error || 'Session expired or invalidated' };
+    }
+    return { valid: true, label: data.label, expires_in: data.expires_in };
+  } catch (err) {
+    // Network fallback: if backend is unreachable, rely on client-side exp check
+    if (!isLeadTokenExpired(token)) {
+      return { valid: true, label: getLeadPasscodeLabel() };
+    }
+    clearLeadPasscodeToken();
+    return { valid: false, error: 'Session expired' };
+  }
 }
 
 /**
@@ -100,10 +173,19 @@ export async function submitLead(
   auth_required?: boolean;
 }> {
   const token = getLeadPasscodeToken();
-  const headers: Record<string, string> = {};
-  if (token) {
-    headers['X-Lead-Passcode-Token'] = token;
-    headers['Authorization'] = `Bearer ${token}`;
+  if (!token) {
+    return {
+      success: false,
+      auth_required: true,
+      error: 'Passcode session expired. Please enter passcode to confirm and submit.',
+    };
+  }
+
+  const headers: Record<string, string> = {
+    'X-Lead-Passcode-Token': token,
+    'Authorization': `Bearer ${token}`,
+  };
+  if (!formData.has('token')) {
     formData.append('token', token);
   }
 
@@ -120,7 +202,7 @@ export async function submitLead(
     return {
       success: false,
       auth_required: true,
-      error: data.detail || data.error || 'Passcode session expired. Please enter passcode again to unlock.',
+      error: data.detail || data.error || 'Passcode session expired. Please enter passcode again.',
     };
   }
 

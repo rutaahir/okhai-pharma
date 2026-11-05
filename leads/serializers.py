@@ -57,7 +57,7 @@ class LeadFileSerializer(serializers.ModelSerializer):
         model = LeadFile
         fields = [
             'id', 'original_filename', 'mime_type', 'size', 'sha256',
-            'kind', 'page_count', 'processing_status', 'error_message',
+            'kind', 'page_count', 'processing_status', 'error_code', 'error_message',
             'raw_ocr_text', 'ocr_engine', 'download_url', 'thumbnail_url',
             'created_at'
         ]

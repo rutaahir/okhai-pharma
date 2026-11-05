@@ -146,7 +146,7 @@ X_FRAME_OPTIONS = 'DENY'
 
 # Lead Module Settings
 LEAD_TOKEN_SECRET = os.getenv('JWT_SECRET', 'okhai_pharma_secret_jwt_key_2026_super_secure')
-LEAD_TOKEN_EXPIRY_SECONDS = 7200  # 2 hours
+LEAD_TOKEN_EXPIRY_SECONDS = 86400  # 24 hours (full-day commercial desk access)
 LEAD_RATE_LIMIT_ATTEMPTS = 5
 LEAD_RATE_LIMIT_LOCKOUT_SECONDS = 900  # 15 minutes
 LEAD_CONFIDENCE_THRESHOLD = 0.80

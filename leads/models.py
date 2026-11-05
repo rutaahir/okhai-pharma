@@ -68,6 +68,7 @@ class Lead(models.Model):
         ('PROCESSING', 'Processing'),
         ('NEEDS_REVIEW', 'Needs Review'),
         ('VERIFIED', 'Verified'),
+        ('PARTIAL', 'Partial'),
         ('FAILED', 'Failed'),
         ('ARCHIVED', 'Archived'),
     ]
@@ -147,6 +148,7 @@ class LeadFile(models.Model):
     kind = models.CharField(max_length=20, choices=KIND_CHOICES, default='OTHER')
     page_count = models.IntegerField(default=1)
     processing_status = models.CharField(max_length=20, choices=PROCESSING_STATUS_CHOICES, default='PENDING')
+    error_code = models.CharField(max_length=50, blank=True, default='')
     error_message = models.TextField(blank=True, default='')
     raw_ocr_text = models.TextField(blank=True, default='')
     ocr_engine = models.CharField(max_length=100, blank=True, default='')
@@ -243,8 +245,12 @@ class LeadAuditLog(models.Model):
 class LeadProcessingJob(models.Model):
     JOB_STATUS_CHOICES = [
         ('PENDING', 'Pending'),
+        ('QUEUED', 'Queued'),
         ('RUNNING', 'Running'),
+        ('PROCESSING', 'Processing'),
+        ('SUCCEEDED', 'Succeeded'),
         ('COMPLETED', 'Completed'),
+        ('PARTIAL', 'Partial'),
         ('FAILED', 'Failed'),
     ]
 

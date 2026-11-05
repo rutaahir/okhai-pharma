@@ -1,28 +1,57 @@
 import copy
-from leads.models import Lead, LeadFile, ExtractedContact, LeadAuditLog
+import logging
+from leads.models import Lead, LeadFile, ExtractedContact, LeadAuditLog, LeadProcessingJob
+
+logger = logging.getLogger(__name__)
 
 def merge_and_save_contacts(lead: Lead, extracted_items: list[dict], audit_actor: str = 'system') -> list[ExtractedContact]:
     """
     Consolidates raw extraction results across multiple files, QR codes, and voice notes into
     ExtractedContact database records.
-    - Idempotent: deletes or updates prior non-manually edited contacts for this lead.
+    - Idempotent: deletes prior non-manually edited contacts for this lead.
     - Deduplicates contacts sharing phone numbers or emails.
     - Sets primary contact flag.
-    - Decides whether Lead.status is VERIFIED or NEEDS_REVIEW.
+    - Truthful status transitions: SUCCEEDED (VERIFIED), PARTIAL (NEEDS_REVIEW), FAILED (FAILED).
+    - Never fabricates placeholder data or ghost contacts.
     """
-    if not extracted_items:
-        lead.status = 'NEEDS_REVIEW'
+    job = getattr(lead, 'job', None)
+
+    # 1. Filter out completely empty items
+    valid_items = []
+    for item in (extracted_items or []):
+        if not item or not isinstance(item, dict):
+            continue
+        name = str(item.get('name', '') or '').strip()
+        company = str(item.get('company', '') or '').strip()
+        designation = str(item.get('designation', '') or '').strip()
+        phones = item.get('phones', []) or []
+        emails = item.get('emails', []) or []
+        websites = item.get('websites', []) or []
+        address_raw = str(item.get('address_raw', '') or '').strip()
+
+        if any([name, company, designation, phones, emails, websites, address_raw]):
+            valid_items.append(item)
+
+    if not valid_items:
+        # Clear prior automated contacts
+        ExtractedContact.objects.filter(lead=lead, edited_by_admin=False).delete()
+        lead.status = 'FAILED'
         lead.save(update_fields=['status', 'updated_at'])
+
+        if job:
+            job.status = 'FAILED'
+            job.current_step = 'Could not read this image clearly'
+            job.error_message = 'No legible contact details or card text could be extracted.'
+            job.progress_percent = 100
+            job.save(update_fields=['status', 'current_step', 'error_message', 'progress_percent', 'updated_at'])
+
         LeadAuditLog.objects.create(
             lead=lead,
             actor=audit_actor,
-            action='EXTRACTION_NO_CONTACTS_FOUND',
-            details={'message': 'No contacts were detected in submitted documents.'}
+            action='EXTRACTION_FAILED_NO_CONTACTS',
+            details={'message': 'No legible contact details found.'}
         )
         return []
-
-    # Preserve any existing contacts that were edited by admin
-    admin_edited_contacts = list(ExtractedContact.objects.filter(lead=lead, edited_by_admin=True))
 
     # Clear prior automated contacts
     ExtractedContact.objects.filter(lead=lead, edited_by_admin=False).delete()
@@ -30,24 +59,26 @@ def merge_and_save_contacts(lead: Lead, extracted_items: list[dict], audit_actor
     consolidated = []
     seen_phones = {}
 
-    for item in extracted_items:
+    for item in valid_items:
         source_file = item.get('source_file')
         source_type = item.get('source_type', 'OCR')
-        name = item.get('name', '').strip()
-        company = item.get('company', '').strip()
-        designation = item.get('designation', '').strip()
-        phones = item.get('phones', [])
-        emails = item.get('emails', [])
-        websites = item.get('websites', [])
-        address_raw = item.get('address_raw', '').strip()
-        address_components = item.get('address_components', {})
-        conf_dict = item.get('confidence', {})
-        overall_conf = item.get('overall_confidence', 0.0)
-        bounding_boxes = item.get('bounding_boxes', [])
+        name = str(item.get('name', '') or '').strip()
+        company = str(item.get('company', '') or '').strip()
+        designation = str(item.get('designation', '') or '').strip()
+        phones = item.get('phones', []) or []
+        emails = item.get('emails', []) or []
+        websites = item.get('websites', []) or []
+        address_raw = str(item.get('address_raw', '') or '').strip()
+        address_components = item.get('address_components', {}) or {}
+        conf_dict = item.get('confidence', {}) or {}
+        overall_conf = float(item.get('overall_confidence', 0.0) or 0.0)
+        bounding_boxes = item.get('bounding_boxes', []) or []
 
-        primary_phone = phones[0]['e164'] if phones else ''
+        primary_phone = ''
+        if phones:
+            primary_phone = phones[0].get('e164') or phones[0].get('raw') or ''
 
-        # Check deduplication with already consolidated contacts by phone
+        # Deduplication check by phone
         matched_idx = None
         if primary_phone and primary_phone in seen_phones:
             matched_idx = seen_phones[primary_phone]
@@ -74,11 +105,10 @@ def merge_and_save_contacts(lead: Lead, extracted_items: list[dict], audit_actor
                     existing['websites'].append(ws)
 
             # Boost confidence due to multi-source cross validation
-            boosted_conf = min(0.99, existing['overall_confidence'] + 0.15)
+            boosted_conf = min(0.99, existing['overall_confidence'] + 0.10)
             existing['overall_confidence'] = round(boosted_conf, 3)
             existing['confidence']['cross_source_agreement'] = 0.99
         else:
-            # New unique contact entry
             contact_data = {
                 'source_file': source_file,
                 'source_type': source_type,
@@ -128,21 +158,36 @@ def merge_and_save_contacts(lead: Lead, extracted_items: list[dict], audit_actor
         )
         saved_contacts.append(c_obj)
 
-    # Determine Lead status based on threshold and required fields
-    # Required: Name + Phone or Address, and overall_confidence >= 0.80
+    # Truthful status determination:
+    # SUCCEEDED / VERIFIED: Name + (Phone or Email) with overall_confidence >= 0.80
+    # PARTIAL / NEEDS_REVIEW: Incomplete fields or confidence < 0.80
     if saved_contacts:
         primary = saved_contacts[0]
-        has_essential_fields = bool(primary.name and primary.primary_phone)
+        has_critical_identity = bool(primary.name and (primary.primary_phone or primary.emails))
         meets_threshold = primary.overall_confidence >= 0.80
 
-        if has_essential_fields and meets_threshold:
+        if has_critical_identity and meets_threshold:
             lead.status = 'VERIFIED'
+            if job:
+                job.status = 'SUCCEEDED'
+                job.current_step = 'Extraction succeeded'
+                job.progress_percent = 100
         else:
             lead.status = 'NEEDS_REVIEW'
+            if job:
+                job.status = 'PARTIAL'
+                job.current_step = 'Partial extraction completed. Some fields require review.'
+                job.progress_percent = 100
     else:
-        lead.status = 'NEEDS_REVIEW'
+        lead.status = 'FAILED'
+        if job:
+            job.status = 'FAILED'
+            job.current_step = 'Could not read this image clearly'
+            job.progress_percent = 100
 
     lead.save(update_fields=['status', 'updated_at'])
+    if job:
+        job.save(update_fields=['status', 'current_step', 'progress_percent', 'updated_at'])
 
     LeadAuditLog.objects.create(
         lead=lead,
@@ -152,8 +197,8 @@ def merge_and_save_contacts(lead: Lead, extracted_items: list[dict], audit_actor
             'contacts_count': len(saved_contacts),
             'top_confidence': saved_contacts[0].overall_confidence if saved_contacts else 0.0,
             'lead_status': lead.status,
+            'job_status': job.status if job else 'UNKNOWN',
         }
     )
 
     return saved_contacts
-

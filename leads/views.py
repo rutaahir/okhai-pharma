@@ -140,6 +140,56 @@ class LeadUnlockView(APIView):
             'expires_in': settings.LEAD_TOKEN_EXPIRY_SECONDS
         }, status=status.HTTP_200_OK)
 
+class LeadVerifySessionView(APIView):
+    """
+    POST /api/lead/verify-session/
+    Validates a passcode session token immediately.
+    Returns { valid: True, label: "...", expires_in: ... } or 401 if expired/invalid/rotated.
+    """
+    authentication_classes = []
+    permission_classes = []
+
+    def post(self, request):
+        token = request.data.get('token') or request.headers.get('X-Lead-Passcode-Token')
+        if not token:
+            auth_header = request.headers.get('Authorization', '')
+            if auth_header.startswith('Bearer '):
+                token = auth_header.split(' ')[1]
+
+        if not token:
+            return Response({'valid': False, 'error': 'No token provided.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            payload = jwt.decode(
+                token,
+                settings.LEAD_TOKEN_SECRET,
+                algorithms=['HS256']
+            )
+            if payload.get('type') != 'lead_passcode_token':
+                return Response({'valid': False, 'error': 'Invalid token type.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+            # Check if underlying passcode is still active
+            passcode_id = payload.get('passcode_id')
+            if passcode_id:
+                try:
+                    p_entry = LeadAccessPasscode.objects.get(id=passcode_id)
+                    if not p_entry.is_valid():
+                        return Response({'valid': False, 'error': 'Passcode has been rotated or deactivated.'}, status=status.HTTP_401_UNAUTHORIZED)
+                except LeadAccessPasscode.DoesNotExist:
+                    return Response({'valid': False, 'error': 'Passcode record not found.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+            remaining_seconds = max(0, int(payload.get('exp', 0) - time.time()))
+            return Response({
+                'valid': True,
+                'label': payload.get('label', 'Commercial Lead Access'),
+                'expires_in': remaining_seconds
+            }, status=status.HTTP_200_OK)
+
+        except jwt.ExpiredSignatureError:
+            return Response({'valid': False, 'error': 'Passcode session expired.'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception:
+            return Response({'valid': False, 'error': 'Invalid or corrupted session token.'}, status=status.HTTP_401_UNAUTHORIZED)
+
 class LeadSubmitView(APIView):
     """
     POST /api/lead/submit/

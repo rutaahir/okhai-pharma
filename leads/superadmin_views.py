@@ -8,8 +8,10 @@ from django.db.models import Q, Avg, Count
 from django.contrib.auth.hashers import make_password
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.renderers import BaseRenderer, JSONRenderer
+import jwt
+from django.conf import settings
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 
@@ -523,12 +525,44 @@ class SuperAdminLeadStatsView(APIView):
             'trend_30_days': trend_data,
         })
 
+class LeadMediaAccessPermission(permissions.BasePermission):
+    """
+    Allows image/thumbnail streaming for:
+    1. Preprocessed card thumbnails (?thumb=1)
+    2. Valid Lead Passcode Token (query param ?token=... or header)
+    3. SuperAdmin credentials / sessions
+    """
+    def has_permission(self, request, view):
+        # Allow preprocessed thumbnail previews
+        if request.query_params.get('thumb') in ('1', 'true', 'yes'):
+            return True
+
+        # Check SuperAdmin or Lead Passcode
+        token = request.query_params.get('token') or request.headers.get('X-Lead-Passcode-Token')
+        if not token:
+            auth_header = request.headers.get('Authorization', '')
+            if auth_header.startswith('Bearer '):
+                token = auth_header.split(' ')[1]
+
+        if request.user and request.user.is_authenticated and request.user.is_superuser:
+            return True
+
+        if token:
+            try:
+                payload = jwt.decode(token, settings.LEAD_TOKEN_SECRET, algorithms=['HS256'])
+                if payload.get('type') == 'lead_passcode_token' or payload.get('role') == 'superadmin' or payload.get('is_superuser'):
+                    return True
+            except Exception:
+                pass
+
+        return False
+
 class SuperAdminMediaView(APIView):
     """
     GET /api/superadmin/media/<file_id>/
     Secure authenticated streaming for cards, PDFs, thumbnails, and audio files.
     """
-    permission_classes = [IsSuperAdminUser]
+    permission_classes = [LeadMediaAccessPermission]
 
     def get(self, request, file_id):
         # 1. Check if LeadFile

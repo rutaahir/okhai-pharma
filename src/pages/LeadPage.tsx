@@ -9,7 +9,12 @@ import {
   Building2,
   CheckCircle,
   HelpCircle,
-  FileSpreadsheet
+  FileSpreadsheet,
+  Lock,
+  Eye,
+  EyeOff,
+  X,
+  AlertCircle
 } from 'lucide-react';
 import { PasscodeGate } from '../components/lead/PasscodeGate';
 import { FileUploadZone } from '../components/lead/FileUploadZone';
@@ -19,10 +24,14 @@ import {
   getLeadPasscodeToken,
   clearLeadPasscodeToken,
   getLeadPasscodeLabel,
+  isLeadTokenExpired,
+  verifyLeadSession,
+  unlockLeadPasscode,
   submitLead
 } from '../services/leadApi';
 
 export const LeadPage: React.FC = () => {
+  const [isVerifyingSession, setIsVerifyingSession] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [sessionLabel, setSessionLabel] = useState<string>('');
 
@@ -37,17 +46,61 @@ export const LeadPage: React.FC = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submittedLead, setSubmittedLead] = useState<{ id: string; refCode: string } | null>(null);
 
+  // Quick In-place Re-authentication Modal (prevents losing draft on session expiry)
+  const [showQuickReauthModal, setShowQuickReauthModal] = useState<boolean>(false);
+  const [reauthPasscode, setReauthPasscode] = useState<string>('');
+  const [showReauthPin, setShowReauthPin] = useState<boolean>(false);
+  const [isReauthing, setIsReauthing] = useState<boolean>(false);
+  const [reauthError, setReauthError] = useState<string | null>(null);
+
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Check initial session
+  // Check initial session immediately on page load
   useEffect(() => {
-    const token = getLeadPasscodeToken();
-    if (token) {
-      setIsAuthenticated(true);
-      setSessionLabel(getLeadPasscodeLabel());
-    } else {
-      setIsAuthenticated(false);
-    }
+    let isMounted = true;
+
+    const checkInitialSession = async () => {
+      // 1. Check local storage token first (purges expired tokens immediately)
+      const token = getLeadPasscodeToken();
+      if (!token) {
+        if (isMounted) {
+          setIsAuthenticated(false);
+          setIsVerifyingSession(false);
+        }
+        return;
+      }
+
+      // 2. Validate token against backend to ensure passcode wasn't revoked or rotated
+      try {
+        const check = await verifyLeadSession();
+        if (!isMounted) return;
+        if (check.valid) {
+          setIsAuthenticated(true);
+          setSessionLabel(check.label || getLeadPasscodeLabel());
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (err) {
+        if (isMounted) {
+          if (!isLeadTokenExpired(token)) {
+            setIsAuthenticated(true);
+            setSessionLabel(getLeadPasscodeLabel());
+          } else {
+            setIsAuthenticated(false);
+          }
+        }
+      } finally {
+        if (isMounted) {
+          setIsVerifyingSession(false);
+        }
+      }
+    };
+
+    checkInitialSession();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleUnlockSuccess = (label: string) => {
@@ -62,13 +115,10 @@ export const LeadPage: React.FC = () => {
     setSubmittedLead(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isSubmitting) return;
-
+  const executeSubmit = async (): Promise<boolean> => {
     if (files.length === 0 && voiceNotes.length === 0 && !description.trim()) {
       setSubmitError('Please attach at least one business card/brochure, record a voice note, or provide a written briefing.');
-      return;
+      return false;
     }
 
     setSubmitError(null);
@@ -100,10 +150,11 @@ export const LeadPage: React.FC = () => {
 
       const res = await submitLead(formData, abortController.signal);
 
+      // If token expired right at submission: KEEP FORM SAFE and prompt inline PIN
       if (res.auth_required) {
-        setIsAuthenticated(false);
-        setSubmitError(res.error || 'Passcode session expired. Please enter passcode again to unlock.');
-        return;
+        setShowQuickReauthModal(true);
+        setReauthError(res.error || 'Your commercial session has expired. Please enter passcode to confirm and submit.');
+        return false;
       }
 
       if (res.success && res.lead_id && res.reference_code) {
@@ -111,21 +162,65 @@ export const LeadPage: React.FC = () => {
           id: res.lead_id,
           refCode: res.reference_code,
         });
-        // Clear draft files
+        // Clear draft files only on verified success
         setFiles([]);
         setVoiceNotes([]);
         setDescription('');
         setCustomerName('');
+        return true;
       } else {
         setSubmitError(res.error || 'Submission failed. Please check your files and try again.');
+        return false;
       }
     } catch (err: any) {
       if (err.name !== 'AbortError') {
         setSubmitError(err.message || 'Network interruption while submitting. Please retry.');
       }
+      return false;
     } finally {
       setIsSubmitting(false);
       abortControllerRef.current = null;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    // Check if token expired before starting
+    const token = getLeadPasscodeToken();
+    if (!token) {
+      setShowQuickReauthModal(true);
+      setReauthError('Session expired. Please enter passcode to submit your lead.');
+      return;
+    }
+
+    await executeSubmit();
+  };
+
+  const handleQuickReauthAndSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reauthPasscode.trim() || isReauthing) return;
+
+    setIsReauthing(true);
+    setReauthError(null);
+
+    try {
+      const res = await unlockLeadPasscode(reauthPasscode.trim());
+      if (res.success && res.token) {
+        setIsAuthenticated(true);
+        setSessionLabel(res.label || 'Commercial Lead Access');
+        setShowQuickReauthModal(false);
+        setReauthPasscode('');
+        // Automatically proceed with submitting the preserved lead
+        await executeSubmit();
+      } else {
+        setReauthError(res.error || 'Invalid passcode. Please enter the correct PIN.');
+      }
+    } catch (err: any) {
+      setReauthError(err.message || 'Failed to authenticate passcode. Please try again.');
+    } finally {
+      setIsReauthing(false);
     }
   };
 
@@ -134,7 +229,19 @@ export const LeadPage: React.FC = () => {
     setSubmitError(null);
   };
 
-  // If not authenticated, show premium passcode gate
+  // If currently verifying initial session, display sleek indicator
+  if (isVerifyingSession) {
+    return (
+      <div className="min-h-screen bg-[#F8F9F4] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-7 h-7 animate-spin text-[#5B9A3C]" />
+          <span className="text-xs font-mono text-[#1E3D2A]/60">Checking commercial desk credentials...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // If not authenticated (or expired on access), immediately show passcode gate
   if (!isAuthenticated) {
     return <PasscodeGate onUnlockSuccess={handleUnlockSuccess} />;
   }
@@ -309,12 +416,12 @@ export const LeadPage: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      clearLeadPasscodeToken();
-                      setIsAuthenticated(false);
+                      setShowQuickReauthModal(true);
+                      setReauthError(null);
                     }}
                     className="px-3.5 py-1.5 bg-red-100 hover:bg-red-200 text-red-900 font-semibold rounded-xl text-xs shrink-0 transition-colors cursor-pointer"
                   >
-                    Re-enter Passcode
+                    Renew Session
                   </button>
                 </div>
               )}
@@ -355,6 +462,93 @@ export const LeadPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* =====================================================================
+          QUICK INLINE RE-AUTHENTICATION MODAL (Preserves in-progress lead)
+      ===================================================================== */}
+      {showQuickReauthModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-[#1E3D2A]/10 space-y-6 animate-in zoom-in-95">
+            <div className="flex items-center justify-between pb-3 border-b border-[#1E3D2A]/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center">
+                  <Lock className="w-5 h-5 text-amber-700" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-serif font-bold text-[#1E3D2A]">
+                    Session Renewal Required
+                  </h3>
+                  <p className="text-[11px] text-[#1E3D2A]/60">
+                    Your attached files and notes are safely kept.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowQuickReauthModal(false)}
+                className="p-1 rounded-xl text-gray-400 hover:text-gray-600 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <p className="text-xs text-[#1E3D2A]/75 leading-relaxed">
+                Your commercial desk session timed out while drafting. Enter your commercial passcode to verify and submit your lead without losing any of your attached documents or notes.
+              </p>
+
+              <form onSubmit={handleQuickReauthAndSubmit} className="space-y-4">
+                <div className="relative">
+                  <input
+                    type={showReauthPin ? 'text' : 'password'}
+                    maxLength={12}
+                    value={reauthPasscode}
+                    onChange={(e) => {
+                      setReauthPasscode(e.target.value);
+                      setReauthError(null);
+                    }}
+                    placeholder="Enter commercial passcode"
+                    className="w-full px-4 py-3 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/15 text-sm font-mono tracking-wider focus:outline-none focus:border-[#5B9A3C] focus:ring-1 focus:ring-[#5B9A3C]/30"
+                    autoFocus
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowReauthPin(!showReauthPin)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+                  >
+                    {showReauthPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+
+                {reauthError && (
+                  <div className="p-2.5 rounded-xl bg-red-50 text-red-800 text-xs flex items-center gap-2 animate-in fade-in">
+                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+                    <span>{reauthError}</span>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowQuickReauthModal(false)}
+                    className="px-4 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-600 hover:bg-gray-50 cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isReauthing || !reauthPasscode.trim()}
+                    className="px-5 py-2.5 rounded-xl bg-[#5B9A3C] hover:bg-[#4e8532] text-white text-xs font-bold tracking-wide transition-all shadow-sm flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {isReauthing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Lock className="w-3.5 h-3.5" />}
+                    <span>Unlock &amp; Submit Now</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
