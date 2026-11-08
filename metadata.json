@@ -1,0 +1,6 @@
+{
+  "name": "Okhai Pharma Intermediates",
+  "description": "Manufacturer, exporter and supplier of pure nicotine and nicotine derivatives from Gujarat, India. Pharma-grade Nicotine Sulfate 40% and Nicotine Alkaloid 90/95%.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
