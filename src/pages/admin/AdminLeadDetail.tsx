@@ -11,7 +11,6 @@ import {
   Maximize2,
   FileText,
   Volume2,
-  Clock,
   Sparkles,
   ShieldCheck,
   AlertTriangle,
@@ -927,50 +926,6 @@ export const AdminLeadDetail: React.FC = () => {
             </div>
 
           </div>
-        </div>
-      </div>
-
-      {/* =====================================================================
-          BOTTOM SECTION: ACTIVITY & AUDIT TRAIL
-      ===================================================================== */}
-      <div className="p-5 sm:p-6 rounded-3xl bg-white border border-[#1E3D2A]/10 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-[#1E3D2A]/10 pb-3">
-          <div className="flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[#5B9A3C]" />
-            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[#1E3D2A]">
-              Activity &amp; Audit Trail ({lead.audit_logs?.length || 0} events)
-            </h3>
-          </div>
-          <span className="text-[10px] font-mono text-[#1E3D2A]/50">
-            Immutable SQLite Log
-          </span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[300px] overflow-y-auto pr-1">
-          {lead.audit_logs && lead.audit_logs.length > 0 ? (
-            lead.audit_logs.map((log) => (
-              <div key={log.id} className="p-3 rounded-2xl bg-[#F8F9F4] border border-[#1E3D2A]/10 text-xs space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-[#1E3D2A] truncate">{log.action}</span>
-                  <span className="text-[10px] font-mono text-[#1E3D2A]/50 shrink-0">
-                    {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  </span>
-                </div>
-                <span className="text-[11px] text-[#1E3D2A]/60 block">
-                  by <span className="font-mono text-[#5B9A3C] font-semibold">{log.actor}</span> · {new Date(log.timestamp).toLocaleDateString()}
-                </span>
-                {log.details && Object.keys(log.details).length > 0 && (
-                  <pre className="text-[10px] font-mono text-[#1E3D2A]/70 bg-white p-1.5 rounded-lg border border-[#1E3D2A]/8 overflow-x-auto">
-                    {JSON.stringify(log.details, null, 2)}
-                  </pre>
-                )}
-              </div>
-            ))
-          ) : (
-            <div className="col-span-full text-xs text-[#1E3D2A]/40 text-center py-4">
-              No audit logs recorded yet.
-            </div>
-          )}
         </div>
       </div>
 
