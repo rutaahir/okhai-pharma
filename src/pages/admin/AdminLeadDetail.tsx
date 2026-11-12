@@ -45,6 +45,7 @@ import {
   LeadFileItem,
   LeadVoiceNoteItem
 } from '../../types/lead';
+import { LeadReplyComposer } from '../../components/admin/LeadReplyComposer';
 
 export const AdminLeadDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -928,6 +929,23 @@ export const AdminLeadDetail: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* =====================================================================
+          OMNICHANNEL REPLY & DISPATCH CENTER (EMAIL / WHATSAPP WITH HTML EDITOR)
+      ===================================================================== */}
+      <LeadReplyComposer
+        lead={lead}
+        onCommunicationSent={(newComm) => {
+          setLead((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  communications: [newComm, ...(prev.communications || [])],
+                }
+              : prev
+          );
+        }}
+      />
 
     </div>
   );

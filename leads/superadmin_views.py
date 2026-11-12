@@ -1,11 +1,14 @@
 import os
 import csv
 import io
+import re
+import urllib.parse
 from datetime import timedelta
 from django.utils import timezone
 from django.http import HttpResponse, FileResponse, Http404
 from django.db.models import Q, Avg, Count
 from django.contrib.auth.hashers import make_password
+from django.core.mail import EmailMessage
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
@@ -22,14 +25,16 @@ from leads.models import (
     ExtractedContact,
     LeadAuditLog,
     LeadAccessPasscode,
-    LeadAccessLog
+    LeadAccessLog,
+    LeadCommunication
 )
 from leads.permissions import IsSuperAdminUser
 from leads.serializers import (
     LeadListSerializer,
     LeadDetailSerializer,
     ExtractedContactSerializer,
-    LeadAccessPasscodeSerializer
+    LeadAccessPasscodeSerializer,
+    LeadCommunicationSerializer
 )
 from leads.pipeline.task_runner import dispatch_lead_pipeline_async
 
@@ -127,7 +132,7 @@ class SuperAdminLeadDetailView(APIView):
     def get(self, request, id):
         try:
             lead = Lead.objects.prefetch_related(
-                'files', 'voice_notes', 'contacts', 'audit_logs'
+                'files', 'voice_notes', 'contacts', 'audit_logs', 'communications'
             ).get(id=id)
         except Lead.DoesNotExist:
             return Response({'error': 'Lead not found.'}, status=status.HTTP_404_NOT_FOUND)
@@ -239,6 +244,207 @@ class SuperAdminLeadReprocessView(APIView):
 
         dispatch_lead_pipeline_async(str(lead.id), is_reprocess=True)
         return Response({'success': True, 'message': 'Extraction pipeline re-queued.'})
+
+
+def html_to_plain_text(html_content):
+    if not html_content:
+        return ''
+    text = re.sub(r'<(br|p|/p|div|/div|li)\b[^>]*>', '\n', html_content, flags=re.IGNORECASE)
+    text = re.sub(r'<(b|strong)\b[^>]*>(.*?)</\1>', r'*\2*', text, flags=re.IGNORECASE | re.DOTALL)
+    text = re.sub(r'<(i|em)\b[^>]*>(.*?)</\1>', r'_\2_', text, flags=re.IGNORECASE | re.DOTALL)
+    text = re.sub(r'<[^>]+>', '', text)
+    text = re.sub(r'\n\s*\n', '\n\n', text)
+    return text.strip()
+
+
+class SuperAdminLeadReplyView(APIView):
+    """
+    GET /api/superadmin/leads/<uuid:id>/reply/
+    POST /api/superadmin/leads/<uuid:id>/reply/
+    Dispatches reply communications (Email with rich HTML or WhatsApp direct)
+    and saves full conversation logs into the LeadCommunication database table.
+    """
+    permission_classes = [IsSuperAdminUser]
+
+    def get(self, request, id):
+        try:
+            lead = Lead.objects.get(id=id)
+        except Lead.DoesNotExist:
+            return Response({'error': 'Lead not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        comms = lead.communications.all()
+        serializer = LeadCommunicationSerializer(comms, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request, id):
+        try:
+            lead = Lead.objects.get(id=id)
+        except Lead.DoesNotExist:
+            return Response({'error': 'Lead not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        data = request.data
+        channel = str(data.get('channel', 'EMAIL')).strip().upper()
+        recipient = str(data.get('recipient', '')).strip()
+        subject = str(data.get('subject', '')).strip()
+        message_html = str(data.get('message_html', '')).strip()
+        message_text = str(data.get('message_text', '')).strip()
+        attach_brochure = bool(data.get('attach_brochure', False))
+
+        if not message_text and message_html:
+            message_text = html_to_plain_text(message_html)
+
+        admin_payload = getattr(request, 'superadmin_payload', {})
+        admin_sender = admin_payload.get('full_name') or admin_payload.get('username') or 'Superadmin'
+
+        if channel not in ['EMAIL', 'WHATSAPP']:
+            return Response({'error': 'Channel must be EMAIL or WHATSAPP.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not recipient:
+            return Response({'error': 'Recipient address or phone number is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not message_html and not message_text:
+            return Response({'error': 'Message body cannot be empty.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if channel == 'EMAIL':
+            if '@' not in recipient:
+                return Response({'error': 'Please provide a valid recipient email address.'}, status=status.HTTP_400_BAD_REQUEST)
+            if not subject:
+                subject = f"Regarding your inquiry with Okhai Pharma [Ref: {lead.reference_code}]"
+
+            if '<!DOCTYPE' not in message_html and '<html' not in message_html:
+                rendered_html = f"""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #F8F9F4; color: #1E3D2A; margin: 0; padding: 24px; }}
+    .container {{ max-width: 640px; margin: 0 auto; background: #ffffff; border-radius: 18px; overflow: hidden; border: 1px solid rgba(30, 61, 42, 0.12); box-shadow: 0 8px 24px rgba(30, 61, 42, 0.04); }}
+    .header {{ background: #1E3D2A; padding: 26px 28px; text-align: left; color: #ffffff; }}
+    .header-logo {{ font-size: 19px; font-weight: 700; color: #ffffff; letter-spacing: -0.3px; margin: 0; }}
+    .header-sub {{ font-size: 11px; color: #8CC63F; font-family: monospace; letter-spacing: 0.8px; margin: 4px 0 0 0; text-transform: uppercase; }}
+    .content {{ padding: 28px; line-height: 1.65; font-size: 14px; color: #1E3D2A; }}
+    .ref-tag {{ display: inline-block; padding: 4px 10px; background: #EAF2E5; color: #5B9A3C; font-weight: 700; font-family: monospace; border-radius: 6px; font-size: 12px; margin-bottom: 16px; }}
+    .footer {{ padding: 20px 28px; background: #FAFBF8; border-top: 1px solid rgba(30, 61, 42, 0.08); font-size: 11px; color: rgba(30, 61, 42, 0.65); }}
+    .footer p {{ margin: 3px 0; }}
+    a {{ color: #5B9A3C; }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-logo">Okhai Pharma Intermediates Pvt. Ltd.</div>
+      <div class="header-sub">Commercial Sales Desk · Gujarat, India</div>
+    </div>
+    <div class="content">
+      <div class="ref-tag">Lead Reference: {lead.reference_code}</div>
+      {message_html}
+    </div>
+    <div class="footer">
+      <p><strong>Commercial Dispatch Desk</strong> · Okhai Pharma Intermediates Pvt. Ltd.</p>
+      <p>Kasor, Sojitra, Anand - 388460, Gujarat, India · WhatsApp/Phone: +91 79900 82565</p>
+      <p>Corporate: <a href="https://okhaipharma.com">https://okhaipharma.com</a> · Email: info@okhaipharma.com</p>
+    </div>
+  </div>
+</body>
+</html>"""
+            else:
+                rendered_html = message_html
+
+            try:
+                email_msg = EmailMessage(
+                    subject=subject,
+                    body=rendered_html,
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[recipient],
+                )
+                email_msg.content_subtype = 'html'
+
+                if attach_brochure:
+                    brochure_path = os.path.join(settings.BASE_DIR, 'public', 'downloads', 'Okhai_Pharma_Brochure.pdf')
+                    if not os.path.exists(brochure_path):
+                        brochure_path = os.path.join(settings.BASE_DIR, 'public', 'Okhai_Pharma_Brochure.pdf')
+                    if os.path.exists(brochure_path):
+                        email_msg.attach_file(brochure_path, mimetype='application/pdf')
+
+                email_msg.send(fail_silently=False)
+
+                comm = LeadCommunication.objects.create(
+                    lead=lead,
+                    channel='EMAIL',
+                    recipient=recipient,
+                    subject=subject,
+                    message_html=rendered_html,
+                    message_text=message_text,
+                    status='SENT',
+                    sender=admin_sender,
+                )
+
+                LeadAuditLog.objects.create(
+                    lead=lead,
+                    actor=admin_sender,
+                    action='EMAIL_REPLY_SENT',
+                    details={'recipient': recipient, 'subject': subject, 'comm_id': str(comm.id)}
+                )
+
+                return Response({
+                    'success': True,
+                    'channel': 'EMAIL',
+                    'message': f'Commercial email successfully dispatched to {recipient}.',
+                    'communication': LeadCommunicationSerializer(comm).data
+                }, status=status.HTTP_200_OK)
+
+            except Exception as e:
+                comm = LeadCommunication.objects.create(
+                    lead=lead,
+                    channel='EMAIL',
+                    recipient=recipient,
+                    subject=subject,
+                    message_html=message_html,
+                    message_text=message_text,
+                    status='FAILED',
+                    sender=admin_sender,
+                    error_message=str(e),
+                )
+                return Response({
+                    'error': f'Failed to dispatch email: {str(e)}',
+                    'communication': LeadCommunicationSerializer(comm).data
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        elif channel == 'WHATSAPP':
+            clean_phone = re.sub(r'[^0-9]', '', recipient)
+            if len(clean_phone) == 10:
+                clean_phone = '91' + clean_phone
+
+            if len(clean_phone) < 10:
+                return Response({'error': 'Please provide a valid phone number with country code.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            whatsapp_url = f"https://api.whatsapp.com/send?phone={clean_phone}&text={urllib.parse.quote(message_text)}"
+
+            comm = LeadCommunication.objects.create(
+                lead=lead,
+                channel='WHATSAPP',
+                recipient=f"+{clean_phone}",
+                subject=subject or 'WhatsApp Reply',
+                message_html=message_html or f"<p>{message_text}</p>",
+                message_text=message_text,
+                status='OPENED_WHATSAPP',
+                sender=admin_sender,
+            )
+
+            LeadAuditLog.objects.create(
+                lead=lead,
+                actor=admin_sender,
+                action='WHATSAPP_REPLY_DISPATCHED',
+                details={'recipient': f"+{clean_phone}", 'comm_id': str(comm.id)}
+            )
+
+            return Response({
+                'success': True,
+                'channel': 'WHATSAPP',
+                'whatsapp_url': whatsapp_url,
+                'message': f'WhatsApp message prepared for +{clean_phone}.',
+                'communication': LeadCommunicationSerializer(comm).data
+            }, status=status.HTTP_200_OK)
 
 class SuperAdminLeadBulkView(APIView):
     """

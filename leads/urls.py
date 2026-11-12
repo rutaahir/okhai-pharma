@@ -15,7 +15,8 @@ from leads.superadmin_views import (
     SuperAdminLeadExportView,
     SuperAdminPasscodesView,
     SuperAdminLeadStatsView,
-    SuperAdminMediaView
+    SuperAdminMediaView,
+    SuperAdminLeadReplyView
 )
 
 urlpatterns = [
@@ -38,6 +39,7 @@ urlpatterns = [
     path('superadmin/leads/bulk/', SuperAdminLeadBulkView.as_view(), name='superadmin-leads-bulk'),
     path('superadmin/leads/<uuid:id>/', SuperAdminLeadDetailView.as_view(), name='superadmin-lead-detail'),
     path('superadmin/leads/<uuid:id>/reprocess/', SuperAdminLeadReprocessView.as_view(), name='superadmin-lead-reprocess'),
+    path('superadmin/leads/<uuid:id>/reply/', SuperAdminLeadReplyView.as_view(), name='superadmin-lead-reply'),
     path('superadmin/lead-passcodes/', SuperAdminPasscodesView.as_view(), name='superadmin-passcodes'),
     path('superadmin/media/<uuid:file_id>/', SuperAdminMediaView.as_view(), name='superadmin-media-file'),
     path('superadmin/media/voice/<uuid:file_id>/', SuperAdminMediaView.as_view(), name='superadmin-media-voice'),

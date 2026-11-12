@@ -8,7 +8,8 @@ from leads.models import (
     LeadVoiceNote,
     ExtractedContact,
     LeadAuditLog,
-    LeadProcessingJob
+    LeadProcessingJob,
+    LeadCommunication
 )
 
 class LeadAccessPasscodeSerializer(serializers.ModelSerializer):
@@ -142,11 +143,21 @@ class LeadListSerializer(serializers.ModelSerializer):
             return _append_token_to_url(url, self.context.get('request'))
         return None
 
+class LeadCommunicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LeadCommunication
+        fields = [
+            'id', 'channel', 'recipient', 'subject', 'message_html',
+            'message_text', 'status', 'sender', 'error_message', 'created_at'
+        ]
+        read_only_fields = ['id', 'created_at']
+
 class LeadDetailSerializer(serializers.ModelSerializer):
     files = LeadFileSerializer(many=True, read_only=True)
     voice_notes = LeadVoiceNoteSerializer(many=True, read_only=True)
     contacts = ExtractedContactSerializer(many=True, read_only=True)
     audit_logs = LeadAuditLogSerializer(many=True, read_only=True)
+    communications = LeadCommunicationSerializer(many=True, read_only=True)
     job = LeadProcessingJobSerializer(read_only=True)
 
     class Meta:
@@ -156,6 +167,6 @@ class LeadDetailSerializer(serializers.ModelSerializer):
             'status', 'priority', 'tags', 'source_ip', 'user_agent',
             'verified_by', 'verified_at', 'internal_notes',
             'created_at', 'updated_at', 'files', 'voice_notes',
-            'contacts', 'audit_logs', 'job'
+            'contacts', 'audit_logs', 'communications', 'job'
         ]
 

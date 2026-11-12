@@ -74,6 +74,19 @@ export interface LeadAuditLogItem {
   timestamp: string;
 }
 
+export interface LeadCommunicationItem {
+  id: string;
+  channel: 'EMAIL' | 'WHATSAPP';
+  recipient: string;
+  subject?: string;
+  message_html: string;
+  message_text: string;
+  status: 'SENT' | 'OPENED_WHATSAPP' | 'FAILED';
+  sender: string;
+  error_message?: string;
+  created_at: string;
+}
+
 export interface LeadProcessingJobItem {
   id: string;
   status: 'PENDING' | 'RUNNING' | 'COMPLETED' | 'FAILED';
@@ -132,6 +145,7 @@ export interface LeadDetailItem {
   voice_notes: LeadVoiceNoteItem[];
   contacts: ExtractedContact[];
   audit_logs: LeadAuditLogItem[];
+  communications?: LeadCommunicationItem[];
   job: LeadProcessingJobItem | null;
 }
 

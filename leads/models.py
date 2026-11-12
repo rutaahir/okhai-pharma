@@ -267,3 +267,33 @@ class LeadProcessingJob(models.Model):
 
     def __str__(self):
         return f"Job for {self.lead.reference_code} [{self.status} {self.progress_percent}%]"
+
+
+class LeadCommunication(models.Model):
+    CHANNEL_CHOICES = [
+        ('EMAIL', 'Email'),
+        ('WHATSAPP', 'WhatsApp'),
+    ]
+    STATUS_CHOICES = [
+        ('SENT', 'Sent'),
+        ('OPENED_WHATSAPP', 'Opened in WhatsApp'),
+        ('FAILED', 'Failed'),
+    ]
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    lead = models.ForeignKey(Lead, on_delete=models.CASCADE, related_name='communications')
+    channel = models.CharField(max_length=20, choices=CHANNEL_CHOICES, db_index=True)
+    recipient = models.CharField(max_length=255)
+    subject = models.CharField(max_length=255, blank=True, default='')
+    message_html = models.TextField(blank=True, default='')
+    message_text = models.TextField(blank=True, default='')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='SENT')
+    sender = models.CharField(max_length=150, default='superadmin')
+    error_message = models.TextField(blank=True, default='')
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.channel} to {self.recipient} [{self.status}]"

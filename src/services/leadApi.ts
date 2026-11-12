@@ -4,6 +4,7 @@ import {
   LeadDetailItem,
   LeadPasscodeItem,
   LeadStatsResponse,
+  LeadCommunicationItem,
 } from '../types/lead';
 
 // Session storage key for client passcode token
@@ -458,6 +459,47 @@ export async function deleteSuperAdminPasscode(
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error(err.error || 'Failed to delete passcode');
+  }
+  return res.json();
+}
+
+export async function sendSuperAdminLeadReply(
+  authFetch: (url: string, opts?: RequestInit) => Promise<Response>,
+  id: string,
+  payload: {
+    channel: 'EMAIL' | 'WHATSAPP';
+    recipient: string;
+    subject?: string;
+    message_html: string;
+    message_text?: string;
+    attach_brochure?: boolean;
+  }
+): Promise<{
+  success: boolean;
+  channel: 'EMAIL' | 'WHATSAPP';
+  message: string;
+  whatsapp_url?: string;
+  communication: LeadCommunicationItem;
+}> {
+  const res = await authFetch(`/api/superadmin/leads/${id}/reply/`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || 'Failed to dispatch reply');
+  }
+  return data;
+}
+
+export async function getSuperAdminLeadCommunications(
+  authFetch: (url: string, opts?: RequestInit) => Promise<Response>,
+  id: string
+): Promise<LeadCommunicationItem[]> {
+  const res = await authFetch(`/api/superadmin/leads/${id}/reply/`);
+  if (!res.ok) {
+    throw new Error('Failed to fetch communications');
   }
   return res.json();
 }
