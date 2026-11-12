@@ -88,9 +88,16 @@ export const AdminLeadDetail: React.FC = () => {
       setInternalNotes(data.internal_notes || '');
 
       const primary = data.contacts?.find((c) => c.is_primary) || data.contacts?.[0] || {};
+      let resolvedName = (primary.name || '').trim();
+      if (!resolvedName || /^(e-?mail(\s*id)?|phone(\s*no)?|name|unknown)$/i.test(resolvedName)) {
+        if (data.customer_name_input && !/^(e-?mail(\s*id)?|unknown)$/i.test(data.customer_name_input.trim())) {
+          resolvedName = data.customer_name_input.trim();
+        }
+      }
+
       setContactForm({
         id: primary.id,
-        name: primary.name || '',
+        name: resolvedName,
         company: primary.company || '',
         designation: primary.designation || '',
         phones: primary.phones ? [...primary.phones] : [],

@@ -82,7 +82,7 @@ export function initDatabase() {
     db.prepare(`
       INSERT INTO admins (username, email, password_hash, full_name, role)
       VALUES (?, ?, ?, ?, ?)
-    `).run(adminUsername, adminEmail, passwordHash, 'Rutvik Ahir (Superadmin)', 'superadmin');
+    `).run(adminUsername, adminEmail, passwordHash, 'Okhai Pharma', 'superadmin');
   }
 }
 

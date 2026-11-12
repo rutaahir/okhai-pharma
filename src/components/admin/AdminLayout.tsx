@@ -201,15 +201,17 @@ export const AdminLayout: React.FC = () => {
         <div className="p-4 border-t border-white/10 bg-black/15">
           <div className="p-3 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 overflow-hidden">
-              <div className="w-9 h-9 rounded-xl bg-[#8CC63F] text-[#1E3D2A] font-bold text-xs flex items-center justify-center shrink-0 shadow-inner">
-                RA
+              <div className="w-9 h-9 rounded-xl bg-[#8CC63F] text-[#1E3D2A] font-bold text-xs flex items-center justify-center shrink-0 shadow-inner font-mono">
+                OP
               </div>
               <div className="overflow-hidden">
                 <div className="text-xs font-bold text-white truncate">
-                  {admin?.full_name || 'Rutvik Ahir'}
+                  {admin?.full_name && admin.full_name !== 'Rutvik Ahir (Superadmin)' && admin.full_name !== 'Rutvik Ahir'
+                    ? admin.full_name
+                    : 'Okhai Pharma'}
                 </div>
                 <div className="text-[10px] text-[#8CC63F] font-mono uppercase truncate">
-                  {admin?.role || 'Superadmin'}
+                  Commercial Suite
                 </div>
               </div>
             </div>

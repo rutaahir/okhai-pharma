@@ -294,7 +294,9 @@ class SuperAdminLeadReplyView(APIView):
             message_text = html_to_plain_text(message_html)
 
         admin_payload = getattr(request, 'superadmin_payload', {})
-        admin_sender = admin_payload.get('full_name') or admin_payload.get('username') or 'Superadmin'
+        admin_sender = admin_payload.get('full_name') or admin_payload.get('username') or 'Okhai Pharma'
+        if 'Rutvik Ahir' in str(admin_sender):
+            admin_sender = 'Okhai Pharma'
 
         if channel not in ['EMAIL', 'WHATSAPP']:
             return Response({'error': 'Channel must be EMAIL or WHATSAPP.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -350,6 +352,10 @@ class SuperAdminLeadReplyView(APIView):
             else:
                 rendered_html = message_html
 
+            mailto_url = f"mailto:{recipient}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(message_text)}"
+            smtp_success = False
+            smtp_error = None
+
             try:
                 email_msg = EmailMessage(
                     subject=subject,
@@ -367,48 +373,37 @@ class SuperAdminLeadReplyView(APIView):
                         email_msg.attach_file(brochure_path, mimetype='application/pdf')
 
                 email_msg.send(fail_silently=False)
-
-                comm = LeadCommunication.objects.create(
-                    lead=lead,
-                    channel='EMAIL',
-                    recipient=recipient,
-                    subject=subject,
-                    message_html=rendered_html,
-                    message_text=message_text,
-                    status='SENT',
-                    sender=admin_sender,
-                )
-
-                LeadAuditLog.objects.create(
-                    lead=lead,
-                    actor=admin_sender,
-                    action='EMAIL_REPLY_SENT',
-                    details={'recipient': recipient, 'subject': subject, 'comm_id': str(comm.id)}
-                )
-
-                return Response({
-                    'success': True,
-                    'channel': 'EMAIL',
-                    'message': f'Commercial email successfully dispatched to {recipient}.',
-                    'communication': LeadCommunicationSerializer(comm).data
-                }, status=status.HTTP_200_OK)
-
+                smtp_success = True
             except Exception as e:
-                comm = LeadCommunication.objects.create(
-                    lead=lead,
-                    channel='EMAIL',
-                    recipient=recipient,
-                    subject=subject,
-                    message_html=message_html,
-                    message_text=message_text,
-                    status='FAILED',
-                    sender=admin_sender,
-                    error_message=str(e),
-                )
-                return Response({
-                    'error': f'Failed to dispatch email: {str(e)}',
-                    'communication': LeadCommunicationSerializer(comm).data
-                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                smtp_error = str(e)
+
+            comm = LeadCommunication.objects.create(
+                lead=lead,
+                channel='EMAIL',
+                recipient=recipient,
+                subject=subject,
+                message_html=rendered_html,
+                message_text=message_text,
+                status='SENT' if smtp_success else 'LOGGED',
+                sender=admin_sender,
+                error_message=smtp_error or '',
+            )
+
+            LeadAuditLog.objects.create(
+                lead=lead,
+                actor=admin_sender,
+                action='EMAIL_REPLY_SENT',
+                details={'recipient': recipient, 'subject': subject, 'comm_id': str(comm.id), 'smtp_dispatched': smtp_success}
+            )
+
+            return Response({
+                'success': True,
+                'channel': 'EMAIL',
+                'smtp_success': smtp_success,
+                'mailto_url': mailto_url,
+                'message': f'Commercial email successfully dispatched to {recipient}.' if smtp_success else f'Commercial email logged & recorded in database for {recipient}.',
+                'communication': LeadCommunicationSerializer(comm).data
+            }, status=status.HTTP_200_OK)
 
         elif channel == 'WHATSAPP':
             clean_phone = re.sub(r'[^0-9]', '', recipient)

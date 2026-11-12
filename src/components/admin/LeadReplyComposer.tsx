@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  Mail,
   Send,
-  MessageSquare,
   Paperclip,
   CheckCircle2,
   AlertCircle,
@@ -13,7 +11,6 @@ import {
   ChevronUp,
   ExternalLink,
   Clock,
-  User,
   Phone,
   Bold,
   Italic,
@@ -25,22 +22,55 @@ import {
   Quote,
   Link2,
   Eraser,
-  FileText,
   RefreshCw,
-  Copy,
-  Check
 } from 'lucide-react';
 import { LeadDetailItem, LeadCommunicationItem } from '../../types/lead';
 import { sendSuperAdminLeadReply, getSuperAdminLeadCommunications } from '../../services/leadApi';
 import { useAdminAuth } from '../../context/AdminAuthContext';
+
+// Real Official WhatsApp Brand SVG Icon
+const RealWhatsAppIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+);
+
+// Real Official Email / Gmail Brand SVG Icon
+const RealEmailIcon: React.FC<{ className?: string }> = ({ className = "w-4 h-4" }) => (
+  <svg viewBox="0 0 24 24" className={className}>
+    <path fill="#4285F4" d="M22 6.5l-10 6.5L2 6.5V18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6.5z"/>
+    <path fill="#34A853" d="M22 6.5V6c0-1.1-.9-2-2-2h-3l-5 4-5-4H4c-1.1 0-2 .9-2 2v.5l10 6.5 10-6.5z"/>
+    <path fill="#EA4335" d="M20 4H4c-1.1 0-2 .9-2 2v1.5l10 6.5 10-6.5V6c0-1.1-.9-2-2-2z"/>
+    <path fill="#FBBC05" d="M2 7v1l10 6.5L22 8V7l-10 6.5L2 7z" opacity="0.3"/>
+  </svg>
+);
 
 interface LeadReplyComposerProps {
   lead: LeadDetailItem;
   onCommunicationSent?: (comm: LeadCommunicationItem) => void;
 }
 
+// Clean and validate real human name, preventing "E-mail ID" or OCR label artifacts
+export function getCleanCustomerName(lead: LeadDetailItem): string {
+  const contactName = lead.contacts?.[0]?.name?.trim() || '';
+  const isGarbage = !contactName || /^(e-?mail(\s*id)?|phone(\s*no)?|name|contact|unknown|null|undefined)$/i.test(contactName);
+
+  if (!isGarbage) {
+    return contactName;
+  }
+  const custInput = lead.customer_name_input?.trim() || '';
+  if (custInput && !/^(unknown|null|undefined|e-?mail(\s*id)?)$/i.test(custInput)) {
+    return custInput;
+  }
+  const company = lead.contacts?.[0]?.company?.trim() || '';
+  if (company) {
+    return company;
+  }
+  return 'Valued Commercial Partner';
+}
+
 export const LeadReplyComposer: React.FC<LeadReplyComposerProps> = ({ lead, onCommunicationSent }) => {
-  const { authFetch, admin } = useAdminAuth();
+  const { authFetch } = useAdminAuth();
 
   // Active Channel: 'EMAIL' or 'WHATSAPP'
   const [channel, setChannel] = useState<'EMAIL' | 'WHATSAPP'>('EMAIL');
@@ -48,11 +78,11 @@ export const LeadReplyComposer: React.FC<LeadReplyComposerProps> = ({ lead, onCo
   // Editor View Mode: 'visual' (WYSIWYG) | 'code' (HTML source) | 'preview' (Live preview)
   const [editorMode, setEditorMode] = useState<'visual' | 'code' | 'preview'>('visual');
 
-  // Lead contact extraction defaults
+  // Resolved dynamic values
   const primaryContact = lead.contacts?.[0];
   const defaultEmail = primaryContact?.emails?.[0] || '';
   const defaultPhone = primaryContact?.primary_phone || primaryContact?.phones?.[0]?.raw || '';
-  const defaultName = primaryContact?.name || lead.customer_name_input || 'Valued Partner';
+  const customerName = getCleanCustomerName(lead);
   const defaultCompany = primaryContact?.company || '';
 
   // Form states
@@ -63,12 +93,12 @@ export const LeadReplyComposer: React.FC<LeadReplyComposerProps> = ({ lead, onCo
   const [isSending, setIsSending] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [mailtoFallbackUrl, setMailtoFallbackUrl] = useState<string | null>(null);
 
   // Communications history
   const [communications, setCommunications] = useState<LeadCommunicationItem[]>(lead.communications || []);
   const [isLoadingHistory, setIsLoadingHistory] = useState<boolean>(false);
   const [expandedCommId, setExpandedCommId] = useState<string | null>(null);
-  const [copiedLink, setCopiedLink] = useState<boolean>(false);
 
   const visualEditorRef = useRef<HTMLDivElement>(null);
 
@@ -77,12 +107,12 @@ export const LeadReplyComposer: React.FC<LeadReplyComposerProps> = ({ lead, onCo
     if (channel === 'EMAIL') {
       setRecipient(defaultEmail);
       setSubject(`Commercial Inquiries & Specifications [Ref: ${lead.reference_code}] - Okhai Pharma`);
-      if (!htmlContent || htmlContent.trim() === '') {
+      if (!htmlContent || htmlContent.trim() === '' || htmlContent.includes('E-mail ID') || htmlContent.includes('Rutvik Ahir')) {
         loadTemplate('quotation');
       }
     } else {
       setRecipient(defaultPhone);
-      if (!htmlContent || htmlContent.trim() === '') {
+      if (!htmlContent || htmlContent.trim() === '' || htmlContent.includes('E-mail ID') || htmlContent.includes('Rutvik Ahir')) {
         loadTemplate('whatsapp_quick');
       }
     }
@@ -110,9 +140,9 @@ export const LeadReplyComposer: React.FC<LeadReplyComposerProps> = ({ lead, onCo
     }
   };
 
-  // Pre-made SaaS Templates
+  // Pre-made SaaS Templates without any personal names
   const loadTemplate = (templateType: 'quotation' | 'brochure' | 'meeting' | 'whatsapp_quick') => {
-    const custName = defaultName || 'Valued Partner';
+    const custName = customerName;
     const compName = defaultCompany ? ` at ${defaultCompany}` : '';
     const refCode = lead.reference_code;
 
@@ -120,16 +150,16 @@ export const LeadReplyComposer: React.FC<LeadReplyComposerProps> = ({ lead, onCo
       const tpl = `<p>Dear <strong>${custName}</strong>,</p>
 <p>Thank you for connecting with <strong>Okhai Pharma Intermediates Pvt. Ltd.</strong> regarding your commercial nicotine intermediate requirements${compName}.</p>
 <p>We have cataloged your file under commercial dossier reference <strong>${refCode}</strong>. Our state-of-the-art cGMP facility located in Anand, Gujarat produces high-purity chemical intermediates and pharmaceutical compounds under rigorous ISO and GLP compliance.</p>
-<h3>Commercial Specifications & Supply Grades:</h3>
+<h3>Commercial Specifications &amp; Supply Grades:</h3>
 <ul>
-  <li><strong>Pure Nicotine 99.5%+ USP / EP:</strong> Pharmaceutical research & active pharmaceutical intermediate grade with verified zero-impurity chromatographic resolution.</li>
-  <li><strong>Nicotine Sulfate 40% Solution:</strong> High-miscibility technical & research formulation grade.</li>
+  <li><strong>Pure Nicotine 99.5%+ USP / EP:</strong> Pharmaceutical research &amp; active pharmaceutical intermediate grade with verified zero-impurity chromatographic resolution.</li>
+  <li><strong>Nicotine Sulfate 40% Solution:</strong> High-miscibility technical &amp; research formulation grade.</li>
   <li><strong>Nicotine Alkaloid 90% &amp; 95%:</strong> Analytical and formulation intermediate grade.</li>
 </ul>
-<p>Attached to this communication is our comprehensive corporate product brochure with complete HPLC/GC chromatograms, packaging dimensions (UN-certified fluorinated drums with dry nitrogen blanketing), and FOB/CIF delivery terms for Mundra/Nhava Sheva ports.</p>
+<p>Attached to this communication is our corporate product brochure with complete HPLC/GC chromatograms, packaging dimensions (UN-certified fluorinated drums with dry nitrogen blanketing), and FOB/CIF delivery terms for Mundra/Nhava Sheva ports.</p>
 <p>Kindly reply with your projected quantity, target delivery timeline, and delivery port so our sales engineering team can issue a formal pro-forma quotation.</p>
 <p>Warm regards,<br>
-<strong>${admin?.full_name || 'Commercial Sales Desk'}</strong><br>
+<strong>Commercial Sales Desk</strong><br>
 Okhai Pharma Intermediates Pvt. Ltd.<br>
 <span style="color: #5B9A3C;">Gujarat, India · info@okhaipharma.com · +91 79900 82565</span></p>`;
       setHtmlContent(tpl);
@@ -141,7 +171,8 @@ Okhai Pharma Intermediates Pvt. Ltd.<br>
 <p>You may also directly access our live compliance portal here: <a href="https://okhaipharma.com/downloads/Okhai_Pharma_Brochure.pdf">https://okhaipharma.com/downloads/Okhai_Pharma_Brochure.pdf</a></p>
 <p>Please let us know if your quality control team requires a sample batch Certificate of Analysis (CoA) or custom analytical testing parameters.</p>
 <p>Best regards,<br>
-<strong>Okhai Pharma Commercial Desk</strong></p>`;
+<strong>Commercial Sales Desk</strong><br>
+Okhai Pharma Intermediates Pvt. Ltd.</p>`;
       setHtmlContent(tpl);
       if (visualEditorRef.current) visualEditorRef.current.innerHTML = tpl;
     } else if (templateType === 'meeting') {
@@ -156,7 +187,7 @@ Okhai Pharma Intermediates Pvt. Ltd.<br>
 </ul>
 <p>Please let us know what day and time works best for your schedule, or feel free to message us on WhatsApp at <strong>+91 79900 82565</strong>.</p>
 <p>Warm regards,<br>
-<strong>${admin?.full_name || 'Commercial Desk'}</strong><br>
+<strong>Commercial Sales Desk</strong><br>
 Okhai Pharma Intermediates Pvt. Ltd.</p>`;
       setHtmlContent(tpl);
       if (visualEditorRef.current) visualEditorRef.current.innerHTML = tpl;
@@ -170,7 +201,7 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
   // Variable chip insertion
   const insertVariable = (variable: string) => {
     let val = '';
-    if (variable === 'ContactName') val = defaultName;
+    if (variable === 'ContactName') val = customerName;
     else if (variable === 'Company') val = defaultCompany || 'Your Organization';
     else if (variable === 'LeadRef') val = lead.reference_code;
     else if (variable === 'Email') val = defaultEmail;
@@ -205,6 +236,7 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
   const handleSendReply = async () => {
     setErrorMsg(null);
     setSuccessMsg(null);
+    setMailtoFallbackUrl(null);
 
     const cleanRecipient = recipient.trim();
     if (!cleanRecipient) {
@@ -246,6 +278,10 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
       });
 
       setSuccessMsg(res.message || 'Reply processed successfully.');
+      if (res.mailto_url) {
+        setMailtoFallbackUrl(res.mailto_url);
+      }
+
       if (res.communication) {
         setCommunications((prev) => [res.communication, ...prev]);
         if (onCommunicationSent) {
@@ -253,12 +289,12 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
         }
       }
 
-      // If WhatsApp, launch the link
+      // If WhatsApp, launch the link directly in a new window/tab
       if (channel === 'WHATSAPP' && res.whatsapp_url) {
         window.open(res.whatsapp_url, '_blank', 'noopener,noreferrer');
       }
     } catch (err: any) {
-      setErrorMsg(err.message || 'Failed to dispatch reply. Please check your credentials and connection.');
+      setErrorMsg(err.message || 'Failed to dispatch reply. Please check connection.');
     } finally {
       setIsSending(false);
     }
@@ -287,7 +323,7 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
           </div>
         </div>
 
-        {/* Channel Segmented Buttons */}
+        {/* Real Brand Icon Segmented Buttons */}
         <div className="inline-flex p-1 rounded-2xl bg-[#1E3D2A]/8 border border-[#1E3D2A]/10 self-start md:self-auto">
           <button
             type="button"
@@ -295,13 +331,13 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
               channel === 'EMAIL'
                 ? 'bg-white text-[#1E3D2A] shadow-xs'
-                : 'text-[#1E3D2A]/60 hover:text-[#1E3D2A]'
+                : 'text-[#1E3D2A]/65 hover:text-[#1E3D2A]'
             }`}
           >
-            <Mail className={`w-3.5 h-3.5 ${channel === 'EMAIL' ? 'text-[#5B9A3C]' : ''}`} />
-            <span>Email (SMTP)</span>
+            <RealEmailIcon className="w-4 h-4 shrink-0" />
+            <span>Email</span>
             {channel === 'EMAIL' && (
-              <span className="w-1.5 h-1.5 rounded-full bg-[#5B9A3C] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#34A853] animate-pulse" />
             )}
           </button>
 
@@ -311,10 +347,10 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-mono font-semibold transition-all cursor-pointer ${
               channel === 'WHATSAPP'
                 ? 'bg-[#25D366] text-white shadow-xs font-bold'
-                : 'text-[#1E3D2A]/60 hover:text-[#1E3D2A]'
+                : 'text-[#1E3D2A]/65 hover:text-[#1E3D2A]'
             }`}
           >
-            <MessageSquare className="w-3.5 h-3.5" />
+            <RealWhatsAppIcon className={`w-4 h-4 shrink-0 ${channel === 'WHATSAPP' ? 'text-white' : 'text-[#25D366]'}`} />
             <span>WhatsApp</span>
             {channel === 'WHATSAPP' && (
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
@@ -338,8 +374,12 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
 
           <div className="md:col-span-9 flex items-center gap-2">
             <div className="relative flex-1">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#1E3D2A]/40">
-                {channel === 'EMAIL' ? <Mail className="w-3.5 h-3.5" /> : <Phone className="w-3.5 h-3.5" />}
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                {channel === 'EMAIL' ? (
+                  <RealEmailIcon className="w-4 h-4" />
+                ) : (
+                  <RealWhatsAppIcon className="w-4 h-4 text-[#25D366]" />
+                )}
               </div>
               <input
                 type={channel === 'EMAIL' ? 'email' : 'text'}
@@ -358,7 +398,7 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
                     type="button"
                     onClick={() => setRecipient(primaryContact.emails[0])}
                     className="px-2.5 py-1.5 rounded-lg bg-[#EAF2E5] hover:bg-[#d8e8d1] text-[10px] font-mono font-semibold text-[#5B9A3C] transition-colors"
-                    title="Use OCR Extracted Email"
+                    title="Use Extracted Email"
                   >
                     Auto-Fill Email
                   </button>
@@ -368,7 +408,7 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
                     type="button"
                     onClick={() => setRecipient(primaryContact?.primary_phone || primaryContact?.phones?.[0]?.raw || '')}
                     className="px-2.5 py-1.5 rounded-lg bg-[#EAF2E5] hover:bg-[#d8e8d1] text-[10px] font-mono font-semibold text-[#5B9A3C] transition-colors"
-                    title="Use OCR Extracted Phone"
+                    title="Use Extracted Phone"
                   >
                     Auto-Fill Phone
                   </button>
@@ -490,7 +530,7 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
           <div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-[#1E3D2A]/8">
             <span className="text-[10px] font-mono text-[#1E3D2A]/60">Insert Variable:</span>
             {[
-              { label: '{{ContactName}}', key: 'ContactName', desc: defaultName },
+              { label: '{{ContactName}}', key: 'ContactName', desc: customerName },
               { label: '{{Company}}', key: 'Company', desc: defaultCompany || 'Org' },
               { label: '{{LeadRef}}', key: 'LeadRef', desc: lead.reference_code },
               { label: '{{BrochureLink}}', key: 'BrochureLink', desc: 'Direct URL' },
@@ -625,7 +665,7 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
               rows={12}
               value={htmlContent}
               onChange={(e) => setHtmlContent(e.target.value)}
-              className="w-full p-4 font-mono text-[11px] leading-relaxed text-[#1E3D2A] bg-[#0A160F] text-[#8CC63F] focus:outline-none resize-y min-h-[220px]"
+              className="w-full p-4 font-mono text-[11px] leading-relaxed text-[#8CC63F] bg-[#0A160F] focus:outline-none resize-y min-h-[220px]"
               placeholder="Write or edit raw HTML tags here..."
             />
           )}
@@ -655,28 +695,7 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
           )}
         </div>
 
-        {/* 6. WhatsApp Live Preview Bubble (Shown when in WhatsApp Mode) */}
-        {channel === 'WHATSAPP' && (
-          <div className="p-3.5 rounded-2xl bg-[#EFEAE2] border border-[#1E3D2A]/10 space-y-2">
-            <div className="flex items-center justify-between text-[10px] font-mono text-[#1E3D2A]/60">
-              <span className="flex items-center gap-1 font-semibold text-[#1E3D2A]">
-                <MessageSquare className="w-3 h-3 text-[#25D366]" />
-                WhatsApp Message Preview
-              </span>
-              <span>Recipient: {recipient || '+91 ...'}</span>
-            </div>
-            <div className="flex justify-end">
-              <div className="max-w-[90%] sm:max-w-[80%] rounded-xl rounded-tr-none bg-[#E7FFDB] p-3 shadow-2xs text-xs text-[#111B21] whitespace-pre-wrap leading-relaxed">
-                {getPlainText(htmlContent)}
-                <div className="text-[9px] text-[#667781] text-right mt-1 font-mono">
-                  {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ✓✓
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 7. Action Controls & Dispatch Options */}
+        {/* 6. Action Controls & Dispatch Options */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
           {/* Options */}
           <div className="flex items-center gap-3">
@@ -713,13 +732,13 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
                 </>
               ) : channel === 'EMAIL' ? (
                 <>
-                  <Send className="w-3.5 h-3.5 text-[#8CC63F]" />
+                  <RealEmailIcon className="w-4 h-4 shrink-0" />
                   <span>Send Commercial Email</span>
                 </>
               ) : (
                 <>
-                  <MessageSquare className="w-3.5 h-3.5" />
-                  <span>Open WhatsApp &amp; Log Reply</span>
+                  <RealWhatsAppIcon className="w-4 h-4 shrink-0 text-white" />
+                  <span>Send via WhatsApp</span>
                 </>
               )}
             </button>
@@ -735,14 +754,25 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
         )}
 
         {successMsg && (
-          <div className="p-3 rounded-xl bg-[#EAF2E5] border border-[#5B9A3C]/30 text-xs text-[#1E3D2A] flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#5B9A3C] shrink-0" />
-            <span className="font-medium">{successMsg}</span>
+          <div className="p-3.5 rounded-xl bg-[#EAF2E5] border border-[#5B9A3C]/30 text-xs text-[#1E3D2A] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-[#5B9A3C] shrink-0" />
+              <span className="font-medium">{successMsg}</span>
+            </div>
+            {mailtoFallbackUrl && (
+              <a
+                href={mailtoFallbackUrl}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1E3D2A] text-white text-[11px] font-mono hover:bg-[#152c1e] transition-colors shrink-0"
+              >
+                <ExternalLink className="w-3 h-3 text-[#8CC63F]" />
+                <span>Open in Mail App (Outlook / Gmail)</span>
+              </a>
+            )}
           </div>
         )}
       </div>
 
-      {/* 8. Sent Communications Timeline & Database Log */}
+      {/* 7. Sent Communications Timeline & Database Log */}
       <div className="border-t border-[#1E3D2A]/10 bg-[#FAFBF8] p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -784,13 +814,13 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <span
-                        className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
                           isEmail
                             ? 'bg-[#EAF2E5] text-[#5B9A3C]'
                             : 'bg-[#25D366]/15 text-[#1b8c44]'
                         }`}
                       >
-                        {isEmail ? <Mail className="w-3 h-3" /> : <MessageSquare className="w-3 h-3" />}
+                        {isEmail ? <RealEmailIcon className="w-3.5 h-3.5" /> : <RealWhatsAppIcon className="w-3.5 h-3.5 text-[#25D366]" />}
                         {comm.channel}
                       </span>
 
@@ -804,6 +834,8 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
                         className={`px-2 py-0.5 rounded-md text-[9px] font-mono font-bold uppercase ${
                           comm.status === 'SENT' || comm.status === 'OPENED_WHATSAPP'
                             ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : comm.status === 'LOGGED'
+                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
                             : 'bg-red-50 text-red-700 border border-red-200'
                         }`}
                       >
@@ -829,7 +861,7 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
                       {comm.subject || 'Direct Message'}
                     </span>
                     <span className="text-[10px] font-mono text-[#1E3D2A]/50">
-                      by <strong className="text-[#5B9A3C]">{comm.sender || 'superadmin'}</strong>
+                      by <strong className="text-[#5B9A3C]">{comm.sender && !comm.sender.includes('Rutvik') ? comm.sender : 'Okhai Pharma'}</strong>
                     </span>
                   </div>
 
@@ -837,8 +869,8 @@ Okhai Pharma Intermediates Pvt. Ltd.</p>`;
                   {isExpanded && (
                     <div className="pt-2 border-t border-[#1E3D2A]/8 space-y-2">
                       {comm.error_message && (
-                        <div className="p-2 rounded-lg bg-red-50 text-[11px] text-red-700 font-mono">
-                          Error: {comm.error_message}
+                        <div className="p-2 rounded-lg bg-amber-50 text-[11px] text-amber-800 font-mono">
+                          Status note: {comm.error_message}
                         </div>
                       )}
                       <div className="p-3 rounded-xl bg-[#F8F9F4] border border-[#1E3D2A]/8 text-xs text-[#1E3D2A] leading-relaxed max-h-[220px] overflow-y-auto">

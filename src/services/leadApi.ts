@@ -479,6 +479,8 @@ export async function sendSuperAdminLeadReply(
   channel: 'EMAIL' | 'WHATSAPP';
   message: string;
   whatsapp_url?: string;
+  mailto_url?: string;
+  smtp_success?: boolean;
   communication: LeadCommunicationItem;
 }> {
   const res = await authFetch(`/api/superadmin/leads/${id}/reply/`, {
